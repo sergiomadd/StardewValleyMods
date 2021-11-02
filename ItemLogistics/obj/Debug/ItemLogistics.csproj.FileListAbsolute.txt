@@ -1,0 +1,8 @@
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My Mods\MaddCoreMods\Item Logistics\ItemLogistics\obj\Debug\ItemLogistics.csproj.AssemblyReference.cache
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My Mods\MaddCoreMods\Item Logistics\ItemLogistics\obj\Debug\ItemLogistics.csproj.CoreCompileInputs.cache
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ItemLogistics\obj\Debug\ItemLogistics.csproj.AssemblyReference.cache
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ItemLogistics\obj\Debug\ItemLogistics.csproj.CoreCompileInputs.cache
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ItemLogistics\bin\Debug\ItemLogistics.dll
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ItemLogistics\bin\Debug\ItemLogistics.pdb
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ItemLogistics\obj\Debug\ItemLogistics.dll
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ItemLogistics\obj\Debug\ItemLogistics.pdb

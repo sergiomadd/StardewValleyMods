@@ -1,0 +1,9 @@
+{
+  "Name": "Item Logistics",
+  "Author": "Sergiomadd",
+  "Version": "1.0.0",
+  "Description": "Logistics for items.",
+  "UniqueID": "Sergiomadd.ItemLogistics",
+  "EntryDll": "ItemLogistics.dll",
+  "UpdateKeys": []
+}

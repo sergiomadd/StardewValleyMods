@@ -93,14 +93,14 @@ namespace ItemLogistics
                     {
                         if(LogisticItemNames.Contains(location.getObjectAtTile(x, y).name))
                         {
-                            LoadAdjacents(location, null, x, y);
+                            LoadAdjacentsRecursive(location, null, x, y);
                         }
                     }  
                 }
             }
         }
 
-        private SGElement LoadAdjacents(GameLocation location, SGraph lg, int x, int y)
+        private SGElement LoadAdjacentsRecursive(GameLocation location, SGraph lg, int x, int y)
         {
             SGElement[,] logisticMatrix;
             LocationsMatrix.TryGetValue(location, out logisticMatrix);
@@ -113,8 +113,7 @@ namespace ItemLogistics
             {
                 elem.parentGraph = new LogisticGroup();
                 List<LogisticGroup> logisticList;
-                elem.parentGraph.AddElement(elem);
-                LoadPipeType(location, x, y);
+                LoadElemenToGraph(location, x, y, elem.parentGraph);
                 LogisticLocations.TryGetValue(location, out logisticList);
                 if (!logisticList.Contains((LogisticGroup)elem.parentGraph))
                 {
@@ -131,8 +130,7 @@ namespace ItemLogistics
                     {
                         if (!elem.parentGraph.Elements.Contains(logisticMatrix[x, y]))
                         {
-                            lg.AddElement(elem);
-                            LoadPipeType(location, x, y);
+                            LoadElemenToGraph(location, x, y, lg);
                         }
                     }
                 }
@@ -149,8 +147,7 @@ namespace ItemLogistics
                     if (!elem.parentGraph.Elements.Contains(logisticMatrix[x, y - 1]))
                     {
                         Monitor.Log("Inserted!", LogLevel.Info);
-                        LoadPipeType(location, x, y);
-                        SGElement adj = LoadAdjacents(location, elem.parentGraph, x, y - 1);
+                        SGElement adj = LoadAdjacentsRecursive(location, elem.parentGraph, x, y - 1);
                         elem.AddAdjacent("Up", adj);
                     }
                 }
@@ -164,7 +161,7 @@ namespace ItemLogistics
                     Monitor.Log("Down: " + location.getObjectAtTile(x, y + 1).Name + x.ToString() + (y + 1).ToString(), LogLevel.Info);
                     if (!elem.parentGraph.Elements.Contains(logisticMatrix[x, y + 1]))
                     {
-                        SGElement adj = LoadAdjacents(location, elem.parentGraph, x, y + 1);
+                        SGElement adj = LoadAdjacentsRecursive(location, elem.parentGraph, x, y + 1);
                         elem.AddAdjacent("Down", adj);
                     }
                 }
@@ -177,7 +174,7 @@ namespace ItemLogistics
                     Monitor.Log("Right: " + location.getObjectAtTile(x + 1, y).Name + (x + 1).ToString() + (y).ToString(), LogLevel.Info);
                     if (!elem.parentGraph.Elements.Contains(logisticMatrix[x + 1, y]))
                     {
-                        SGElement adj = LoadAdjacents(location, elem.parentGraph, x + 1, y);
+                        SGElement adj = LoadAdjacentsRecursive(location, elem.parentGraph, x + 1, y);
                         elem.AddAdjacent("Right", adj);
                     }
                 }
@@ -190,7 +187,7 @@ namespace ItemLogistics
                     Monitor.Log("Left: " + location.getObjectAtTile(x - 1, y).Name + (x - 1).ToString() + (y).ToString(), LogLevel.Info);
                     if (!elem.parentGraph.Elements.Contains(logisticMatrix[x - 1, y]))
                     {
-                        SGElement adj = LoadAdjacents(location, elem.parentGraph, x - 1, y);
+                        SGElement adj = LoadAdjacentsRecursive(location, elem.parentGraph, x - 1, y);
                         elem.AddAdjacent("Left", adj);
                     }
                 }
@@ -199,61 +196,143 @@ namespace ItemLogistics
             return elem;
         }
 
-        private void LoadPipeType(GameLocation location, int x, int y)
+        private SGElement LoadAdjacents(GameLocation location, SGraph lg, int x, int y)
         {
             SGElement[,] logisticMatrix;
             LocationsMatrix.TryGetValue(location, out logisticMatrix);
+            if (logisticMatrix[x, y] == null)
+            {
+                logisticMatrix[x, y] = ElementFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x, y));
+            }
+            SGElement elem = logisticMatrix[x, y];
+            if (lg == null && elem.parentGraph == null)
+            {
+                elem.parentGraph = new LogisticGroup();
+                List<LogisticGroup> logisticList;
+                LoadElemenToGraph(location, x, y, elem.parentGraph);
+                LogisticLocations.TryGetValue(location, out logisticList);
+                if (!logisticList.Contains((LogisticGroup)elem.parentGraph))
+                {
+                    logisticList.Add((LogisticGroup)elem.parentGraph);
+                }
+            }
+            else if (lg != null && elem.parentGraph == null)
+            {
+                elem.parentGraph = lg;
+                //Source
+                if (location.getObjectAtTile(x, y) != null)
+                {
+                    if (LogisticItemNames.Contains(location.getObjectAtTile(x, y).Name))
+                    {
+                        if (!elem.parentGraph.Elements.Contains(logisticMatrix[x, y]))
+                        {
+                            LoadElemenToGraph(location, x, y, lg);
+                        }
+                    }
+                }
+            }
+            Monitor.Log("SOURCE: " + location.getObjectAtTile(x, y).Name + x.ToString() + (y).ToString(), LogLevel.Info);
+
+
+            //Up
+            if (location.getObjectAtTile(x, y - 1) != null && y - 1 >= 0)
+            {
+                if (LogisticItemNames.Contains(location.getObjectAtTile(x, y - 1).Name))
+                {
+                    Monitor.Log("Up: " + location.getObjectAtTile(x, y - 1).Name + x.ToString() + (y - 1).ToString(), LogLevel.Info);
+                    if (!elem.parentGraph.Elements.Contains(logisticMatrix[x, y - 1]))
+                    {
+                        Monitor.Log("Inserted!", LogLevel.Info);
+                        SGElement adj = LoadAdjacentsRecursive(location, elem.parentGraph, x, y - 1);
+                        elem.AddAdjacent("Up", adj);
+                    }
+                }
+            }
+
+            //Down
+            if (location.getObjectAtTile(x, y + 1) != null && y + 1 < location.map.DisplayHeight)
+            {
+                if (LogisticItemNames.Contains(location.getObjectAtTile(x, y + 1).Name))
+                {
+                    Monitor.Log("Down: " + location.getObjectAtTile(x, y + 1).Name + x.ToString() + (y + 1).ToString(), LogLevel.Info);
+                    if (!elem.parentGraph.Elements.Contains(logisticMatrix[x, y + 1]))
+                    {
+                        SGElement adj = LoadAdjacentsRecursive(location, elem.parentGraph, x, y + 1);
+                        elem.AddAdjacent("Down", adj);
+                    }
+                }
+            }
+            //Right
+            if (location.getObjectAtTile(x + 1, y) != null && x + 1 < location.map.DisplayWidth)
+            {
+                if (LogisticItemNames.Contains(location.getObjectAtTile(x + 1, y).Name))
+                {
+                    Monitor.Log("Right: " + location.getObjectAtTile(x + 1, y).Name + (x + 1).ToString() + (y).ToString(), LogLevel.Info);
+                    if (!elem.parentGraph.Elements.Contains(logisticMatrix[x + 1, y]))
+                    {
+                        SGElement adj = LoadAdjacentsRecursive(location, elem.parentGraph, x + 1, y);
+                        elem.AddAdjacent("Right", adj);
+                    }
+                }
+            }
+            //Left
+            if (location.getObjectAtTile(x - 1, y) != null && x - 1 >= 0)
+            {
+                if (LogisticItemNames.Contains(location.getObjectAtTile(x - 1, y).Name))
+                {
+                    Monitor.Log("Left: " + location.getObjectAtTile(x - 1, y).Name + (x - 1).ToString() + (y).ToString(), LogLevel.Info);
+                    if (!elem.parentGraph.Elements.Contains(logisticMatrix[x - 1, y]))
+                    {
+                        SGElement adj = LoadAdjacentsRecursive(location, elem.parentGraph, x - 1, y);
+                        elem.AddAdjacent("Left", adj);
+                    }
+                }
+            }
+
+            return elem;
+        }
+
+        private void LoadElemenToGraph(GameLocation location, int x, int y, SGraph lg)
+        {
+            SGElement[,] logisticMatrix;
+            LocationsMatrix.TryGetValue(location, out logisticMatrix);
+            lg.AddElement(logisticMatrix[x, y]);
             if (logisticMatrix[x, y] is OutPipe)
             {
                 Monitor.Log("OUTPIPE", LogLevel.Info);
-                logisticMatrix[x, y].parentGraph.AddOutput((OutPipe)logisticMatrix[x, y]);
+                lg.AddOutput((OutPipe)logisticMatrix[x, y]);
             }
             if (logisticMatrix[x, y] is InPipe)
             {
                 Monitor.Log("INPIPE", LogLevel.Info);
-                logisticMatrix[x, y].parentGraph.AddInput((InPipe)logisticMatrix[x, y]);
+                lg.AddInput((InPipe)logisticMatrix[x, y]);
             }
             if (logisticMatrix[x, y] is Pipe)
             {
                 Monitor.Log("PIPE", LogLevel.Info);
-                logisticMatrix[x, y].parentGraph.AddConector((Pipe)logisticMatrix[x, y]);
+                lg.AddConector((Pipe)logisticMatrix[x, y]);
             }
         }
 
-
-
-        private LogisticGroup FindLogisticGroup(GameLocation location)
+        private void LoadElemenToGraph2(SGElement elem, SGraph lg)
         {
-            LogisticGroup group = new LogisticGroup(); ;
-            int id = 0;
-            //Sweeper
-            /*
-            while (true)
+            lg.AddElement(elem);
+            if (elem is OutPipe)
             {
-                //si el objeto encontrado es uno de 
-                //los del mod
-                if(obj is Mod.obj)
-                {
-                    //Empezar el grafo
-                    UpdateObject(obj);
-
-
-
-
-                }
-                //Cuando acabe se añade +1 a id
-                //Acaba cuando una linea y una columna
-                //No han tenido objetos del grafo
-                group.ID = id;
-                id++;
-
+                Monitor.Log("OUTPIPE", LogLevel.Info);
+                lg.AddOutput((OutPipe)elem);
             }
-            */
-
-            return group;
+            if (elem is InPipe)
+            {
+                Monitor.Log("INPIPE", LogLevel.Info);
+                lg.AddInput((InPipe)elem);
+            }
+            if (elem is Pipe)
+            {
+                Monitor.Log("PIPE", LogLevel.Info);
+                lg.AddConector((Pipe)elem);
+            }
         }
-
-
 
         private void OnObjectListChanged(object sender, ObjectListChangedEventArgs e)
         {
@@ -263,74 +342,96 @@ namespace ItemLogistics
                 UpdateObject(obj);
             }
         }
-        
+
+        private void AddNewElement(SGElement newElem, SGraph lg)
+        {
+            SGElement[,] logisticMatrix;
+            LocationsMatrix.TryGetValue(Game1.currentLocation, out logisticMatrix);
+            newElem.parentGraph = lg;
+            logisticMatrix[(int)newElem.Position.X, (int)newElem.Position.Y] = newElem;
+            LoadElemenToGraph(newElem.Location, (int)newElem.Position.X, (int)newElem.Position.Y, lg);
+        }
+
+
         private void UpdateObject(KeyValuePair<Vector2, StardewValley.Object> obj)
         {
-            this.Monitor.Log("CHANGE: " + obj.Key.ToString() + Game1.currentLocation.ToString(), LogLevel.Info);
+            this.Monitor.Log("CHANGE: " + obj.Key.ToString() + obj.Value.Name, LogLevel.Info);
             //Conector
-            if (obj.Value.name.Equals("Wood Fence"))
+            if (LogisticItemNames.Contains(obj.Value.Name))
             {
-                /*
-                this.Monitor.Log("CONECTOR", LogLevel.Info);
+                SGElement[,] logisticMatrix;
+                LocationsMatrix.TryGetValue(Game1.currentLocation, out logisticMatrix);
                 SGElement newElem = ElementFactory.CreateElement(obj.Key, Game1.currentLocation, obj.Value);
+                logisticMatrix[(int)newElem.Position.X, (int)newElem.Position.Y] = newElem;
+                if (logisticMatrix[(int)newElem.Position.X, (int)newElem.Position.Y - 1] != null) 
+                {
+                    newElem.AddAdjacent("Up", logisticMatrix[(int)newElem.Position.X, (int)newElem.Position.Y - 1]);
+                }
+                if (logisticMatrix[(int)newElem.Position.X, (int)newElem.Position.Y + 1] != null)
+                {
+                    newElem.AddAdjacent("Down", logisticMatrix[(int)newElem.Position.X, (int)newElem.Position.Y + 1]);
+                }
+                if (logisticMatrix[(int)newElem.Position.X + 1, (int)newElem.Position.Y] != null)
+                {
+                    newElem.AddAdjacent("Right", logisticMatrix[(int)newElem.Position.X + 1, (int)newElem.Position.Y]);
+                }
+                if (logisticMatrix[(int)newElem.Position.X - 1, (int)newElem.Position.Y] != null)
+                {
+                    newElem.AddAdjacent("Left", logisticMatrix[(int)newElem.Position.X - 1, (int)newElem.Position.Y]);
+                }
+
                 List<SGraph> adjGraphs = newElem.Scan();
+                Monitor.Log("Graphs adj: " + adjGraphs.Count.ToString(), LogLevel.Info);
+
                 if (adjGraphs.Count == 0)
                 {
+                    Monitor.Log("New graph", LogLevel.Info);
                     LogisticGroup lg = new LogisticGroup();
-                    lg.AddConector(newElem);
-                }
-                else if (adjGraphs.Count == 1)
-                {
-                    adjGraphs
-                    LoadAdjacents(Game1.currentLocation, SGraph lg, int x, int y)
+                    AddNewElement(newElem, lg);
+                    Monitor.Log(lg.Print(), LogLevel.Info);
+                    Monitor.Log((lg == null).ToString(), LogLevel.Info);
                 }
                 else
                 {
-                    List<SGUnit> conections = pipe.Adjacents.Values.ToList();
-                    foreach (SGUnit connection in conections)
+                    foreach (SGraph lg in adjGraphs)
                     {
-                        connection.ParentGraph.AddConector(pipe);
-                        connection.ParentGraph.Conectors.Add(pipe);
-                        pipe.AddAdjacent("Up", connection);
+                        Monitor.Log("Params: " + (lg == null).ToString() + (newElem.parentGraph == null).ToString(), LogLevel.Info);
+                        if (lg != null && newElem.parentGraph == null)
+                        {
+                            Monitor.Log("Existing graph", LogLevel.Info);
+                            //LoadAdjacents(Game1.currentLocation, lg, (int)obj.Key.X, (int)obj.Key.Y);
+                            AddNewElement(newElem, lg);
+                            Monitor.Log(lg.Print(), LogLevel.Info);
+                        }
+                        else if(lg != null && newElem.parentGraph != null)
+                        {
+                            //Segundo graph
+                            Monitor.Log("Segundo graph", LogLevel.Info);
+                            List<SGraph> orderedAdjGraphs = adjGraphs.OrderByDescending(s => s.Elements.Count).ToList();
+                            MergeGraphs(orderedAdjGraphs);
+                        }
+                        else
+                        {
+                            Monitor.Log("No graph", LogLevel.Info);
+                        }
                     }
 
                 }
-                */
             }
-            //Out
-            else if (obj.Value.Name.Equals("Stone Fence"))
+        }
+
+        //Añadir todos los items de la lista de
+        //grafos al primer grafo (el mas largo)
+        private void MergeGraphs(List<SGraph> graphs)
+        {
+            for(int i=1;i<graphs.Count;i++)
             {
-                /*this.Monitor.Log("OUTPUT", LogLevel.Info);
-                OutPipe output = new OutPipe();
-                if (!output.Scan())
+                Monitor.Log("G size:" + graphs[i].Elements.Count.ToString(), LogLevel.Info);
+                foreach(SGElement elem in graphs[i].Elements)
                 {
-                    //Other Storage Managwre not found
-                    LogisticGroup lg = new LogisticGroup();
-                    lg.AddOutput(output);
+                    elem.parentGraph = graphs[0];
+                    LoadElemenToGraph2(elem, graphs[0]);
                 }
-                else
-                {
-                    //GetConections = scan()
-                    List<SGUnit> conections = output.Adjacents.Values.ToList();
-                    foreach (SGUnit connection in conections)
-                    {
-                        connection.ParentGraph.AddOutput(output);
-                        output.AddAdjacent("Up", connection);
-                    }
-                }*/
-            }
-            //In Brick Floor
-            else if (obj.Value.Name.Equals("Chest"))
-            {
-                /*Container newContainer = new Container(obj.Key, Game1.currentLocation);
-                if (newContainer.ScanAround())
-                {
-                    //Other Storage Managwre found
-                    Pipe pipe = newContainer.GetLGAround();
-                    LogisticGroup lg = pipe.ParentGraph;
-                    newContainer.ParentGraph = lg;
-                    lg.AddNode(obj.Key, Game1.currentLocation, pipe);
-                }*/
             }
         }
 

@@ -78,7 +78,10 @@ namespace ItemLogistics.Framework.Model
             List<SGraph> retList = new List<SGraph>();
             foreach(KeyValuePair<string, SGElement> adj in Adjacents)
             {
-                retList.Add(adj.Value.parentGraph);
+                if(adj.Value != null)
+                {
+                    retList.Add(adj.Value.parentGraph);
+                }
             }
             return retList;
         }

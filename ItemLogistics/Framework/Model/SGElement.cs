@@ -116,6 +116,22 @@ namespace ItemLogistics.Framework.Model
             return removed;
         }
 
+        
+        public bool RemoveAllAdjacents()
+        {
+            bool removed = false;
+            foreach(KeyValuePair<string, SGElement> adj in Adjacents)
+            {
+                if(adj.Value != null)
+                {
+                    removed = true;
+                    RemoveAdjacent(GetInverseOrientation(adj.Key), this);
+                    Adjacents[adj.Key] = null;
+                }
+            }
+            return removed;
+        }
+
         private string GetInverseOrientation(string orientation)
         {
             string inverse = "";

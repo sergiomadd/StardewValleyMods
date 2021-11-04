@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,18 @@ using ItemLogistics.Framework.Model;
 
 namespace ItemLogistics
 {
+    public interface IJsonAssetsApi
+    {
+        int GetObjectId(string name);
+        void LoadAssets(string path);
+    }
+
     class ModEntry : Mod
     {
+        private IJsonAssetsApi JsonAssets;
+        private int PipeID = -1;
+
+
         public Dictionary<GameLocation, List<LogisticGroup>> LogisticLocations { get; set; }
         public Dictionary<GameLocation, SGElement[,]> LocationsMatrix { get; set; }
         public List<string> LogisticItemNames { get; set; }
@@ -25,8 +36,8 @@ namespace ItemLogistics
         {
             LogisticLocations = new Dictionary<GameLocation, List<LogisticGroup>>();
             LocationsMatrix = new Dictionary<GameLocation, SGElement[,]>();
-            
 
+            helper.Events.GameLoop.GameLaunched += GameLoop_GameLaunched;
             helper.Events.World.ObjectListChanged += this.OnObjectListChanged;
             helper.Events.GameLoop.OneSecondUpdateTicked += this.OnOneSecondUpdateTicked;
             helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
@@ -48,9 +59,36 @@ namespace ItemLogistics
             ElementFactory = new SGElementFactory(LogisticItemNames);
         }
 
+        private void GameLoop_GameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
+            if (JsonAssets == null)
+            {
+                Monitor.Log("Can't load Json Assets API, which is needed for Home Sewing Kit to function", LogLevel.Error);
+            }
+            else
+            {
+                JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets"));
+            }
+        }
+
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            foreach(GameLocation location in Game1.locations)
+            if (JsonAssets != null)
+            {
+
+                PipeID = JsonAssets.GetObjectId("Pipe");
+                if (PipeID == -1)
+                {
+                    Monitor.Log("Can't get ID for Sewing Machine. Some functionality will be lost.", LogLevel.Warn);
+                }
+                else
+                {
+                    Monitor.Log($"Sewing Machine ID is {PipeID}.", LogLevel.Info);
+                }
+            }
+
+            foreach (GameLocation location in Game1.locations)
             {
                 //Va por cada location haciendo un swep
                 //Y crea los grafos de cada location
@@ -336,10 +374,16 @@ namespace ItemLogistics
 
         private void OnObjectListChanged(object sender, ObjectListChangedEventArgs e)
         {
-            List<KeyValuePair<Vector2, StardewValley.Object>> objects = e.Added.ToList();
-            foreach(KeyValuePair< Vector2, StardewValley.Object > obj in objects)
+            List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();
+            foreach(KeyValuePair< Vector2, StardewValley.Object > obj in addedObjects)
             {
-                UpdateObject(obj);
+                AddObject(obj);
+            }
+
+            List<KeyValuePair<Vector2, StardewValley.Object>> removedObjects = e.Removed.ToList();
+            foreach (KeyValuePair<Vector2, StardewValley.Object> obj in removedObjects)
+            {
+                RemoveObject(obj);
             }
         }
 
@@ -353,9 +397,9 @@ namespace ItemLogistics
         }
 
 
-        private void UpdateObject(KeyValuePair<Vector2, StardewValley.Object> obj)
+        private void AddObject(KeyValuePair<Vector2, StardewValley.Object> obj)
         {
-            this.Monitor.Log("CHANGE: " + obj.Key.ToString() + obj.Value.Name, LogLevel.Info);
+            this.Monitor.Log("ADDING: " + obj.Key.ToString() + obj.Value.Name, LogLevel.Info);
             //Conector
             if (LogisticItemNames.Contains(obj.Value.Name))
             {
@@ -432,6 +476,38 @@ namespace ItemLogistics
                     elem.parentGraph = graphs[0];
                     LoadElemenToGraph2(elem, graphs[0]);
                 }
+            }
+        }
+
+        private void SplitGraphs(List<SGraph> graphs)
+        {
+
+            for (int i = 1; i < graphs.Count; i++)
+            {
+                foreach (SGElement elem in graphs[i].Elements)
+                {
+                    elem.parentGraph = graphs[0];
+                    LoadElemenToGraph2(elem, graphs[0]);
+                }
+            }
+        }
+
+        private void RemoveObject(KeyValuePair<Vector2, StardewValley.Object> obj)
+        {
+            this.Monitor.Log("REMOVE: " + obj.Key.ToString() + obj.Value.Name, LogLevel.Info);
+            //Conector
+            if (LogisticItemNames.Contains(obj.Value.Name))
+            {
+                SGElement[,] logisticMatrix;
+                LocationsMatrix.TryGetValue(Game1.currentLocation, out logisticMatrix);
+                SGElement elem = logisticMatrix[(int)obj.Key.X, (int)obj.Key.Y];
+                List<SGraph> adjGraphs = elem.Scan();
+                logisticMatrix[(int)elem.Position.X, (int)elem.Position.Y] = null;
+                elem.parentGraph.RemoveElement(elem);
+                elem.RemoveAllAdjacents();
+                //Split graphs
+                //Hay que recorrerlos enteros para volver a construirlos
+
             }
         }
 

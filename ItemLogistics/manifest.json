@@ -5,5 +5,9 @@
   "Description": "Logistics for items.",
   "UniqueID": "Sergiomadd.ItemLogistics",
   "EntryDll": "ItemLogistics.dll",
-  "UpdateKeys": []
+  "MinimumApiVersion": "3.0.0",
+  "UpdateKeys": [],
+  "Dependencies": [
+    { "UniqueID": "spacechase0.JsonAssets" }
+  ]
 }

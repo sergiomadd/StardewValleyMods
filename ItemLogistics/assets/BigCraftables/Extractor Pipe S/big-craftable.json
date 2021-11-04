@@ -1,0 +1,20 @@
+{
+  "Name": "ExtractorPipeE",
+  "Price": 0,
+  "Description": "ExtractorPipe",
+  "Category": "Crafting",
+  "Edibility": -300,
+  "EdibleIsDrink": false,
+  "EdibleBuffs": null,
+  "IsColored": false,
+  "Recipe": {
+    "ResultCount": 1,
+    "Ingredients": [
+      {
+        "Object": 709,
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}

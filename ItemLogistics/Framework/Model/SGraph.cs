@@ -130,22 +130,26 @@ namespace ItemLogistics.Framework.Model
             Update();
         }
 
-        public bool RemoveNode(int id)
+        public bool RemoveElement(SGElement elem)
         {
             bool removed = false;
-            /*SGNode node = Find(id);
-            if (node != null)
+            if (Elements.Contains(elem))
             {
                 removed = true;
-                Conectors.Remove(node);
-                foreach (SGNode n in Conectors)
+                Elements.Remove(elem);
+                if(Outputs.Contains(elem))
                 {
-                    if (n.ConnectedNodes.Keys.Contains(node))
-                    {
-                        n.ConnectedNodes.Remove(node);
-                    }
+                    Outputs.Remove((SGNode)elem);
                 }
-            }*/
+                if (Inputs.Contains(elem))
+                {
+                    Inputs.Remove((SGNode)elem);
+                }
+                if (Conectors.Contains(elem))
+                {
+                    Conectors.Remove(elem);
+                }
+            }
             return removed;
         }
 

@@ -63,8 +63,17 @@
     <Compile Include="ModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <Folder Include="assets\BigCraftables\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\content-pack.json" />
+    <None Include="assets\Fences\Extractor Pipe\fence.json" />
+    <None Include="assets\Fences\Pipe\fence.json" />
+    <None Include="assets\Objects\Extractor Pipe E\big-craftable.json" />
+    <None Include="assets\Objects\Extractor Pipe N\big-craftable.json" />
+    <None Include="assets\Objects\Extractor Pipe S\big-craftable.json" />
+    <None Include="assets\Objects\Extractor Pipe W\big-craftable.json" />
     <None Include="manifest.json" />
     <None Include="packages.config" />
   </ItemGroup>

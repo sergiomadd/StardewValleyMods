@@ -38,9 +38,17 @@ namespace ConnectedFences.Patches
             }
         }
 
-        private static void Fence_countsForDrawing_Postfix(ref bool __result)
+        private static void Fence_countsForDrawing_Postfix(Fence __instance, ref bool __result)
         {
-            __result = true;
+            if (((float)__instance.health > 1f || __instance.repairQueued.Value) && !__instance.isGate)
+            {
+                __result = true;
+            }
+            else
+            {
+                __result = false;
+            }
+
         }
     }
 }

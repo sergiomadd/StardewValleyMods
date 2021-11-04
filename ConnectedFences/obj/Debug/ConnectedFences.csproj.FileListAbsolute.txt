@@ -7,3 +7,11 @@ C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFen
 C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\ConnectedFences\obj\Debug\ConnectedFences.csproj.CopyComplete
 C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\ConnectedFences\obj\Debug\ConnectedFences.dll
 C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\ConnectedFences\obj\Debug\ConnectedFences.pdb
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\bin\Debug\ConnectedFences.dll
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\bin\Debug\ConnectedFences.pdb
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\bin\Debug\0Harmony.dll
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\bin\Debug\0Harmony.xml
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\obj\Debug\ConnectedFences.csproj.AssemblyReference.cache
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\obj\Debug\ConnectedFences.csproj.CoreCompileInputs.cache
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\obj\Debug\ConnectedFences.dll
+C:\Users\Sergio\Dropbox\Programing\Modding\Stardew Valley\My SVMods\ConnectedFences\obj\Debug\ConnectedFences.pdb

@@ -1,9 +1,0 @@
-{
-  "Name": "Connected Fences",
-  "Author": "Sergiomadd",
-  "Version": "1.0.0",
-  "Description": "Allows different fence types to connect with each other.",
-  "UniqueID": "Sergiomadd.ConnectedFences",
-  "EntryDll": "ConnectedFences.dll",
-  "UpdateKeys": []
-}

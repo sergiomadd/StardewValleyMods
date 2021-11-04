@@ -1,0 +1,5 @@
+CONNECTED FENCES - 1.0.0
+
+:: REQUIREMENTS Template::
+
+:: FEATURES Template::

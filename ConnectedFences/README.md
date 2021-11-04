@@ -1,5 +1,7 @@
 Allows for different fence types to connect with each other.
 
+![test](https://github.com/sergiomadd/StardewValleyMods/tree/main/ConnectedFences/docs/img/)
+
 Requirements:
 - SMAPI
 

@@ -1,0 +1,3 @@
+- [ ] Poner ifs en Trygetvalue
+- [ ] BSF recursive for path
+- [ ] Make all graph elemts nodes

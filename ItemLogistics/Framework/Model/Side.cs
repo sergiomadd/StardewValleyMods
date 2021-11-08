@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using StardewValley;
 
 namespace ItemLogistics.Framework.Model
 {
-    class SGEdgeUnit : SGUnit
+    public class Side
     {
-        public SGEdgeUnit()
+        public string Name { get; set; }
+        public Side(string name)
         {
-
+            Name = name;
         }
     }
 }

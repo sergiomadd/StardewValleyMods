@@ -8,63 +8,150 @@ using StardewValley;
 
 namespace ItemLogistics.Framework.Model
 {
-    class SGNode : SGElement
+    public class SGNode
     {
+        public Vector2 Position { get; set; }
+        public GameLocation Location { get; set; }
+        public StardewValley.Object Obj { get; set; }
+        public Dictionary<Side, SGNode> Adjacents { get; set; }
         public List<SGNode> ConnectedNodes { get; set; }
-        public List<SGEdgeUnit> ConnectedEdgeUnits { get; set; }
+        public SGraph ParentGraph { get; set; }
+        public int MinCostToStart { get; set; }
+        public bool Visited { get; set; }
+        public int Cost { get; set; }
+        public SideStruct Sides { get; set; }
 
-        public SGNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
+        public SGNode(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
+            Position = position;
+            Location = location;
+            Obj = obj;
+
+            MinCostToStart = 0;
+            Visited = false;
+            Cost = 0;
+
+            Sides = SideStruct.GetSides();
+
+            Adjacents = new Dictionary<Side, SGNode>();
+            Adjacents.Add(Sides.North, null);
+            Adjacents.Add(Sides.South, null);
+            Adjacents.Add(Sides.West, null);
+            Adjacents.Add(Sides.East, null);
             ConnectedNodes = new List<SGNode>();
-            ConnectedEdgeUnits = new List<SGEdgeUnit>();
+
+            ParentGraph = null;
         }
 
-        public bool AddConnectedNode(SGNode node)
+        public SGNode TryReach(SGNode elem, List<SGNode> looked)
         {
-            bool connected = false;
-            if (!ConnectedNodes.Contains(node))
+            SGNode adj;
+            SGNode last = null;
+            if(last == elem)
             {
-                connected = true;
-                ConnectedNodes.Add(node);
+                return last;
             }
-            return connected;
+            else
+            {
+                if (Adjacents.TryGetValue(Sides.North, out adj) && last != elem)
+                {
+                    if (adj != null && !looked.Contains(adj))
+                    {
+                        last = adj.TryReach(elem, looked);
+                    }
+                }
+                if (Adjacents.TryGetValue(Sides.South, out adj) && last != elem)
+                {
+                    if (adj != null && !looked.Contains(adj))
+                    {
+                        last = adj.TryReach(elem, looked);
+                    }
+                }
+                if (Adjacents.TryGetValue(Sides.West, out adj) && last != elem)
+                {
+                    if (adj != null && !looked.Contains(adj))
+                    {
+                        last = adj.TryReach(elem, looked);
+                    }
+                }
+                if (Adjacents.TryGetValue(Sides.East, out adj) && last != elem)
+                {
+                    if (adj != null && !looked.Contains(adj))
+                    {
+                        last = adj.TryReach(elem, looked);
+                    }
+                }
+                return last;
+            }
         }
 
-        public bool RemoveConnectedNode(SGNode node)
+        public List<SGraph> Scan()
+        {
+            List<SGraph> retList = new List<SGraph>();
+            foreach(KeyValuePair<Side, SGNode> adj in Adjacents)
+            {
+                if(adj.Value != null)
+                {
+                    retList.Add(adj.Value.ParentGraph);
+                }
+            }
+            return retList;
+        }
+
+        public SGNode GetAdjacent(Side side)
+        {
+            return Adjacents[side];
+        }
+
+        public bool AddAdjacent(Side side, SGNode entity)
+        {
+            bool added = false;
+            if (Adjacents[side] == null)
+            {
+                added = true;
+                Adjacents[side] = entity;
+                entity.AddAdjacent(Sides.GetInverse(side), this);
+            }
+            return added;
+        }
+
+        public bool RemoveAdjacent(Side side, SGNode entity)
         {
             bool removed = false;
-            if (ConnectedNodes.Contains(node))
+
+            if (Adjacents[side] != null)
             {
                 removed = true;
-                ConnectedNodes.Remove(node);
+                Adjacents[side] = null;
+                entity.RemoveAdjacent(Sides.GetInverse(side), this);
             }
             return removed;
         }
 
-        public bool RemoveAllConnectedNodes()
+        
+        public bool RemoveAllAdjacents()
         {
             bool removed = false;
-            foreach (SGNode node in ConnectedNodes)
+            foreach(KeyValuePair<Side, SGNode> adj in Adjacents.ToList())
             {
-                ConnectedNodes.Remove(node);
-            }
-            if (ConnectedNodes.Count == 0)
-            {
-                removed = true;
+                if(adj.Value != null)
+                {
+                    removed = true;
+                    RemoveAdjacent(Sides.GetInverse(adj.Key), this);
+                    Adjacents[adj.Key] = null;
+                }
             }
             return removed;
         }
 
-        public string Print()
+        public void AddConnectedNode(SGNode node)
         {
-            /*StringBuilder graph = new StringBuilder();
-            graph.AppendLine(Data + " has this connected nodes:");
-            foreach (SGNode node in ConnectedNodes.Keys)
-            {
-                graph.AppendLine("-> " + node.Data);
-            }
-            return graph.ToString();*/
-            return "";
+
+        }
+
+        public void RemoveConnectedNode(SGNode node)
+        {
+
         }
     }
 }

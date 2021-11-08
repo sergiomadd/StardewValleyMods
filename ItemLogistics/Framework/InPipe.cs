@@ -9,8 +9,8 @@ using StardewValley;
 
 namespace ItemLogistics.Framework
 {
-    class InPipe : SGNode
-    {
+    class InPipe : SGNode   {
+        public List<OutPipe> ConnectedInputs { get; set; }
         public InPipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
 

@@ -6,57 +6,45 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 
+
 namespace ItemLogistics.Framework.Model
 {
-    class SGraph
+    public class SGraph
     {
-        public List<SGElement> Elements { get; set; }
+        public List<SGNode> Nodes { get; set; }
         public List<SGNode> Outputs { get; set; }
         public List<SGNode> Inputs { get; set; }
-        public List<SGElement> Conectors { get; set; }
+        public List<SGNode> Conectors { get; set; }
 
         public SGraph()
         {
-            Elements = new List<SGElement>();
+            Nodes = new List<SGNode>();
             Outputs = new List<SGNode>();
             Inputs = new List<SGNode>();
-            Conectors = new List<SGElement>();
+            Conectors = new List<SGNode>();
         }
 
-        public string Build()
-        {
-            string ret = "BUILDING.. \n";
-            foreach (SGNode output in Outputs)
-            {
-                foreach (SGNode input in Inputs)
-                {
-                    if(TryConnectNodes(output, input))
-                    {
-                        ret = ret + "CONNECTED " + output.Position.ToString() + "WITH " + input.Position.ToString() + " | ";
-                    }
-                }
-            }
-            return ret;
-        }
-
-        public bool AddElement(SGElement elem)
+        public bool AddNode(SGNode node)
         {
             bool added = false;
-            if (!Elements.Contains(elem))
+            if (!Nodes.Contains(node))
             {
                 added = true;
-                Elements.Add(elem);
+                Nodes.Add(node);
             }
             return added;
         }
 
-        public bool AddConector(SGElement edge)
+        public bool AddConector(SGNode node)
         {
             bool added = false;
-            if (!Conectors.Contains(edge))
+            if (Nodes.Contains(node))
             {
-                added = true;
-                Conectors.Add(edge);
+                if (!Conectors.Contains(node))
+                {
+                    added = true;
+                    Conectors.Add(node);
+                }
             }
             return added;
         }
@@ -64,21 +52,26 @@ namespace ItemLogistics.Framework.Model
         public bool AddOutput(SGNode node)
         {
             bool added = false;
-            if (!Outputs.Contains(node))
+            if (Nodes.Contains(node))
             {
-                added = true;
-                Outputs.Add(node);
-                //TryConnectOutput(node);
+                if (!Outputs.Contains(node))
+                {
+                    added = true;
+                    Outputs.Add(node);
+                }
             }
             return added;
         }
         public bool AddInput(SGNode node)
         {
             bool added = false;
-            if (!Inputs.Contains(node))
+            if (Nodes.Contains(node))
             {
-                added = true;
-                Inputs.Add(node);
+                if (!Inputs.Contains(node))
+                {
+                    added = true;
+                    Inputs.Add(node);
+                }
             }
             return added;
         }
@@ -90,7 +83,7 @@ namespace ItemLogistics.Framework.Model
             {
                 if (!output.ConnectedNodes.Contains(input))
                 {
-                    if(output.TryReach(input, new List<SGElement>()) == input)
+                    if(output.TryReach(input, new List<SGNode>()) == input)
                     {
                         ConnectNodes(output, input);
                         canConnect = true;
@@ -109,7 +102,7 @@ namespace ItemLogistics.Framework.Model
                 {
                     if (!output.ConnectedNodes.Contains(input))
                     {
-                        foreach (SGEdgeUnit unit in output.ConnectedEdgeUnits)
+                        foreach (SGNode unit in output.ConnectedNodes)
                         {
                             /*if (input.Adjacents.Values.Contains(unit))
                             {
@@ -127,27 +120,26 @@ namespace ItemLogistics.Framework.Model
         public void ConnectNodes(SGNode output, SGNode input)
         {
             output.AddConnectedNode(input);
-            Update();
         }
 
-        public bool RemoveElement(SGElement elem)
+        public bool RemoveNode(SGNode node)
         {
             bool removed = false;
-            if (Elements.Contains(elem))
+            if (Nodes.Contains(node))
             {
                 removed = true;
-                Elements.Remove(elem);
-                if(Outputs.Contains(elem))
+                Nodes.Remove(node);
+                if(Outputs.Contains(node))
                 {
-                    Outputs.Remove((SGNode)elem);
+                    Outputs.Remove((SGNode)node);
                 }
-                if (Inputs.Contains(elem))
+                if (Inputs.Contains(node))
                 {
-                    Inputs.Remove((SGNode)elem);
+                    Inputs.Remove((SGNode)node);
                 }
-                if (Conectors.Contains(elem))
+                if (Conectors.Contains(node))
                 {
-                    Conectors.Remove(elem);
+                    Conectors.Remove(node);
                 }
             }
             return removed;
@@ -195,25 +187,22 @@ namespace ItemLogistics.Framework.Model
                 graph.Append("\n");
             }
             graph.Append("Connectors: \n");
-            foreach (SGElement conn in Conectors)
+            foreach (SGNode conn in Conectors)
             {
                 graph.Append(conn.Obj.Name + conn.Position.ToString() + ", ");
             }
+            graph.Append("\n");
             return graph.ToString();
         }
 
-        public bool IsValidPath(SGNode from, SGNode to)
+        public bool Contains(Vector2 position)
         {
-            return false;
+            bool contains = false;
+            if(Nodes.Any(x => x.Position== position))
+            {
+                contains = true;
+            }
+            return contains;
         }
-        
-        public void Update()
-        {
-            //Construit todo el grafo
-        }
-
-
-
-
     }
 }

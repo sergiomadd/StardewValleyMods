@@ -10,6 +10,8 @@ namespace ItemLogistics.Framework
     class LogisticGroup : SGraph
     {
         public int ID { get; set; }
+        public List<OutPipe> Outputs { get; set; }
+        public List<InPipe> Inputs { get; set; }
 
         public LogisticGroup()
         {

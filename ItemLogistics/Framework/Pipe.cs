@@ -9,7 +9,7 @@ using StardewValley;
 
 namespace ItemLogistics.Framework
 {
-    class Pipe : SGElement
+    class Pipe : SGNode
     {
         public Pipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {

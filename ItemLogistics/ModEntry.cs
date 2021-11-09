@@ -75,6 +75,7 @@ namespace ItemLogistics
                     DataAccess.LocationMatrix.Add(location, new SGNode[location.map.DisplayWidth, location.map.DisplayHeight]);
                     SGraphBuilder.BuildLocationGraphs(location);
                     Monitor.Log(location.Name + " LOADED!", LogLevel.Info);
+                    SGraphManager.PrintLocationGraphs(location);
                 }
             }
         }

@@ -7,28 +7,33 @@ using StardewModdingAPI;
 
 namespace ItemLogistics.Framework.Model
 {
-    class Console
+    class Printer
     {
         private static IMonitor _monitor;
 
         public static void SetMonitor(IMonitor monitor)
         {
-            Console._monitor = monitor;
+            _monitor = monitor;
         }
 
         public static void Info(String message)
         {
-            Console._monitor.Log(message, LogLevel.Info);
+            _monitor.Log(message, LogLevel.Info);
+        }
+
+        public static void Warn(String message)
+        {
+            _monitor.Log(message, LogLevel.Warn);
         }
 
         public static void Debug(String message)
         {
-            Console._monitor.Log(message, LogLevel.Debug);
+            _monitor.Log(message, LogLevel.Debug);
         }
 
         public static void Trace(String message)
         {
-            Console._monitor.Log(message, LogLevel.Trace);
+            _monitor.Log(message, LogLevel.Trace);
         }
     }
 }

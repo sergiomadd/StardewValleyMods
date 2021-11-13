@@ -14,11 +14,7 @@ namespace ItemLogistics.Framework.Model
         public GameLocation Location { get; set; }
         public StardewValley.Object Obj { get; set; }
         public Dictionary<Side, SGNode> Adjacents { get; set; }
-        public List<SGNode> ConnectedNodes { get; set; }
         public SGraph ParentGraph { get; set; }
-        public int MinCostToStart { get; set; }
-        public bool Visited { get; set; }
-        public int Cost { get; set; }
         public SideStruct Sides { get; set; }
 
         public SGNode(Vector2 position, GameLocation location, StardewValley.Object obj)
@@ -27,10 +23,6 @@ namespace ItemLogistics.Framework.Model
             Location = location;
             Obj = obj;
 
-            MinCostToStart = 0;
-            Visited = false;
-            Cost = 0;
-
             Sides = SideStruct.GetSides();
 
             Adjacents = new Dictionary<Side, SGNode>();
@@ -38,47 +30,60 @@ namespace ItemLogistics.Framework.Model
             Adjacents.Add(Sides.South, null);
             Adjacents.Add(Sides.West, null);
             Adjacents.Add(Sides.East, null);
-            ConnectedNodes = new List<SGNode>();
 
             ParentGraph = null;
         }
 
-        public SGNode TryReach(SGNode elem, List<SGNode> looked)
+        public bool CanConnectedWith(SGNode target)
+        {
+            bool connected = false;
+            List<SGNode> looked = new List<SGNode>();
+            if (this.TryReach(target, null, looked).Equals(target))
+            {
+                connected = true;
+            }
+            return connected;
+        }
+
+        public SGNode TryReach(SGNode target, SGNode last, List<SGNode> looked)
         {
             SGNode adj;
-            SGNode last = null;
-            if(last == elem)
+            if(this == target)
             {
-                return last;
+                return this;
             }
             else
             {
-                if (Adjacents.TryGetValue(Sides.North, out adj) && last != elem)
+                looked.Add(this);
+                if (Adjacents.TryGetValue(Sides.North, out adj))
                 {
                     if (adj != null && !looked.Contains(adj))
                     {
-                        last = adj.TryReach(elem, looked);
+                        last = adj.TryReach(target, this, looked);
                     }
                 }
-                if (Adjacents.TryGetValue(Sides.South, out adj) && last != elem)
+                if (Adjacents.TryGetValue(Sides.South, out adj) && last != target)
                 {
                     if (adj != null && !looked.Contains(adj))
                     {
-                        last = adj.TryReach(elem, looked);
+                        last = adj.TryReach(target, this, looked);
                     }
                 }
-                if (Adjacents.TryGetValue(Sides.West, out adj) && last != elem)
+                if (Adjacents.TryGetValue(Sides.West, out adj) && last != target)
                 {
                     if (adj != null && !looked.Contains(adj))
                     {
-                        last = adj.TryReach(elem, looked);
+                        Printer.Info("W");
+                        last = adj.TryReach(target, this, looked);
                     }
                 }
-                if (Adjacents.TryGetValue(Sides.East, out adj) && last != elem)
+                
+                if (Adjacents.TryGetValue(Sides.East, out adj) && last != target)
                 {
                     if (adj != null && !looked.Contains(adj))
                     {
-                        last = adj.TryReach(elem, looked);
+                        Printer.Info("E");
+                        last = adj.TryReach(target, this, looked);
                     }
                 }
                 return last;
@@ -103,7 +108,7 @@ namespace ItemLogistics.Framework.Model
             return Adjacents[side];
         }
 
-        public bool AddAdjacent(Side side, SGNode entity)
+        public virtual bool AddAdjacent(Side side, SGNode entity)
         {
             bool added = false;
             if (Adjacents[side] == null)
@@ -118,7 +123,6 @@ namespace ItemLogistics.Framework.Model
         public bool RemoveAdjacent(Side side, SGNode entity)
         {
             bool removed = false;
-
             if (Adjacents[side] != null)
             {
                 removed = true;
@@ -142,16 +146,6 @@ namespace ItemLogistics.Framework.Model
                 }
             }
             return removed;
-        }
-
-        public void AddConnectedNode(SGNode node)
-        {
-
-        }
-
-        public void RemoveConnectedNode(SGNode node)
-        {
-
         }
     }
 }

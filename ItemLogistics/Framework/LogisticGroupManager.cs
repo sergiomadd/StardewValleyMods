@@ -3,18 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+using ItemLogistics.Framework.Model;
 using StardewValley;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using SVObject = StardewValley.Objects;
-using ItemLogistics.Framework;
-using ItemLogistics.Framework.Model;
+using Microsoft.Xna.Framework;
 
-namespace ItemLogistics.Framework.Model
+namespace ItemLogistics.Framework
 {
-    public static class SGraphManager
+    public static class LogisticGroupManager
     {
+        public static void UpdateLocationGroups(GameLocation location)
+        {
+            SGraphDB DataAccess = SGraphDB.GetSGraphDB();
+            List<LogisticGroup> groupList;
+            if (DataAccess.LocationGroups.TryGetValue(location, out groupList))
+            {
+                foreach (LogisticGroup group in groupList)
+                {
+                    Printer.Info("UPDATING");
+                    group.Update();
+                }
+            }
+        }
+
+
         public static void LoadNodeToGraph(GameLocation location, int x, int y, SGraph graph)
         {
             SGraphDB DataAccess = SGraphDB.GetSGraphDB();
@@ -26,7 +39,7 @@ namespace ItemLogistics.Framework.Model
             if (DataAccess.LocationMatrix.TryGetValue(location, out locationMatrix))
             {
                 graph.AddNode(locationMatrix[x, y]);
-                if(graph is LogisticGroup)
+                if (graph is LogisticGroup)
                 {
                     LogisticGroup lg = (LogisticGroup)graph;
                     if (locationMatrix[x, y] is ExtractorPipe)
@@ -49,6 +62,7 @@ namespace ItemLogistics.Framework.Model
                         Printer.Info("PIPE");
                         lg.AddConnector((Pipe)locationMatrix[x, y]);
                     }
+                    Printer.Info(lg.Containers.Count.ToString());
                 }
             }
         }
@@ -183,7 +197,7 @@ namespace ItemLogistics.Framework.Model
                     List<SGraph> graphList;
                     if (DataAccess.LocationGraphs.TryGetValue(Game1.currentLocation, out graphList))
                     {
-                        if(graphList.Count == 0)
+                        if (graphList.Count == 0)
                         {
                             Printer.Info("Old graph: " + adj.Value.ParentGraph.Print());
                             SGNode newNode = SGraphBuilder.BuildGraphRecursive(Game1.currentLocation, null, (int)adj.Value.Position.X, (int)adj.Value.Position.Y);
@@ -203,15 +217,16 @@ namespace ItemLogistics.Framework.Model
             }
         }
 
-        public static void PrintLocationGraphs(GameLocation location)
+        public static void PrintLocationGroups(GameLocation location)
         {
             SGraphDB DataAccess = SGraphDB.GetSGraphDB();
-            List<SGraph> graphList;
-            if (DataAccess.LocationGraphs.TryGetValue(location, out graphList))
+            List<LogisticGroup> groupList;
+            if (DataAccess.LocationGroups.TryGetValue(location, out groupList))
             {
-                foreach (SGraph graph in graphList)
+                Printer.Info($"NUMBER OF GROUPS: {groupList.Count}");
+                foreach (LogisticGroup group in groupList)
                 {
-                    Printer.Info(graph.Print());
+                    Printer.Info(group.Print());
                 }
             }
         }

@@ -1,0 +1,11 @@
+{
+  "ValidItemNames": [
+    "Pipe",
+    "Extractor Pipe",
+    "Inserter Pipe",
+    "Chest"
+  ],
+  "ValidLocations": [
+    "Farm"
+  ]
+}

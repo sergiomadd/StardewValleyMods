@@ -15,6 +15,8 @@ namespace ItemLogistics.Framework.Model
 {
     public static class SGraphBuilder
     {
+
+        //Mover el builder y el manager a lg
         public static void BuildLocationGraphs(GameLocation location)
         {
             SGraphDB DataAccess = SGraphDB.GetSGraphDB();
@@ -41,7 +43,7 @@ namespace ItemLogistics.Framework.Model
             SGraphDB DataAccess = SGraphDB.GetSGraphDB();
             SGNode node = null;
             SGNode[,] locationMatrix;
-            Console.Info("IN: " + x.ToString() + y.ToString());
+            Printer.Info("IN: " + x.ToString() + y.ToString());
             if (location.getObjectAtTile(x, y) != null)
             {
                 if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x, y).name))
@@ -64,7 +66,7 @@ namespace ItemLogistics.Framework.Model
                         SGraphManager.LoadNodeToGraph(location, x, y, node.ParentGraph);
 
 
-                        Console.Info("SOURCE: " + location.getObjectAtTile(x, y).Name + x.ToString() + (y).ToString());
+                        Printer.Info("SOURCE: " + location.getObjectAtTile(x, y).Name + x.ToString() + (y).ToString());
                         //Up
                         if (location.getObjectAtTile(x, y - 1) != null && y - 1 >= 0)
                         {
@@ -120,7 +122,7 @@ namespace ItemLogistics.Framework.Model
             return node;
         }
 
-        private static SGraph CreateLocationGraph(GameLocation location)
+        public static SGraph CreateLocationGraph(GameLocation location)
         {
             SGraphDB DataAccess = SGraphDB.GetSGraphDB();
             SGraph newSGraph = new SGraph();

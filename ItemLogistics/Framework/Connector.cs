@@ -9,13 +9,12 @@ using StardewValley;
 
 namespace ItemLogistics.Framework
 {
-    class OutPipe : SGNode
+    public class Connector : SGNode
     {
-        public List<InPipe> ConnectedInputs { get; set; }
-
-        public OutPipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
+        public Connector(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
 
         }
+
     }
 }

@@ -30,11 +30,16 @@ namespace ItemLogistics.Framework.Model
         {
             if(obj.name.Equals("Extractor Pipe"))
             {
-                return new OutPipe(position, location, obj);
+                return new ExtractorPipe(position, location, obj);
             }
             else if (obj.name.Equals("Inserter Pipe"))
             {
-                return new InPipe(position, location, obj);
+                return new Input(position, location, obj);
+            }
+            else if (obj.name.Equals("Chest"))
+            {
+                Printer.Info("CHEST");
+                return new Container(position, location, obj);
             }
             else
             {

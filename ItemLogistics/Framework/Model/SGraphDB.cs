@@ -17,29 +17,25 @@ namespace ItemLogistics.Framework.Model
     {
         private static SGraphDB mySGraphDB;
         public Dictionary<GameLocation, List<SGraph>> LocationGraphs { get; set; }
+        public Dictionary<GameLocation, List<LogisticGroup>> LocationGroups { get; set; }
         public Dictionary<GameLocation, SGNode[,]> LocationMatrix  { get; set; }
         public List<string> ValidItemNames { get; set; }
         public List<string> ValidLocations { get; set; }
+
+
         private SGraphDB()
         {
             LocationGraphs = new Dictionary<GameLocation, List<SGraph>>();
+            LocationGroups = new Dictionary<GameLocation, List<LogisticGroup>>();
             LocationMatrix  = new Dictionary<GameLocation, SGNode[,]>();
-
-            //Leer de config
-            ValidLocations = new List<string>
-                {
-                "Farm"
-                };
+            ValidItemNames = new List<string>();
+            ValidLocations = new List<string>();
             /*ValidLocations = new List<string>
                 { 
                 "FarmHouse", "Farm", "FarmCave", "Beach", "Mountain", 
                 "Forest", "RailRoad", "Greenhouse", "Tunnel", "Cellar", "Cellar2", "Cellar3", "Cellar4"
                 };
             */
-            ValidItemNames = new List<string>
-                {
-                "Pipe", "Extractor Pipe", "Inserter Pipe"
-                };
         }
 
         public static SGraphDB GetSGraphDB()

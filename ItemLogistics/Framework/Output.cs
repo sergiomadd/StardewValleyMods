@@ -55,6 +55,11 @@ namespace ItemLogistics.Framework
                 foreach (Input input in ConnectedInputs)
                 {
                     Printer.Info("INPUT");
+                    if(input is PolymorphicPipe)
+                    {
+                        Printer.Info("Filter");
+                        input.UpdateFilter();
+                    }
                     StartExchage(input);
                 }
             }

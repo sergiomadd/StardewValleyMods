@@ -3,6 +3,7 @@
     "Pipe",
     "Extractor Pipe",
     "Inserter Pipe",
+    "Polymorphic Pipe",
     "Chest"
   ],
   "ValidLocations": [

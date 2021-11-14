@@ -13,62 +13,69 @@ namespace ItemLogistics.Framework
     public class Container : SGNode
     {
         public Chest Chest { get; set; }
-        public List<Item> Filter { get; set; }
+        public List<string> Filter { get; set; }
         public Container(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             if(obj is Chest)
             {
                 Chest = (Chest)obj;
             }
+            Filter = new List<string>();
         }
 
-        public bool IsEmpty()
+        public void SendItem(Container input)
         {
-            bool isEmpty = false;
-            if (Chest.items.Count < 1)
-            {
-                isEmpty = true;
-            }
-            return isEmpty;
-        }
-
-        public void SendItems(Container target)
-        {
-            foreach (Item item in Chest.items.ToList())
-            {
-                Printer.Info($"SENDING: {item.Name}");
-                if (target.CanStackItem(item))
-                {
-                    target.ReceiveStack(item);
-                }
-                else if(target.CanReceiveItems())
-                {
-                    target.ReceiveItem(item);
-                }
-            }
-        }
-
-        public void SendItem(Container target)
-        {
-            Printer.Info(Chest.items.Count.ToString());
             if(!IsEmpty())
             {
-                if (Chest.items[0] != null)
+                int index = Chest.items.Count-1;
+                bool sent = false;
+                while (index >= 0 && sent == false)
                 {
-                    Item item = Chest.items[0];
-                    Printer.Info($"SENDING: {item.Name}");
-                    if (target.CanStackItem(item))
+                    Printer.Info(index.ToString());
+                    if (Chest.items[index] != null)
                     {
-                        Printer.Info("Stacking");
-                        target.ReceiveStack(item);
+                        Printer.Info(Chest.items[index].Name);
+                        Item item = Chest.items[index];
+                        if (input.HasFilter())
+                        {
+                            Printer.Info("FILTERED");
+                            if (input.Filter.Contains(item.Name))
+                            {
+                                Printer.Info($"SENDING FILTERED: {item.Name}");
+                                if (input.CanStackItem(item))
+                                {
+                                    Printer.Info("Stacking");
+                                    input.ReceiveStack(item);
+                                }
+                                else if (input.CanReceiveItems())
+                                {
+                                    Printer.Info("New Stack");
+                                    input.ReceiveItem(item);
+                                }
+                                Chest.items.RemoveAt(index);
+                                Chest.clearNulls();
+                                sent = true;
+                            }
+                        }
+                        else
+                        {
+                            Printer.Info($"SENDING: {item.Name}");
+                            if (input.CanStackItem(item))
+                            {
+                                Printer.Info("Stacking");
+                                input.ReceiveStack(item);
+                            }
+                            else if (input.CanReceiveItems())
+                            {
+                                Printer.Info("New Stack");
+                                input.ReceiveItem(item);
+                            }
+                            Chest.items.RemoveAt(index);
+                            Chest.clearNulls();
+                            sent = true;
+                        }
                     }
-                    else if (target.CanReceiveItems())
-                    {
-                        Printer.Info("New Stack");
-                        target.ReceiveItem(item);
-                    }
-                    Chest.items.RemoveAt(0);
-                    Chest.clearNulls();
+                    index--;
                 }
             }
         }
@@ -107,5 +114,33 @@ namespace ItemLogistics.Framework
             Chest.addToStack(item);
         }
 
+        public void UpdateFilter()
+        {
+            Printer.Info($"Filter items: {Chest.items.Count}");
+            Filter.Clear();
+            foreach (Item item in Chest.items.ToList())
+            {
+                Filter.Add(item.Name);
+            }
+        }
+        public bool HasFilter()
+        {
+            bool hasFilter = false;
+            if (Filter.Count > 0)
+            {
+                hasFilter = true;
+            }
+            return hasFilter;
+        }
+
+        public bool IsEmpty()
+        {
+            bool isEmpty = false;
+            if (Chest.items.Count < 1)
+            {
+                isEmpty = true;
+            }
+            return isEmpty;
+        }
     }
 }

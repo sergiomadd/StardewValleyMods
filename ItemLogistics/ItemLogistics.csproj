@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Framework\Connector.cs" />
     <Compile Include="Framework\Container.cs" />
+    <Compile Include="Framework\FilterPipe.cs" />
     <Compile Include="Framework\Input.cs" />
     <Compile Include="Framework\InserterPipe.cs" />
     <Compile Include="Framework\LogisticGroup.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Framework\Output.cs" />
     <Compile Include="Framework\Patches\ChestPatcher.cs" />
     <Compile Include="Framework\Pipe.cs" />
+    <Compile Include="Framework\PolymorphicPipe.cs" />
     <Compile Include="ModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

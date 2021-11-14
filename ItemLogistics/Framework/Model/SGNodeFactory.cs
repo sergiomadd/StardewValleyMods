@@ -36,6 +36,11 @@ namespace ItemLogistics.Framework.Model
             {
                 return new Input(position, location, obj);
             }
+            else if (obj.name.Equals("Polymorphic Pipe"))
+            {
+                Printer.Info("Polymorphic");
+                return new PolymorphicPipe(position, location, obj);
+            }
             else if (obj.name.Equals("Chest"))
             {
                 Printer.Info("CHEST");

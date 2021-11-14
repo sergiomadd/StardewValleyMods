@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ItemLogistics.Framework.Model;
 using Microsoft.Xna.Framework;
 using StardewValley;
+using StardewValley.Objects;
+using ItemLogistics.Framework;
+using ItemLogistics.Framework.Model;
 
 namespace ItemLogistics.Framework
 {
-    public class Input : SGNode
+    class PolymorphicPipe : Input
     {
-        public Container ConnectedContainer { get; set; }
-
-        public Input(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
+        public List<Item> Filter { get; set; }
+        public PolymorphicPipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
         }
@@ -31,6 +32,7 @@ namespace ItemLogistics.Framework
                     if (ConnectedContainer == null && entity is Container)
                     {
                         ConnectedContainer = (Container)entity;
+                        UpdateFilter(ConnectedContainer.Chest.items.ToList());
                     }
                 }
                 catch (Exception e)
@@ -42,9 +44,9 @@ namespace ItemLogistics.Framework
             return added;
         }
 
-        public void UpdateFilter()
+        public void UpdateFilter(List<Item> itemList)
         {
-            ConnectedContainer.UpdateFilter();
+            this.Filter = itemList;
         }
     }
 }

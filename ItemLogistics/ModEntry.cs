@@ -136,8 +136,7 @@ namespace ItemLogistics
                         foreach (LogisticGroup group in logisticGroups)
                         {
                             Printer.Info("Group");
-                            group.ProcessExchanges();
-                            
+                            group.ProcessExchanges();    
                         }
                     }
                 }

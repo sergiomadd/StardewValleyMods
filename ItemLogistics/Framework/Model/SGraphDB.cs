@@ -21,6 +21,8 @@ namespace ItemLogistics.Framework.Model
         public Dictionary<GameLocation, SGNode[,]> LocationMatrix  { get; set; }
         public List<string> ValidItemNames { get; set; }
         public List<string> ValidLocations { get; set; }
+        public List<string> ValidIOPipeNames { get; set; }
+        public List<string> ValidPipeNames { get; set; }
 
 
         private SGraphDB()
@@ -30,6 +32,8 @@ namespace ItemLogistics.Framework.Model
             LocationMatrix  = new Dictionary<GameLocation, SGNode[,]>();
             ValidItemNames = new List<string>();
             ValidLocations = new List<string>();
+            ValidIOPipeNames = new List<string>();
+            ValidPipeNames = new List<string>();
             /*ValidLocations = new List<string>
                 { 
                 "FarmHouse", "Farm", "FarmCave", "Beach", "Mountain", 

@@ -34,9 +34,6 @@ namespace ItemLogistics.Framework
 
         public static SGNode BuildGraphRecursive(GameLocation location, SGraph inGraph, int x, int y)
         {
-            //Revisar metodo, refactor checks si null y si moditem
-
-            //Check si location es valida
             SGraphDB DataAccess = SGraphDB.GetSGraphDB();
             SGNode node = null;
             SGNode[,] locationMatrix;
@@ -55,7 +52,7 @@ namespace ItemLogistics.Framework
                         {
                             if (inGraph == null)
                             {
-                                node.ParentGraph = CreateLocationGraph(location);
+                                node.ParentGraph = LogisticGroupManager.CreateLocationGraph(location);
                             }
                             else
                             {
@@ -116,21 +113,6 @@ namespace ItemLogistics.Framework
                 }
             }
             return node;
-        }
-
-        public static SGraph CreateLocationGraph(GameLocation location)
-        {
-            SGraphDB DataAccess = SGraphDB.GetSGraphDB();
-            LogisticGroup newLG = new LogisticGroup();
-            List<LogisticGroup> groupList;
-            if (DataAccess.LocationGroups.TryGetValue(location, out groupList))
-            {
-                if (!groupList.Contains(newLG))
-                {
-                    groupList.Add(newLG);
-                }
-            }
-            return newLG;
         }
     }
 }

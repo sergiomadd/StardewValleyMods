@@ -23,61 +23,112 @@ namespace ItemLogistics.Framework
             Filter = new List<string>();
         }
 
-        public void SendItem(Container input)
+        public bool CanSendItem(Container input)
         {
-            if(!IsEmpty())
+            bool can = false;
+            if (!IsEmpty() && input != null)
             {
-                int index = Chest.items.Count-1;
-                bool sent = false;
-                while (index >= 0 && sent == false)
+                int index = Chest.items.Count - 1;
+                while (index >= 0 && can == false)
                 {
-                    Printer.Info(index.ToString());
                     if (Chest.items[index] != null)
                     {
-                        Printer.Info(Chest.items[index].Name);
                         Item item = Chest.items[index];
+                        Printer.Info("Has filter: " + input.HasFilter().ToString());
                         if (input.HasFilter())
                         {
-                            Printer.Info("FILTERED");
                             if (input.Filter.Contains(item.Name))
                             {
-                                Printer.Info($"SENDING FILTERED: {item.Name}");
-                                if (input.CanStackItem(item))
-                                {
-                                    Printer.Info("Stacking");
-                                    input.ReceiveStack(item);
-                                }
-                                else if (input.CanReceiveItems())
-                                {
-                                    Printer.Info("New Stack");
-                                    input.ReceiveItem(item);
-                                }
-                                Chest.items.RemoveAt(index);
-                                Chest.clearNulls();
-                                sent = true;
+                                can = true;
                             }
                         }
                         else
                         {
-                            Printer.Info($"SENDING: {item.Name}");
-                            if (input.CanStackItem(item))
-                            {
-                                Printer.Info("Stacking");
-                                input.ReceiveStack(item);
-                            }
-                            else if (input.CanReceiveItems())
-                            {
-                                Printer.Info("New Stack");
-                                input.ReceiveItem(item);
-                            }
-                            Chest.items.RemoveAt(index);
-                            Chest.clearNulls();
-                            sent = true;
+                            can = true;
                         }
                     }
                     index--;
                 }
             }
+            return can;
+        }
+
+        public Item GetItemToSend(Container input)
+        {
+            Item item = null;
+            if (!IsEmpty())
+            {
+                int index = Chest.items.Count - 1;
+                while (index >= 0 && item == null)
+                {
+                    Printer.Info(index.ToString());
+                    if (Chest.items[index] != null)
+                    {
+                        item = Chest.items[index];
+                        Chest.items.RemoveAt(index);
+                        Chest.clearNulls();
+                    }
+                    index--;
+                }
+            }
+            return item;
+        }
+
+        public bool SendItem(Container input, Item item)
+        {
+            bool sent = false;
+            if (input.HasFilter())
+            {
+                //Printer.Info("FILTERED");
+                if (input.Filter.Contains(item.Name))
+                {
+                    //Printer.Info($"SENDING FILTERED: {item.Name}");
+                    if (input.CanStackItem(item))
+                    {
+                        //Printer.Info("Stacking");
+                        input.ReceiveStack(item);
+                    }
+                    else if (input.CanReceiveItems())
+                    {
+                        //Printer.Info("New Stack");
+                        input.ReceiveItem(item);
+                    }
+                    sent = true;
+                }
+                else
+                {
+                    Printer.Info("RETURNING ITEM");
+                    if (CanStackItem(item))
+                    {
+                        //Printer.Info("Stacking");
+                        ReceiveStack(item);
+                    }
+                    else if (CanReceiveItems())
+                    {
+                        //Printer.Info("New Stack");
+                        ReceiveItem(item);
+                    }
+                    sent = false;
+                }
+
+            }
+            else
+            {
+                //Printer.Info($"SENDING: {item.Name}");
+                if (input.CanStackItem(item))
+                {
+                    //Printer.Info("Stacking");
+                    input.ReceiveStack(item);
+                }
+                else if (input.CanReceiveItems())
+                {
+                    //Printer.Info("New Stack");
+                    input.ReceiveItem(item);
+                }
+                sent = true;
+            }
+            //Printer.Info("Item sent? " + sent.ToString());
+            return sent;
         }
 
         public bool CanReceiveItems()
@@ -117,7 +168,7 @@ namespace ItemLogistics.Framework
         public void UpdateFilter()
         {
             Printer.Info($"Filter items: {Chest.items.Count}");
-            Filter.Clear();
+            Filter = new List<string>();
             foreach (Item item in Chest.items.ToList())
             {
                 Filter.Add(item.Name);
@@ -131,6 +182,12 @@ namespace ItemLogistics.Framework
                 hasFilter = true;
             }
             return hasFilter;
+            /*bool hasFilter = false;
+            if (Filter != null)
+            {
+                hasFilter = true;
+            }
+            return hasFilter;*/
         }
 
         public bool IsEmpty()

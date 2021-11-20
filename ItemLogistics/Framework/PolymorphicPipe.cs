@@ -17,6 +17,7 @@ namespace ItemLogistics.Framework
         public PolymorphicPipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
+            Filter = new List<Item>();
         }
 
         public override bool AddAdjacent(Side side, SGNode entity)
@@ -32,7 +33,7 @@ namespace ItemLogistics.Framework
                     if (ConnectedContainer == null && entity is Container)
                     {
                         ConnectedContainer = (Container)entity;
-                        UpdateFilter(ConnectedContainer.Chest.items.ToList());
+                        UpdateFilter();
                     }
                 }
                 catch (Exception e)
@@ -43,10 +44,9 @@ namespace ItemLogistics.Framework
             }
             return added;
         }
-
-        public void UpdateFilter(List<Item> itemList)
+        public void UpdateFilter()
         {
-            this.Filter = itemList;
+            ConnectedContainer.UpdateFilter();
         }
     }
 }

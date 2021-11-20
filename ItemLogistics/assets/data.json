@@ -1,12 +1,27 @@
 {
   "ValidItemNames": [
-    "Pipe",
+    "Connector Pipe",
     "Extractor Pipe",
     "Inserter Pipe",
     "Polymorphic Pipe",
+    "Filter Pipe",
     "Chest"
+  ],
+  "ValidPipeNames": [
+    "Connector Pipe",
+    "Extractor Pipe",
+    "Inserter Pipe",
+    "Polymorphic Pipe",
+    "Filter Pipe"
+  ],
+  "ValidIOPipeNames": [
+    "Extractor Pipe",
+    "Inserter Pipe",
+    "Polymorphic Pipe",
+    "Filter Pipe"
   ],
   "ValidLocations": [
     "Farm"
   ]
+
 }

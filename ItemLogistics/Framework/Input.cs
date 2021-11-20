@@ -32,6 +32,10 @@ namespace ItemLogistics.Framework
                     {
                         ConnectedContainer = (Container)entity;
                     }
+                    else
+                    {
+                        Printer.Info("More than 1 container adjacent.");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -41,10 +45,35 @@ namespace ItemLogistics.Framework
             }
             return added;
         }
-
-        public void UpdateFilter()
+        public override bool RemoveAdjacent(Side side, SGNode entity)
         {
-            ConnectedContainer.UpdateFilter();
+            bool removed = false;
+            if (Adjacents[side] != null)
+            {
+                removed = true;
+                if (ConnectedContainer != null && entity is Container)
+                {
+                    ConnectedContainer = null;
+                }
+                Adjacents[side] = null;
+                entity.RemoveAdjacent(Sides.GetInverse(side), this);
+            }
+            return removed;
+        }
+
+        public override bool RemoveAllAdjacents()
+        {
+            bool removed = false;
+            foreach (KeyValuePair<Side, SGNode> adj in Adjacents.ToList())
+            {
+                if (adj.Value != null)
+                {
+                    removed = true;
+                    RemoveAdjacent(adj.Key, adj.Value);
+                    Adjacents[adj.Key] = null;
+                }
+            }
+            return removed;
         }
     }
 }

@@ -11,6 +11,8 @@ using StardewModdingAPI.Events;
 using SVObject = StardewValley.Objects;
 using ItemLogistics.Framework;
 using ItemLogistics.Framework.Model;
+using ItemLogistics.Framework.Patches;
+using HarmonyLib;
 
 namespace ItemLogistics
 {
@@ -29,7 +31,7 @@ namespace ItemLogistics
 
         public override void Entry(IModHelper helper)
         {
-            Framework.Model.Printer.SetMonitor(this.Monitor);
+            Framework.Printer.SetMonitor(this.Monitor);
             LogisticItemIds = new Dictionary<string, int>();
             DataAccess = SGraphDB.GetSGraphDB();
 
@@ -49,7 +51,15 @@ namespace ItemLogistics
             }
 
             DataAccess.ValidItemNames = data.ValidItemNames;
+            DataAccess.ValidPipeNames = data.ValidPipeNames;
+            DataAccess.ValidIOPipeNames = data.ValidIOPipeNames;
             DataAccess.ValidLocations = data.ValidLocations;
+            
+
+            var harmony = new Harmony(this.ModManifest.UniqueID);
+            FencePatcher.Apply(harmony);
+            //ChestPatcher.Apply(harmony);
+
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.World.ObjectListChanged += this.OnObjectListChanged;
@@ -80,16 +90,16 @@ namespace ItemLogistics
                     LogisticItemIds.Add(item.Key, JsonAssets.GetObjectId(item.Key));
                     if (item.Value == -1)
                     {
-                        Framework.Model.Printer.Warn($"Can't get ID for {item.Key}");
+                        Framework.Printer.Warn($"Can't get ID for {item.Key}");
                     }
                     else
                     {
-                        Framework.Model.Printer.Info($"{item.Key} ID is {item.Key}");
+                        Framework.Printer.Info($"{item.Key} ID is {item.Key}");
                     }
                 }
             }
 
-
+            
             foreach (GameLocation location in Game1.locations)
             {
                 if (DataAccess.ValidLocations.Contains(location.Name))
@@ -100,7 +110,6 @@ namespace ItemLogistics
                     LogisticGroupBuilder.BuildLocationGraphs(location);
                     LogisticGroupManager.UpdateLocationGroups(location);
                     Monitor.Log(location.Name + " LOADED!", LogLevel.Info);
-                    //SGraphManager.PrintLocationGraphs(location);
                     LogisticGroupManager.PrintLocationGroups(location);
                 }
             }
@@ -111,14 +120,14 @@ namespace ItemLogistics
             List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in addedObjects)
             {
-                SGraphManager.AddObject(obj);
+                LogisticGroupManager.AddObject(obj);
                 LogisticGroupManager.UpdateLocationGroups(Game1.currentLocation);
             }
 
             List<KeyValuePair<Vector2, StardewValley.Object>> removedObjects = e.Removed.ToList();
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in removedObjects)
             {
-                SGraphManager.RemoveObject(obj);
+                LogisticGroupManager.RemoveObject(obj);
                 LogisticGroupManager.UpdateLocationGroups(Game1.currentLocation);
             }
         }
@@ -127,7 +136,7 @@ namespace ItemLogistics
         {
             if(Context.IsWorldReady)
             {
-                if(e.IsMultipleOf(180))
+                if(e.IsMultipleOf(120))
                 {
                     SGraphDB DataAccess = SGraphDB.GetSGraphDB();
                     List<LogisticGroup> logisticGroups;
@@ -135,7 +144,6 @@ namespace ItemLogistics
                     {
                         foreach (LogisticGroup group in logisticGroups)
                         {
-                            Printer.Info("Group");
                             group.ProcessExchanges();    
                         }
                     }

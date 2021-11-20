@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StardewModdingAPI;
 
-namespace ItemLogistics.Framework.Model
+namespace ItemLogistics.Framework
 {
     class Printer
     {

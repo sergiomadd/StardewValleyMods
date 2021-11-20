@@ -16,6 +16,7 @@ namespace ItemLogistics.Framework.Model
         public Dictionary<Side, SGNode> Adjacents { get; set; }
         public SGraph ParentGraph { get; set; }
         public SideStruct Sides { get; set; }
+        public bool Reached { get; set; }
 
         public SGNode(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
@@ -38,56 +39,95 @@ namespace ItemLogistics.Framework.Model
         {
             bool connected = false;
             List<SGNode> looked = new List<SGNode>();
-            if (this.TryReach(target, null, looked).Equals(target))
+            if ((bool)GetPathRecursive(target, looked, false)[2])
             {
+                Printer.Info("CAN CONNECT");
                 connected = true;
             }
             return connected;
         }
 
-        public SGNode TryReach(SGNode target, SGNode last, List<SGNode> looked)
+        public List<SGNode> GetPath(SGNode target)
         {
+            List<SGNode> looked = new List<SGNode>();
+            Reached = false;
+            System.Object[] returns = GetPathRecursive(target, looked, false);
+            List<SGNode> path = (List<SGNode>)returns[1];
+            return path;
+        }
+
+        public System.Object[] GetPathRecursive(SGNode target, List<SGNode> looked, bool reached)
+        {
+            System.Object[] returns = new System.Object[3];
+            returns[2] = reached;
             SGNode adj;
-            if(this == target)
+            if (this.Equals(target))
             {
-                return this;
+                reached = true;
+                Printer.Info("Reached");
+                Printer.Info(looked.Count.ToString());
+                returns[0] = this;
+                returns[1] = looked;
+                returns[2] = reached;
+                return returns;
             }
             else
             {
                 looked.Add(this);
-                if (Adjacents.TryGetValue(Sides.North, out adj))
+                if (Adjacents.TryGetValue(Sides.North, out adj) && !(bool)returns[2])
                 {
                     if (adj != null && !looked.Contains(adj))
                     {
-                        last = adj.TryReach(target, this, looked);
+                        returns = adj.GetPathRecursive(target, looked, reached);
                     }
                 }
-                if (Adjacents.TryGetValue(Sides.South, out adj) && last != target)
+                if (Adjacents.TryGetValue(Sides.South, out adj) && !(bool)returns[2])
                 {
                     if (adj != null && !looked.Contains(adj))
                     {
-                        last = adj.TryReach(target, this, looked);
+                        returns = adj.GetPathRecursive(target, looked, reached);
                     }
                 }
-                if (Adjacents.TryGetValue(Sides.West, out adj) && last != target)
+                if (Adjacents.TryGetValue(Sides.West, out adj) && !(bool)returns[2])
                 {
                     if (adj != null && !looked.Contains(adj))
                     {
-                        Printer.Info("W");
-                        last = adj.TryReach(target, this, looked);
+                        returns = adj.GetPathRecursive(target, looked, reached);
                     }
                 }
-                
-                if (Adjacents.TryGetValue(Sides.East, out adj) && last != target)
+
+                if (Adjacents.TryGetValue(Sides.East, out adj) && !(bool)returns[2])
                 {
                     if (adj != null && !looked.Contains(adj))
                     {
-                        Printer.Info("E");
-                        last = adj.TryReach(target, this, looked);
+                        returns = adj.GetPathRecursive(target, looked, reached);
                     }
                 }
-                return last;
+                if(!(bool)returns[2])
+                {
+                    looked.Remove(this);
+                }
+                return returns;
             }
+        }
+         
+        public void AnimatePath(List<SGNode> path)
+        {
+            foreach(SGNode node in path)
+            {
+                if(node is Connector)
+                {
+                    Connector conn = (Connector)node;
+                    Animate(conn);
+                }
+            }
+        }
+        
+        public void Animate(Connector conn)
+        {
+            conn.PassingItem = true;
+            System.Threading.Thread.Sleep(500);
+            conn.PassingItem = false;
         }
 
         public List<SGraph> Scan()
@@ -120,7 +160,7 @@ namespace ItemLogistics.Framework.Model
             return added;
         }
 
-        public bool RemoveAdjacent(Side side, SGNode entity)
+        public virtual bool RemoveAdjacent(Side side, SGNode entity)
         {
             bool removed = false;
             if (Adjacents[side] != null)
@@ -133,19 +173,38 @@ namespace ItemLogistics.Framework.Model
         }
 
         
-        public bool RemoveAllAdjacents()
+        public virtual bool RemoveAllAdjacents()
         {
             bool removed = false;
             foreach(KeyValuePair<Side, SGNode> adj in Adjacents.ToList())
             {
+                adj.Value.Print();
                 if(adj.Value != null)
                 {
                     removed = true;
-                    RemoveAdjacent(Sides.GetInverse(adj.Key), this);
+                    RemoveAdjacent(adj.Key, adj.Value);
                     Adjacents[adj.Key] = null;
                 }
             }
             return removed;
+        }
+
+        public bool Same(SGNode node)
+        {
+            if(this.Obj.name.Equals(node.Obj.name) && Position.Equals(node.Position))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void Print()
+        {
+            Printer.Info(Obj.Name + Position.X.ToString() + Position.Y.ToString());
+            Printer.Info(GetHashCode().ToString());
         }
     }
 }

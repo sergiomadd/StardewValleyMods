@@ -1,13 +1,13 @@
 {
-  "Name": "Pipe",
-  "Description": "Pipe",
+  "Name": "Connector Pipe",
+  "Description": "Connector Pipe",
   "Category": "Crafting",
   "Edibility": -300,
   "EdibleBuffs": null,
   "IsColored": false,
   "MaxHealth": 100,
   "RepairMaterial": 335,
-  "BreakTool": "axe",
+  "BreakTool": "Pickaxe",
   "PlacementSound": "cut",
   "RepairSound": "cut",
   "Recipe": {
@@ -15,8 +15,8 @@
     "Ingredients": [
       {
         "Object": 709,
-        "Count":1
-      },
+        "Count": 1
+      }
     ],
     "IsDefault": true
   }

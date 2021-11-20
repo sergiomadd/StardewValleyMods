@@ -49,6 +49,13 @@ namespace ItemLogistics.Framework.Model
             }
             return contains;
         }
+        public void Delete()
+        {
+            foreach (SGNode node in Nodes)
+            {
+                node.ParentGraph = null;
+            }
+        }
 
         public virtual string Print()
         {

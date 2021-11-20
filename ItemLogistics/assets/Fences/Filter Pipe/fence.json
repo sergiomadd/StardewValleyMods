@@ -1,6 +1,6 @@
 {
-  "Name": "Polymorphic Pipe",
-  "Description": "Polymorphic Pipe",
+  "Name": "Filter Pipe",
+  "Description": "Filter Pipe",
   "Category": "Crafting",
   "Edibility": -300,
   "EdibleBuffs": null,

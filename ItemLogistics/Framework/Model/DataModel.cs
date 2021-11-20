@@ -9,6 +9,8 @@ namespace ItemLogistics.Framework.Model
     class DataModel
     {
         public List<string> ValidItemNames { get; set; }
+        public List<string> ValidPipeNames { get; set; }
+        public List<string> ValidIOPipeNames { get; set; }
         public List<string> ValidLocations { get; set; }
     }
 }

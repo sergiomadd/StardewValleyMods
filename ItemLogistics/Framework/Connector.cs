@@ -11,9 +11,10 @@ namespace ItemLogistics.Framework
 {
     public class Connector : SGNode
     {
+        public bool PassingItem { get; set; }
         public Connector(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
-
+            PassingItem = false;
         }
 
     }

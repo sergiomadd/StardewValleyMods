@@ -13,13 +13,17 @@ namespace ItemLogistics.Framework
 {
     class FilterPipe : Input
     {
-        public Chest FilterChest { get; set; }
+        public Chest Filter { get; set; }
         public FilterPipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            Fence
+            Filter = new Chest(true, position, 130);
+        }
+        public void UpdateFilter()
+        {
+            ConnectedContainer.UpdateFilter();
         }
 
-        
+
     }
 }

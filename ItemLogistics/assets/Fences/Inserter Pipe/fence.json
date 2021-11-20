@@ -7,7 +7,7 @@
   "IsColored": false,
   "MaxHealth": 100,
   "RepairMaterial": 335,
-  "BreakTool": "axe",
+  "BreakTool": "Pickaxe",
   "PlacementSound": "cut",
   "RepairSound": "cut",
   "Recipe": {

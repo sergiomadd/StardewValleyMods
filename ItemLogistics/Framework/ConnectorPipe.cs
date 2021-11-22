@@ -9,9 +9,9 @@ using StardewValley;
 
 namespace ItemLogistics.Framework
 {
-    class Pipe : Connector
+    class ConnectorPipe : Connector
     {
-        public Pipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
+        public ConnectorPipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
 
         }

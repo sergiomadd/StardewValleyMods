@@ -5,26 +5,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ItemLogistics.Framework.Model;
+using ItemLogistics.Framework.Objects;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
 
 namespace ItemLogistics.Framework
 {
-    public class Output : SGNode
+    public class Output : Node
     {
-        public List<Input> ConnectedInputs { get; set; }
+        public Dictionary<Input, List<Node>> ConnectedInputs { get; set; }
         public Container ConnectedContainer { get; set; }
         public List<Item> Filter { get; set; }
 
         public Output(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
-            ConnectedInputs = new List<Input>();
+            ConnectedInputs = new Dictionary<Input, List<Node>>();
             ConnectedContainer = null;
             Filter = new List<Item>();
         }
 
-        public override bool AddAdjacent(Side side, SGNode entity)
+        public override bool AddAdjacent(Side side, Node entity)
         {
             Printer.Info(entity.Obj.name);
             bool added = false;
@@ -53,7 +54,7 @@ namespace ItemLogistics.Framework
             return added;
         }
 
-        public override bool RemoveAdjacent(Side side, SGNode entity)
+        public override bool RemoveAdjacent(Side side, Node entity)
         {
             bool removed = false;
             if (Adjacents[side] != null)
@@ -72,7 +73,7 @@ namespace ItemLogistics.Framework
         public override bool RemoveAllAdjacents()
         {
             bool removed = false;
-            foreach (KeyValuePair<Side, SGNode> adj in Adjacents.ToList())
+            foreach (KeyValuePair<Side, Node> adj in Adjacents.ToList())
             {
                 if (adj.Value != null)
                 {
@@ -106,9 +107,15 @@ namespace ItemLogistics.Framework
             Printer.Info(ConnectedInputs.Count.ToString());
             bool sent = false;
             int index = 0;
-            while (index < ConnectedInputs.Count && sent == false)
+            Dictionary<Input, List<Node>> priorityInputs = ConnectedInputs;
+            priorityInputs = priorityInputs.
+                OrderByDescending(pair => pair.Key.Priority).
+                ThenBy(pair => pair.Value.Count).
+                ToDictionary(x => x.Key, x => x.Value);
+            index = 0;
+            while (index < priorityInputs.Count && sent == false)
             {
-                Input input = ConnectedInputs[index];
+                Input input = priorityInputs.Keys.ToList()[index];
                 Printer.Info("INPUT");
                 input.Print();
                 if (input is PolymorphicPipe)
@@ -117,12 +124,18 @@ namespace ItemLogistics.Framework
                     PolymorphicPipe poly = (PolymorphicPipe)input;
                     poly.UpdateFilter();
                 }
+                else if (input is FilterPipe)
+                {
+                    //Printer.Info("Filter");
+                    FilterPipe filter = input as FilterPipe;
+                    filter.UpdateFilter();
+                }
                 sent = ConnectedContainer.CanSendItem(input.ConnectedContainer);
                 Printer.Info("Can send: " + sent.ToString());
                 if (sent)
                 {
                     Item item = ConnectedContainer.GetItemToSend(input.ConnectedContainer);
-                    List<SGNode> path = ConnectedContainer.GetPath(input.ConnectedContainer);
+                    List<Node> path = ConnectedContainer.GetPath(input.ConnectedContainer);
                     AnimatePath(path);
                     Printer.Info("END animation");
                     if(!ConnectedContainer.SendItem(input.ConnectedContainer, item))
@@ -137,6 +150,12 @@ namespace ItemLogistics.Framework
                             PolymorphicPipe poly = (PolymorphicPipe)input;
                             poly.UpdateFilter();
                         }
+                        else if (input is FilterPipe)
+                        {
+                            //Printer.Info("Filter");
+                            FilterPipe filter = input as FilterPipe;
+                            filter.UpdateFilter();
+                        }
                     }
                     
                 }
@@ -148,7 +167,7 @@ namespace ItemLogistics.Framework
         public bool IsInputConnected(Input input)
         {
             bool connected = false;
-            if (ConnectedInputs.Contains(input))
+            if (ConnectedInputs.Keys.Contains(input))
             {
                 connected = true;
             }
@@ -158,10 +177,11 @@ namespace ItemLogistics.Framework
         public bool AddConnectedInput(Input input)
         {
             bool added = false;
-            if (!ConnectedInputs.Contains(input))
+            if (!ConnectedInputs.Keys.Contains(input))
             {
                 added = true;
-                ConnectedInputs.Add(input);
+                List<Node> path = ConnectedContainer.GetPath(input.ConnectedContainer);
+                ConnectedInputs.Add(input, path);
             }
             return added;
         }
@@ -169,7 +189,7 @@ namespace ItemLogistics.Framework
         public bool RemoveConnectedInput(Input input)
         {
             bool removed = false;
-            if (ConnectedInputs.Contains(input))
+            if (!ConnectedInputs.Keys.Contains(input))
             {
                 removed = true;
                 ConnectedInputs.Remove(input);

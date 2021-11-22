@@ -8,17 +8,17 @@ using StardewValley;
 
 namespace ItemLogistics.Framework.Model
 {
-    public class SGNode
+    public class Node
     {
         public Vector2 Position { get; set; }
         public GameLocation Location { get; set; }
         public StardewValley.Object Obj { get; set; }
-        public Dictionary<Side, SGNode> Adjacents { get; set; }
-        public SGraph ParentGraph { get; set; }
+        public Dictionary<Side, Node> Adjacents { get; set; }
+        public Network ParentNetwork { get; set; }
         public SideStruct Sides { get; set; }
         public bool Reached { get; set; }
 
-        public SGNode(Vector2 position, GameLocation location, StardewValley.Object obj)
+        public Node(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
             Position = position;
             Location = location;
@@ -26,19 +26,19 @@ namespace ItemLogistics.Framework.Model
 
             Sides = SideStruct.GetSides();
 
-            Adjacents = new Dictionary<Side, SGNode>();
+            Adjacents = new Dictionary<Side, Node>();
             Adjacents.Add(Sides.North, null);
             Adjacents.Add(Sides.South, null);
             Adjacents.Add(Sides.West, null);
             Adjacents.Add(Sides.East, null);
 
-            ParentGraph = null;
+            ParentNetwork = null;
         }
 
-        public bool CanConnectedWith(SGNode target)
+        public bool CanConnectedWith(Node target)
         {
             bool connected = false;
-            List<SGNode> looked = new List<SGNode>();
+            List<Node> looked = new List<Node>();
             if ((bool)GetPathRecursive(target, looked, false)[2])
             {
                 Printer.Info("CAN CONNECT");
@@ -47,20 +47,20 @@ namespace ItemLogistics.Framework.Model
             return connected;
         }
 
-        public List<SGNode> GetPath(SGNode target)
+        public List<Node> GetPath(Node target)
         {
-            List<SGNode> looked = new List<SGNode>();
+            List<Node> looked = new List<Node>();
             Reached = false;
             System.Object[] returns = GetPathRecursive(target, looked, false);
-            List<SGNode> path = (List<SGNode>)returns[1];
+            List<Node> path = (List<Node>)returns[1];
             return path;
         }
 
-        public System.Object[] GetPathRecursive(SGNode target, List<SGNode> looked, bool reached)
+        public System.Object[] GetPathRecursive(Node target, List<Node> looked, bool reached)
         {
             System.Object[] returns = new System.Object[3];
             returns[2] = reached;
-            SGNode adj;
+            Node adj;
             if (this.Equals(target))
             {
                 reached = true;
@@ -111,11 +111,11 @@ namespace ItemLogistics.Framework.Model
             }
         }
          
-        public void AnimatePath(List<SGNode> path)
+        public void AnimatePath(List<Node> path)
         {
-            foreach(SGNode node in path)
+            foreach(Node node in path)
             {
-                if(node is Connector)
+                if(node != null && node is Connector)
                 {
                     Connector conn = (Connector)node;
                     Animate(conn);
@@ -130,25 +130,25 @@ namespace ItemLogistics.Framework.Model
             conn.PassingItem = false;
         }
 
-        public List<SGraph> Scan()
+        public List<Network> Scan()
         {
-            List<SGraph> retList = new List<SGraph>();
-            foreach(KeyValuePair<Side, SGNode> adj in Adjacents)
+            List<Network> retList = new List<Network>();
+            foreach(KeyValuePair<Side, Node> adj in Adjacents)
             {
                 if(adj.Value != null)
                 {
-                    retList.Add(adj.Value.ParentGraph);
+                    retList.Add(adj.Value.ParentNetwork);
                 }
             }
             return retList;
         }
 
-        public SGNode GetAdjacent(Side side)
+        public Node GetAdjacent(Side side)
         {
             return Adjacents[side];
         }
 
-        public virtual bool AddAdjacent(Side side, SGNode entity)
+        public virtual bool AddAdjacent(Side side, Node entity)
         {
             bool added = false;
             if (Adjacents[side] == null)
@@ -160,7 +160,7 @@ namespace ItemLogistics.Framework.Model
             return added;
         }
 
-        public virtual bool RemoveAdjacent(Side side, SGNode entity)
+        public virtual bool RemoveAdjacent(Side side, Node entity)
         {
             bool removed = false;
             if (Adjacents[side] != null)
@@ -176,7 +176,7 @@ namespace ItemLogistics.Framework.Model
         public virtual bool RemoveAllAdjacents()
         {
             bool removed = false;
-            foreach(KeyValuePair<Side, SGNode> adj in Adjacents.ToList())
+            foreach(KeyValuePair<Side, Node> adj in Adjacents.ToList())
             {
                 adj.Value.Print();
                 if(adj.Value != null)
@@ -189,7 +189,7 @@ namespace ItemLogistics.Framework.Model
             return removed;
         }
 
-        public bool Same(SGNode node)
+        public bool Same(Node node)
         {
             if(this.Obj.name.Equals(node.Obj.name) && Position.Equals(node.Position))
             {

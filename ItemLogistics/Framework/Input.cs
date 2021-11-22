@@ -9,16 +9,17 @@ using StardewValley;
 
 namespace ItemLogistics.Framework
 {
-    public class Input : SGNode
+    public class Input : Node
     {
         public Container ConnectedContainer { get; set; }
+        public int Priority { get; set; }
 
         public Input(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
         }
 
-        public override bool AddAdjacent(Side side, SGNode entity)
+        public override bool AddAdjacent(Side side, Node entity)
         {
             bool added = false;
             if (Adjacents[side] == null)
@@ -45,7 +46,7 @@ namespace ItemLogistics.Framework
             }
             return added;
         }
-        public override bool RemoveAdjacent(Side side, SGNode entity)
+        public override bool RemoveAdjacent(Side side, Node entity)
         {
             bool removed = false;
             if (Adjacents[side] != null)
@@ -64,7 +65,7 @@ namespace ItemLogistics.Framework
         public override bool RemoveAllAdjacents()
         {
             bool removed = false;
-            foreach (KeyValuePair<Side, SGNode> adj in Adjacents.ToList())
+            foreach (KeyValuePair<Side, Node> adj in Adjacents.ToList())
             {
                 if (adj.Value != null)
                 {

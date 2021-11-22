@@ -26,14 +26,14 @@ namespace ItemLogistics
     {
         private IJsonAssetsApi JsonAssets;
         public Dictionary<string, int> LogisticItemIds;
-        public SGraphDB DataAccess { get; set; }
+        public DataAccess DataAccess { get; set; }
 
 
         public override void Entry(IModHelper helper)
         {
             Framework.Printer.SetMonitor(this.Monitor);
             LogisticItemIds = new Dictionary<string, int>();
-            DataAccess = SGraphDB.GetSGraphDB();
+            DataAccess = DataAccess.GetDataAccess();
 
             const string dataPath = "assets/data.json";
             DataModel data = null;
@@ -62,9 +62,11 @@ namespace ItemLogistics
 
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
+            helper.Events.GameLoop.DayStarted += this.OnDayStarted;
             helper.Events.World.ObjectListChanged += this.OnObjectListChanged;
             helper.Events.GameLoop.OneSecondUpdateTicked += this.OnOneSecondUpdateTicked;
-            helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
+
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -81,6 +83,8 @@ namespace ItemLogistics
             }
         }
 
+
+
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
             if (JsonAssets != null)
@@ -90,11 +94,11 @@ namespace ItemLogistics
                     LogisticItemIds.Add(item.Key, JsonAssets.GetObjectId(item.Key));
                     if (item.Value == -1)
                     {
-                        Framework.Printer.Warn($"Can't get ID for {item.Key}");
+                        Printer.Warn($"Can't get ID for {item.Key}");
                     }
                     else
                     {
-                        Framework.Printer.Info($"{item.Key} ID is {item.Key}");
+                        Printer.Info($"{item.Key} ID is {item.Key}");
                     }
                 }
             }
@@ -105,12 +109,31 @@ namespace ItemLogistics
                 if (DataAccess.ValidLocations.Contains(location.Name))
                 {
                     Monitor.Log("LOADING " + location.Name, LogLevel.Info);
-                    DataAccess.LocationGroups.Add(location, new List<LogisticGroup>());
-                    DataAccess.LocationMatrix.Add(location, new SGNode[location.map.DisplayWidth, location.map.DisplayHeight]);
-                    LogisticGroupBuilder.BuildLocationGraphs(location);
-                    LogisticGroupManager.UpdateLocationGroups(location);
+                    DataAccess.LocationNetworks.Add(location, new List<Network>());
+                    DataAccess.LocationMatrix.Add(location, new Node[location.map.DisplayWidth, location.map.DisplayHeight]);
+                    NetworkBuilder.BuildLocationNetworks(location);
+                    NetworkManager.UpdateLocationNetworks(location);
                     Monitor.Log(location.Name + " LOADED!", LogLevel.Info);
-                    LogisticGroupManager.PrintLocationGroups(location);
+                    NetworkManager.PrintLocationNetworks(location);
+                }
+            }
+        }
+
+        private void OnOneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
+        {
+            if (Context.IsWorldReady)
+            {
+                if (e.IsMultipleOf(120))
+                {
+                    DataAccess DataAccess = DataAccess.GetDataAccess();
+                    List<Network> logisticGroups;
+                    if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out logisticGroups))
+                    {
+                        foreach (Network group in logisticGroups)
+                        {
+                            group.ProcessExchanges();
+                        }
+                    }
                 }
             }
         }
@@ -120,32 +143,33 @@ namespace ItemLogistics
             List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in addedObjects)
             {
-                LogisticGroupManager.AddObject(obj);
-                LogisticGroupManager.UpdateLocationGroups(Game1.currentLocation);
+                NetworkManager.AddObject(obj);
+                NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
             }
 
             List<KeyValuePair<Vector2, StardewValley.Object>> removedObjects = e.Removed.ToList();
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in removedObjects)
             {
-                LogisticGroupManager.RemoveObject(obj);
-                LogisticGroupManager.UpdateLocationGroups(Game1.currentLocation);
+                NetworkManager.RemoveObject(obj);
+                NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
             }
         }
 
-        private void OnOneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
+        private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            if(Context.IsWorldReady)
+            RepairPipes();
+        }
+
+        private void RepairPipes()
+        {
+            foreach (GameLocation location in Game1.locations)
             {
-                if(e.IsMultipleOf(120))
+                foreach (Fence fence in location.Objects.Values.OfType<Fence>())
                 {
-                    SGraphDB DataAccess = SGraphDB.GetSGraphDB();
-                    List<LogisticGroup> logisticGroups;
-                    if (DataAccess.LocationGroups.TryGetValue(Game1.currentLocation, out logisticGroups))
+                    if (DataAccess.ValidPipeNames.Contains(fence.name))
                     {
-                        foreach (LogisticGroup group in logisticGroups)
-                        {
-                            group.ProcessExchanges();    
-                        }
+                        fence.health.Value = 100f;
+                        fence.maxHealth.Value = fence.health.Value;
                     }
                 }
             }

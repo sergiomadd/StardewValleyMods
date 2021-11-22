@@ -10,7 +10,7 @@ using ItemLogistics.Framework.Model;
 
 namespace ItemLogistics.Framework
 {
-    public class Container : SGNode
+    public class Container : Node
     {
         public Chest Chest { get; set; }
         public List<string> Filter { get; set; }

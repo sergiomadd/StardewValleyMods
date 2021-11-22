@@ -9,7 +9,7 @@ using StardewValley.Objects;
 using ItemLogistics.Framework;
 using ItemLogistics.Framework.Model;
 
-namespace ItemLogistics.Framework
+namespace ItemLogistics.Framework.Objects
 {
     class FilterPipe : Input
     {
@@ -18,6 +18,7 @@ namespace ItemLogistics.Framework
         {
             ConnectedContainer = null;
             Filter = new Chest(true, position, 130);
+            Priority = 3;
         }
         public void UpdateFilter()
         {

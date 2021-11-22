@@ -4,20 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ItemLogistics.Framework.Model;
+using Microsoft.Xna.Framework;
 
 namespace ItemLogistics.Framework
 {
-    public class LogisticGroup : SGraph
+    public class Network
     {
         public int ID { get; set; }
+        public List<Node> Nodes { get; set; }
         public List<Output> Outputs { get; set; }
         public List<Input> Inputs { get; set; }
         public List<Connector> Connectors { get; set; }
         public List<Container> Containers { get; set; }
         public bool IsPassable { get; set; }
 
-        public LogisticGroup()
+        public Network()
         {
+            Nodes = new List<Node>();
             Outputs = new List<Output>();
             Inputs = new List<Input>();
             Connectors = new List<Connector>();
@@ -100,7 +103,7 @@ namespace ItemLogistics.Framework
             return added;
         }
 
-        public override bool RemoveNode(SGNode node)
+        public bool RemoveNode(Node node)
         {
             bool removed = false;
             if (Nodes.Contains(node))
@@ -109,16 +112,16 @@ namespace ItemLogistics.Framework
                 Nodes.Remove(node);
                 if (Outputs.Contains(node))
                 {
-                    Outputs.Remove((ExtractorPipe)node);
+                    Outputs.Remove((Output)node);
                 }
                 if (Inputs.Contains(node))
                 {
-                    TryDisconnectInput((InserterPipe)node);
-                    Inputs.Remove((InserterPipe)node);
+                    TryDisconnectInput((Input)node);
+                    Inputs.Remove((Input)node);
                 }
                 if (Connectors.Contains(node))
                 {
-                    Connectors.Remove((Pipe)node);
+                    Connectors.Remove((ConnectorPipe)node);
                 }
             }
             return removed;
@@ -186,7 +189,35 @@ namespace ItemLogistics.Framework
             return canDisconnect;
         }
 
-        public override string Print()
+        public bool AddNode(Node node)
+        {
+            bool added = false;
+            if (!Nodes.Contains(node))
+            {
+                added = true;
+                Nodes.Add(node);
+            }
+            return added;
+        }
+
+        public bool ContainsVector2(Vector2 position)
+        {
+            bool contains = false;
+            if (Nodes.Any(x => x.Position == position))
+            {
+                contains = true;
+            }
+            return contains;
+        }
+        public void Delete()
+        {
+            foreach (Node node in Nodes)
+            {
+                node.ParentNetwork = null;
+            }
+        }
+
+        public string Print()
         {
             StringBuilder graph = new StringBuilder();
             graph.Append("\nGroup: \n");
@@ -200,7 +231,7 @@ namespace ItemLogistics.Framework
             foreach (Output output in Outputs)
             {
                 graph.Append(output.Obj.Name + output.Position.ToString() + output.GetHashCode().ToString() + ", \n");
-                foreach (Input input in output.ConnectedInputs)
+                foreach (Input input in output.ConnectedInputs.Keys)
                 {
                     graph.Append("Output Connected Inputs: \n");
                     graph.Append(input.Obj.Name + input.Position.ToString() + input.GetHashCode().ToString() + " | ");

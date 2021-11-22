@@ -9,12 +9,13 @@ using StardewValley.Objects;
 using ItemLogistics.Framework;
 using ItemLogistics.Framework.Model;
 
-namespace ItemLogistics.Framework
+namespace ItemLogistics.Framework.Objects
 {
     class InserterPipe : Input
     {
         public InserterPipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
+            Priority = 1;
         }
     }
 }

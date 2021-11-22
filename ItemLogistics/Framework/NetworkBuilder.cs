@@ -11,12 +11,11 @@ using Microsoft.Xna.Framework;
 
 namespace ItemLogistics.Framework
 {
-    public static class LogisticGroupBuilder
+    public static class NetworkBuilder
     {
-        //Mover el builder y el manager a lg
-        public static void BuildLocationGraphs(GameLocation location)
+        public static void BuildLocationNetworks(GameLocation location)
         {
-            SGraphDB DataAccess = SGraphDB.GetSGraphDB();
+            DataAccess DataAccess = DataAccess.GetDataAccess();
             for (int x = 0; x < location.map.DisplayWidth; x++)
             {
                 for (int y = 0; y < location.map.DisplayHeight; y++)
@@ -25,48 +24,48 @@ namespace ItemLogistics.Framework
                     {
                         if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x, y).name))
                         {
-                            BuildGraphRecursive(location, null, x, y);
+                            BuildNetworkRecursive(location, null, x, y);
                         }
                     }
                 }
             }
         }
 
-        public static SGNode BuildGraphRecursive(GameLocation location, SGraph inGraph, int x, int y)
+        public static Node BuildNetworkRecursive(GameLocation location, Network inNetwork, int x, int y)
         {
-            SGraphDB DataAccess = SGraphDB.GetSGraphDB();
-            SGNode node = null;
-            SGNode[,] locationMatrix;
+            DataAccess DataAccess = DataAccess.GetDataAccess();
+            Node node = null;
+            Node[,] matrix;
             if (location.getObjectAtTile(x, y) != null)
             {
                 if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x, y).name))
                 {
-                    if (DataAccess.LocationMatrix.TryGetValue(location, out locationMatrix))
+                    if (DataAccess.LocationMatrix.TryGetValue(location, out matrix))
                     {
-                        if (locationMatrix[x, y] == null)
+                        if (matrix[x, y] == null)
                         {
-                            locationMatrix[x, y] = SGNodeFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x, y));
+                            matrix[x, y] = NodeFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x, y));
                         }
-                        node = locationMatrix[x, y];
-                        if(node.ParentGraph == null)
+                        node = matrix[x, y];
+                        if(node.ParentNetwork == null)
                         {
-                            if (inGraph == null)
+                            if (inNetwork == null)
                             {
-                                node.ParentGraph = LogisticGroupManager.CreateLocationGraph(location);
+                                node.ParentNetwork = NetworkManager.CreateLocationNetwork(location);
                             }
                             else
                             {
-                                node.ParentGraph = inGraph;
+                                node.ParentNetwork = inNetwork;
                             }
-                            LogisticGroupManager.LoadNodeToGraph(location, x, y, node.ParentGraph);
+                            NetworkManager.LoadNodeToNetwork(location, x, y, node.ParentNetwork);
                             //Up
                             if (location.getObjectAtTile(x, y - 1) != null && y - 1 >= 0)
                             {
                                 if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x, y - 1).Name))
                                 {
-                                    if (!node.ParentGraph.Nodes.Contains(locationMatrix[x, y - 1]))
+                                    if (!node.ParentNetwork.Nodes.Contains(matrix[x, y - 1]))
                                     {
-                                        SGNode adj = BuildGraphRecursive(location, node.ParentGraph, x, y - 1);
+                                        Node adj = BuildNetworkRecursive(location, node.ParentNetwork, x, y - 1);
                                         node.AddAdjacent(SideStruct.GetSides().North, adj);
                                     }
                                 }
@@ -77,9 +76,9 @@ namespace ItemLogistics.Framework
                             {
                                 if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x, y + 1).Name))
                                 {
-                                    if (!node.ParentGraph.Nodes.Contains(locationMatrix[x, y + 1]))
+                                    if (!node.ParentNetwork.Nodes.Contains(matrix[x, y + 1]))
                                     {
-                                        SGNode adj = BuildGraphRecursive(location, node.ParentGraph, x, y + 1);
+                                        Node adj = BuildNetworkRecursive(location, node.ParentNetwork, x, y + 1);
                                         node.AddAdjacent(SideStruct.GetSides().South, adj);
                                     }
                                 }
@@ -89,9 +88,9 @@ namespace ItemLogistics.Framework
                             {
                                 if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x + 1, y).Name))
                                 {
-                                    if (!node.ParentGraph.Nodes.Contains(locationMatrix[x + 1, y]))
+                                    if (!node.ParentNetwork.Nodes.Contains(matrix[x + 1, y]))
                                     {
-                                        SGNode adj = BuildGraphRecursive(location, node.ParentGraph, x + 1, y);
+                                        Node adj = BuildNetworkRecursive(location, node.ParentNetwork, x + 1, y);
                                         node.AddAdjacent(SideStruct.GetSides().West, adj);
                                     }
                                 }
@@ -101,9 +100,9 @@ namespace ItemLogistics.Framework
                             {
                                 if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x - 1, y).Name))
                                 {
-                                    if (!node.ParentGraph.Nodes.Contains(locationMatrix[x - 1, y]))
+                                    if (!node.ParentNetwork.Nodes.Contains(matrix[x - 1, y]))
                                     {
-                                        SGNode adj = BuildGraphRecursive(location, node.ParentGraph, x - 1, y);
+                                        Node adj = BuildNetworkRecursive(location, node.ParentNetwork, x - 1, y);
                                         node.AddAdjacent(SideStruct.GetSides().East, adj);
                                     }
                                 }

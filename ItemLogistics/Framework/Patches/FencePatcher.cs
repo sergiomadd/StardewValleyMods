@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
-using HarmonyLib;
 using StardewValley;
 using StardewValley.Objects;
 using StardewModdingAPI;
 using ItemLogistics.Framework.Model;
+using ItemLogistics.Framework.Objects;
 using Netcode;
 using Microsoft.Xna.Framework;
 using System.Runtime.CompilerServices;
@@ -45,6 +45,10 @@ namespace ItemLogistics.Framework.Patches
 					original: AccessTools.Method(typeof(Fence), nameof(Fence.isPassable)),
 					prefix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Fence_isPassable_Prefix))
 				);
+				harmony.Patch(
+					original: AccessTools.Method(typeof(Fence), nameof(Fence.countsForDrawing)),
+					prefix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Fence_countsForDrawing_Prefix))
+				);
 
 			}
 			catch (Exception ex)
@@ -53,22 +57,55 @@ namespace ItemLogistics.Framework.Patches
 			}
 		}
 
+		private static bool Fence_countsForDrawing_Prefix(Fence __instance, ref bool __result, int type)
+		{
+			__result = false;
+			DataAccess DataAccess = DataAccess.GetDataAccess();
+			//Add when JA obj IDs is done
+			//if (DataAccess.ValidPipeNames.Contains(__instance.Name) && DataAccess.ValidPipeIDs.Contains(type))
+			if (DataAccess.ValidPipeNames.Contains(__instance.Name) && IsDefaultFence(type))
+			{
+				__result = true;
+				return false;
+			}
+			else
+            {
+				return true;
+            }
+		}
+
+		private static bool IsDefaultFence(int type)
+        {
+			if(type == 1 || type == 2 || type == 3 || type == 4 || type == 5)
+            {
+				return false;
+            }
+			else
+            {
+				return true;
+            }
+        }
 
 		private static bool Fence_isPassable_Prefix(ref bool __result, Fence __instance)
 		{
 			__result = false;
-			SGraphDB DataAccess = SGraphDB.GetSGraphDB();
+			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (DataAccess.ValidPipeNames.Contains(__instance.Name))
 			{
-				SGNode[,] locationMatrix;
+				Node[,] locationMatrix;
 				if(DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
                 {
-					if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentGraph is LogisticGroup)
-					{
-						LogisticGroup lg = (LogisticGroup)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentGraph;
-						if (lg.IsPassable)
+					if(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] != null)
+                    {
+						Printer.Info("NOT NULL");
+						if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentNetwork is Network)
 						{
-							__result = true;
+							Printer.Info("HAS LG");
+							Network lg = (Network)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentNetwork;
+							if (lg.IsPassable)
+							{
+								__result = true;
+							}
 						}
 					}
 				}
@@ -82,7 +119,7 @@ namespace ItemLogistics.Framework.Patches
 
 		private static bool Fence_getDrawSum_Prefix(ref int __result, Fence __instance, GameLocation location)
 		{
-			SGraphDB DataAccess = SGraphDB.GetSGraphDB();
+			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (DataAccess.ValidPipeNames.Contains(__instance.Name))
 			{
 				bool CN = false;
@@ -155,7 +192,7 @@ namespace ItemLogistics.Framework.Patches
 				}
 				if (__instance.Name.Equals("Connector Pipe"))
 				{
-					SGNode[,] locationMatrix;
+					Node[,] locationMatrix;
 					if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
 					{
 						if(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] is Connector)
@@ -165,8 +202,7 @@ namespace ItemLogistics.Framework.Patches
 							if(connector.PassingItem)
                             {
 								//Printer.Info("PASSING ITEM");
-								if (drawSum == 1500) { drawSum = 2; }
-								else if (drawSum == 110) { drawSum = 4; }
+								drawSum += 5;
 							}
 
 						}
@@ -246,8 +282,8 @@ namespace ItemLogistics.Framework.Patches
 			{
 
 				//Printer.Info("Filterpipe PATCH");
-				SGraphDB DataAccess = SGraphDB.GetSGraphDB();
-				SGNode[,] locationMatrix;
+				DataAccess DataAccess = DataAccess.GetDataAccess();
+				Node[,] locationMatrix;
 				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
 				{
 					FilterPipe pipe = (FilterPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
@@ -259,7 +295,7 @@ namespace ItemLogistics.Framework.Patches
 		
 		private static bool Fence_drawInMenu_Prefix(Fence __instance, SpriteBatch spriteBatch, Vector2 location, float scale, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
-			SGraphDB DataAccess = SGraphDB.GetSGraphDB();
+			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (DataAccess.ValidPipeNames.Contains(__instance.Name))
 			{
 				location.Y -= 64f * scale;
@@ -291,7 +327,7 @@ namespace ItemLogistics.Framework.Patches
 
 		private static bool Fence_draw_Prefix(Fence __instance, SpriteBatch b, int x, int y, float alpha = 1f)
 		{
-			SGraphDB DataAccess = SGraphDB.GetSGraphDB();
+			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (DataAccess.ValidPipeNames.Contains(__instance.Name))
 			{
 				int sourceRectPosition = 1;
@@ -390,7 +426,7 @@ namespace ItemLogistics.Framework.Patches
 		private static Dictionary<int, int> GetNewDrawGuide(Fence fence)
         {
 			Dictionary<int, int> DrawGuide = new Dictionary<int, int>();
-			SGraphDB DataAccess = SGraphDB.GetSGraphDB();
+			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (DataAccess.ValidItemNames.Contains(fence.Name))
 			{
 				if (fence.Name.Equals("Connector Pipe"))
@@ -411,8 +447,17 @@ namespace ItemLogistics.Framework.Patches
 					DrawGuide.Add(1110, 13);
 					DrawGuide.Add(610, 14);
 					DrawGuide.Add(1610, 15);
-					DrawGuide.Add(2, 16);
-					DrawGuide.Add(4, 17);
+					DrawGuide.Add(1505, 17);
+					DrawGuide.Add(1105, 18);
+					DrawGuide.Add(1015, 19);
+					DrawGuide.Add(605, 20);
+					DrawGuide.Add(515, 21);
+					DrawGuide.Add(115, 22);
+					DrawGuide.Add(1605, 23);
+					DrawGuide.Add(1515, 24);
+					DrawGuide.Add(1115, 25);
+					DrawGuide.Add(615, 26);
+					DrawGuide.Add(1615, 27);
 				}
 				else
 				{

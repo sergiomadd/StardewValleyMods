@@ -9,7 +9,7 @@ using StardewValley.Objects;
 using ItemLogistics.Framework;
 using ItemLogistics.Framework.Model;
 
-namespace ItemLogistics.Framework
+namespace ItemLogistics.Framework.Objects
 {
     class PolymorphicPipe : Input
     {
@@ -18,9 +18,10 @@ namespace ItemLogistics.Framework
         {
             ConnectedContainer = null;
             Filter = new List<Item>();
+            Priority = 2;
         }
 
-        public override bool AddAdjacent(Side side, SGNode entity)
+        public override bool AddAdjacent(Side side, Node entity)
         {
             bool added = false;
             if (Adjacents[side] == null)

@@ -11,25 +11,23 @@ using SVObject = StardewValley.Objects;
 using ItemLogistics.Framework;
 using ItemLogistics.Framework.Model;
 
-namespace ItemLogistics.Framework.Model
+namespace ItemLogistics.Framework
 {
-    public class SGraphDB
+    public class DataAccess
     {
-        private static SGraphDB mySGraphDB;
-        public Dictionary<GameLocation, List<SGraph>> LocationGraphs { get; set; }
-        public Dictionary<GameLocation, List<LogisticGroup>> LocationGroups { get; set; }
-        public Dictionary<GameLocation, SGNode[,]> LocationMatrix  { get; set; }
+        private static DataAccess myDataAccess;
+        public Dictionary<GameLocation, List<Network>> LocationNetworks { get; set; }
+        public Dictionary<GameLocation, Node[,]> LocationMatrix  { get; set; }
         public List<string> ValidItemNames { get; set; }
         public List<string> ValidLocations { get; set; }
         public List<string> ValidIOPipeNames { get; set; }
         public List<string> ValidPipeNames { get; set; }
 
 
-        private SGraphDB()
+        private DataAccess()
         {
-            LocationGraphs = new Dictionary<GameLocation, List<SGraph>>();
-            LocationGroups = new Dictionary<GameLocation, List<LogisticGroup>>();
-            LocationMatrix  = new Dictionary<GameLocation, SGNode[,]>();
+            LocationNetworks = new Dictionary<GameLocation, List<Network>>();
+            LocationMatrix  = new Dictionary<GameLocation, Node[,]>();
             ValidItemNames = new List<string>();
             ValidLocations = new List<string>();
             ValidIOPipeNames = new List<string>();
@@ -42,19 +40,19 @@ namespace ItemLogistics.Framework.Model
             */
         }
 
-        public static SGraphDB GetSGraphDB()
+        public static DataAccess GetDataAccess()
         {
-            if(mySGraphDB == null)
+            if(myDataAccess == null)
             {
-                mySGraphDB = new SGraphDB();
+                myDataAccess = new DataAccess();
             }
-            return mySGraphDB;
+            return myDataAccess;
         }
 
-        public List<SGraph> GetGraphList(GameLocation location)
+        public List<Network> GetNetworkList(GameLocation location)
         {
-            List<SGraph> graphList = null;
-            foreach (KeyValuePair<GameLocation, List<SGraph>> pair in LocationGraphs)
+            List<Network> graphList = null;
+            foreach (KeyValuePair<GameLocation, List<Network>> pair in LocationNetworks)
             {
                 if(pair.Key.Equals(location))
                 {
@@ -64,17 +62,17 @@ namespace ItemLogistics.Framework.Model
             return graphList;
         }
 
-        public SGNode[,] GetMatrix(GameLocation location)
+        public Node[,] GetMatrix(GameLocation location)
         {
-            SGNode[,] graphMatrix = null;
-            foreach (KeyValuePair<GameLocation, SGNode[,]> pair in LocationMatrix)
+            Node[,] matrix = null;
+            foreach (KeyValuePair<GameLocation, Node[,]> pair in LocationMatrix)
             {
                 if (pair.Key.Equals(location))
                 {
-                    graphMatrix = pair.Value;
+                    matrix = pair.Value;
                 }
             }
-            return graphMatrix;
+            return matrix;
         }
     }
 }

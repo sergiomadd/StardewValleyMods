@@ -24,57 +24,44 @@ namespace ItemLogistics.Framework
             Filter = new List<string>();
         }
 
+        public Item TrySendItem(Container input, NetObjectList<Item> itemList, int index)
+        {
+            Item item = null;
+            if (input.CanStackItem(item))
+            {
+                item = itemList[index];
+                itemList.RemoveAt(index);
+                Chest.clearNulls();
+            }
+            else if (input.CanReceiveItems())
+            {
+                item = itemList[index];
+                itemList.RemoveAt(index);
+                Chest.clearNulls();
+            }
+            return item;
+        }
+
         public Item CanSendItem(Container input)
         {
             Item item = null;
             if (!IsEmpty() && input != null)
             {
-                NetObjectList<Item> sourceItemList;
-                if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
-                {
-                    Printer.Info("JUMINO");
-                    sourceItemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
-                }
-                else
-                {
-                    sourceItemList = Chest.items;
-                }
-                int index = sourceItemList.Count - 1;
+                NetObjectList<Item> itemList = GetItemList();
+                int index = itemList.Count - 1;
                 while (index >= 0 && item == null)
                 {
-                    Printer.Info(sourceItemList[index].Name);
+                    //Printer.Info(itemList[index].Name);
                     if (input.HasFilter())
                     {
                         if (input.Filter.Contains(item.Name))
                         {
-                            if(input.CanStackItem(sourceItemList[index]))
-                            {
-                                item = sourceItemList[index];
-                                sourceItemList.RemoveAt(index);
-                                Chest.clearNulls();
-                            }
-                            else if (input.CanReceiveItems())
-                            {
-                                item = sourceItemList[index];
-                                sourceItemList.RemoveAt(index);
-                                Chest.clearNulls();
-                            }
+                            item = TrySendItem(input, itemList, index);
                         }
                     }
                     else
                     {
-                        if (input.CanStackItem(sourceItemList[index]))
-                        {
-                            item = sourceItemList[index];
-                            sourceItemList.RemoveAt(index);
-                            Chest.clearNulls();
-                        }
-                        else if (input.CanReceiveItems())
-                        {
-                            item = sourceItemList[index];
-                            sourceItemList.RemoveAt(index);
-                            Chest.clearNulls();
-                        }
+                        item = TrySendItem(input, itemList, index);
                     }
                     index--;
                 }
@@ -87,7 +74,7 @@ namespace ItemLogistics.Framework
             bool sent = false;
             if (!IsEmpty() && input != null && input.HasFilter())
             {
-                Printer.Info("FILTERED");
+                //Printer.Info("FILTERED");
                 if (input.Filter.Contains(item.Name))
                 {
                     //Printer.Info($"SENDING FILTERED: {item.Name}");
@@ -106,7 +93,7 @@ namespace ItemLogistics.Framework
                 }
                 else
                 {
-                    Printer.Info("RETURNING ITEM");
+                    //Printer.Info("RETURNING ITEM");
                     if (CanStackItem(item))
                     {
                         //Printer.Info("Stacking");
@@ -119,21 +106,27 @@ namespace ItemLogistics.Framework
                         ReceiveItem(item);
                         sent = false;
                     }
+                    else
+                    {
+                        //Drop item
+                        //Game1.currentLocation.dropObject(item);
+                        sent = false;
+                    }
                 }
 
             }
             else
             {
-                Printer.Info($"SENDING: {item.Name}");
+                //Printer.Info($"SENDING: {item.Name}");
                 if (input.CanStackItem(item))
                 {
-                    Printer.Info("Stacking");
+                    //Printer.Info("Stacking");
                     input.ReceiveStack(item);
                     sent = true;
                 }
                 else if (input.CanReceiveItems())
                 {
-                    Printer.Info("New Stack");
+                    //Printer.Info("New Stack");
                     input.ReceiveItem(item);
                     sent = true;
                 }
@@ -141,14 +134,21 @@ namespace ItemLogistics.Framework
                 {
                     if (CanStackItem(item))
                     {
-                        Printer.Info("Stacking");
+                        //Printer.Info("Stacking");
                         ReceiveStack(item);
                         sent = false;
                     }
                     else if (CanReceiveItems())
                     {
-                        Printer.Info("New Stack");
+                        //Printer.Info("New Stack");
                         ReceiveItem(item);
+                        sent = false;
+                    }
+                    //If returning chest is full
+                    else
+                    {
+                        //Drop item
+                        //Game1.currentLocation.dropObject(item);
                         sent = false;
                     }
                 }
@@ -162,22 +162,13 @@ namespace ItemLogistics.Framework
         public bool CanStack()
         {
             bool canStack = false;
-            NetObjectList<Item> itemList;
-            if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
-            {
-                itemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
-            }
-            else
-            {
-                itemList = Chest.items;
-            }
-
+            NetObjectList<Item> itemList = GetItemList();
             int index = itemList.Count - 1;
             while (index >= 0 && !canStack)
             {
                 if (itemList[index] != null)
                 {
-                    Printer.Info(itemList[index].getRemainingStackSpace().ToString());
+                    //Printer.Info(itemList[index].getRemainingStackSpace().ToString());
                     if (itemList[index].getRemainingStackSpace() > 0)
                     {
                         canStack = true;
@@ -192,15 +183,7 @@ namespace ItemLogistics.Framework
         public bool CanStackItem(Item item)
         {
             bool canStack = false;
-            NetObjectList<Item> itemList;
-            if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
-            {
-                itemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
-            }
-            else
-            {
-                itemList = Chest.items;
-            }
+            NetObjectList<Item> itemList = GetItemList();
             if (itemList.Contains(item))
             {
                 int index = itemList.IndexOf(item);
@@ -216,15 +199,7 @@ namespace ItemLogistics.Framework
         public bool CanReceiveItems()
         {
             bool canReceive = false;
-            NetObjectList<Item> itemList;
-            if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
-            {
-                itemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
-            }
-            else
-            {
-                itemList = Chest.items;
-            }
+            NetObjectList<Item> itemList = GetItemList();
             if (itemList.Count < Chest.GetActualCapacity())
             {
                 canReceive = true;
@@ -238,7 +213,6 @@ namespace ItemLogistics.Framework
 
         public void ReceiveItem(Item item)
         {
-            Printer.Info("Receiving item");
             Chest.addItem(item);
         }
 
@@ -246,7 +220,8 @@ namespace ItemLogistics.Framework
         {
             Printer.Info($"Filter items: {Chest.items.Count}");
             Filter = new List<string>();
-            foreach (Item item in Chest.items.ToList())
+            NetObjectList<Item> itemList = GetItemList();
+            foreach (Item item in itemList.ToList())
             {
                 Filter.Add(item.Name);
             }
@@ -259,17 +234,21 @@ namespace ItemLogistics.Framework
                 hasFilter = true;
             }
             return hasFilter;
-            /*bool hasFilter = false;
-            if (Filter != null)
-            {
-                hasFilter = true;
-            }
-            return hasFilter;*/
         }
 
         public bool IsEmpty()
         {
             bool isEmpty = false;
+            NetObjectList<Item> itemList = GetItemList();
+            if (itemList.Count < 1)
+            {
+                isEmpty = true;
+            }
+            return isEmpty;
+        }
+
+        public NetObjectList<Item> GetItemList()
+        {
             NetObjectList<Item> itemList;
             if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
             {
@@ -279,11 +258,7 @@ namespace ItemLogistics.Framework
             {
                 itemList = Chest.items;
             }
-            if (itemList.Count < 1)
-            {
-                isEmpty = true;
-            }
-            return isEmpty;
+            return itemList;
         }
     }
 }

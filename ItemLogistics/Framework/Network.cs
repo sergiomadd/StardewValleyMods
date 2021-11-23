@@ -30,10 +30,8 @@ namespace ItemLogistics.Framework
         {
             foreach(Output output in Outputs)
             {
-                Printer.Info(output.Obj.name);
                 foreach (Input input in output.ConnectedInputs.Keys.ToList())
                 {
-                    Printer.Info(input.Obj.name);
                     TryDisconnectInput(input);
                 }
                 TryConnectOutput(output);
@@ -134,7 +132,7 @@ namespace ItemLogistics.Framework
 
         public bool TryConnectOutput(Output output)
         {
-            Printer.Info("Trying connection");
+            //Printer.Info("Trying connection");
             bool canConnect = false;
             if (output != null)
             {
@@ -143,10 +141,10 @@ namespace ItemLogistics.Framework
                     input.Print();
                     if (!output.IsInputConnected(input))
                     {
-                        Printer.Info("Not connected");
+                        //Printer.Info("Not connected");
                         if (output.CanConnectedWith(input))
                         {
-                            Printer.Info("Connecting..");
+                            //Printer.Info("Connecting..");
                             input.Print();
                             canConnect = output.AddConnectedInput(input);
                         }
@@ -158,21 +156,21 @@ namespace ItemLogistics.Framework
 
         public bool TryDisconnectInput(Input input)
         {
-            Printer.Info("Trying disconnection");
+            //Printer.Info("Trying disconnection");
             bool canDisconnect = false;
             if (input != null)
             {
-                Printer.Info("Input not null");
+                //Printer.Info("Input not null");
                 foreach (Output output in Outputs)
                 {
-                    Printer.Info("Ouput has uinput?:" + output.IsInputConnected(input).ToString());
+                    //Printer.Info("Ouput has uinput?:" + output.IsInputConnected(input).ToString());
                     if (output.IsInputConnected(input))
                     {
                         if (!output.CanConnectedWith(input))
                         {
-                            Printer.Info("Disconnecting..");
+                            //Printer.Info("Disconnecting..");
                             canDisconnect = output.RemoveConnectedInput(input);
-                            Printer.Info("Disconnect: " + canDisconnect.ToString());
+                            //Printer.Info("Disconnect: " + canDisconnect.ToString());
                         }
 
                     }

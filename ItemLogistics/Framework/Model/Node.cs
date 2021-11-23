@@ -58,7 +58,6 @@ namespace ItemLogistics.Framework.Model
 
         public System.Object[] GetPathRecursive(Node target, List<Node> looked, bool reached)
         {
-            this.Print();
             System.Object[] returns = new System.Object[3];
             returns[2] = reached;
             Node adj;

@@ -270,7 +270,16 @@ namespace ItemLogistics.Framework
         public bool IsEmpty()
         {
             bool isEmpty = false;
-            if (Chest.items.Count < 1)
+            NetObjectList<Item> itemList;
+            if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
+            {
+                itemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
+            }
+            else
+            {
+                itemList = Chest.items;
+            }
+            if (itemList.Count < 1)
             {
                 isEmpty = true;
             }

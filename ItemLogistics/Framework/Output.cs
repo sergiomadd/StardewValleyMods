@@ -36,12 +36,13 @@ namespace ItemLogistics.Framework
                 entity.AddAdjacent(Sides.GetInverse(side), this);
                 if (ConnectedContainer == null && entity is Container)
                 {
-                    Printer.Info("Container es null");
+                    //Printer.Info("Container es null");
                     ConnectedContainer = (Container)entity;
                 }
                 else
                 {
-                    Printer.Info("Container no es null.");
+                    
+                    //Printer.Info("Container no es null.");
                 }
             }
             return added;
@@ -80,7 +81,6 @@ namespace ItemLogistics.Framework
 
         public void ProcessExchanges()
         {
-
             if (ConnectedContainer != null && !ConnectedContainer.IsEmpty() && ConnectedInputs.Count > 0)
             {
                 Printer.Info("Output empty? " + ConnectedContainer.IsEmpty().ToString());
@@ -173,8 +173,8 @@ namespace ItemLogistics.Framework
             bool added = false;
             if (!ConnectedInputs.Keys.Contains(input))
             {
-                Printer.Info("input container: "+ (input.ConnectedContainer == null).ToString());
-                if (input.ConnectedContainer != null)
+                //Printer.Info("input container: "+ (input.ConnectedContainer == null).ToString());
+                if (ConnectedContainer != null && input.ConnectedContainer != null)
                 {
                     added = true;
                     List<Node> path;
@@ -192,7 +192,7 @@ namespace ItemLogistics.Framework
             {
                 removed = true;
                 ConnectedInputs.Remove(input);
-                Printer.Info("HAS STILL INPUT: "+ ConnectedInputs.Keys.Contains(input).ToString());
+                //Printer.Info("HAS STILL INPUT: "+ ConnectedInputs.Keys.Contains(input).ToString());
             }
             return removed;
         }

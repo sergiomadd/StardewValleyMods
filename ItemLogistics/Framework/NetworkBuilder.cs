@@ -22,7 +22,7 @@ namespace ItemLogistics.Framework
                 {
                     if (location.getObjectAtTile(x, y) != null)
                     {
-                        if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x, y).name))
+                        if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x, y).name))
                         {
                             BuildNetworkRecursive(location, null, x, y);
                         }
@@ -38,7 +38,7 @@ namespace ItemLogistics.Framework
             Node[,] matrix;
             if (location.getObjectAtTile(x, y) != null)
             {
-                if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x, y).name))
+                if (DataAccess.ValidItems.Contains(location.getObjectAtTile(x, y).name))
                 {
                     if (DataAccess.LocationMatrix.TryGetValue(location, out matrix))
                     {
@@ -49,6 +49,7 @@ namespace ItemLogistics.Framework
                         node = matrix[x, y];
                         if(node.ParentNetwork == null)
                         {
+
                             if (inNetwork == null)
                             {
                                 node.ParentNetwork = NetworkManager.CreateLocationNetwork(location);
@@ -58,10 +59,10 @@ namespace ItemLogistics.Framework
                                 node.ParentNetwork = inNetwork;
                             }
                             NetworkManager.LoadNodeToNetwork(location, x, y, node.ParentNetwork);
-                            //Up
+                            //North
                             if (location.getObjectAtTile(x, y - 1) != null && y - 1 >= 0)
                             {
-                                if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x, y - 1).Name))
+                                if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x, y - 1).Name))
                                 {
                                     if (!node.ParentNetwork.Nodes.Contains(matrix[x, y - 1]))
                                     {
@@ -69,12 +70,18 @@ namespace ItemLogistics.Framework
                                         node.AddAdjacent(SideStruct.GetSides().North, adj);
                                     }
                                 }
+                                else if (DataAccess.ValidExtraNames.Contains(location.getObjectAtTile(x, y - 1).Name))
+                                {
+                                    Node adj = NodeFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x, y - 1));
+                                    matrix[x, y - 1] = adj;
+                                    node.AddAdjacent(SideStruct.GetSides().North, adj);
+                                }
                             }
 
-                            //Down
+                            //South
                             if (location.getObjectAtTile(x, y + 1) != null && y + 1 < location.map.DisplayHeight)
                             {
-                                if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x, y + 1).Name))
+                                if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x, y + 1).Name))
                                 {
                                     if (!node.ParentNetwork.Nodes.Contains(matrix[x, y + 1]))
                                     {
@@ -82,11 +89,17 @@ namespace ItemLogistics.Framework
                                         node.AddAdjacent(SideStruct.GetSides().South, adj);
                                     }
                                 }
+                                else if (DataAccess.ValidExtraNames.Contains(location.getObjectAtTile(x, y + 1).Name))
+                                {
+                                    Node adj = NodeFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x, y + 1));
+                                    matrix[x, y + 1] = adj;
+                                    node.AddAdjacent(SideStruct.GetSides().North, adj);
+                                }
                             }
-                            //Right
+                            //West
                             if (location.getObjectAtTile(x + 1, y) != null && x + 1 < location.map.DisplayWidth)
                             {
-                                if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x + 1, y).Name))
+                                if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x + 1, y).Name))
                                 {
                                     if (!node.ParentNetwork.Nodes.Contains(matrix[x + 1, y]))
                                     {
@@ -94,17 +107,29 @@ namespace ItemLogistics.Framework
                                         node.AddAdjacent(SideStruct.GetSides().West, adj);
                                     }
                                 }
+                                else if (DataAccess.ValidExtraNames.Contains(location.getObjectAtTile(x + 1, y).Name))
+                                {
+                                    Node adj = NodeFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x + 1, y));
+                                    matrix[x + 1, y] = adj;
+                                    node.AddAdjacent(SideStruct.GetSides().North, adj);
+                                }
                             }
-                            //Left
+                            //East
                             if (location.getObjectAtTile(x - 1, y) != null && x - 1 >= 0)
                             {
-                                if (DataAccess.ValidItemNames.Contains(location.getObjectAtTile(x - 1, y).Name))
+                                if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x - 1, y).Name))
                                 {
                                     if (!node.ParentNetwork.Nodes.Contains(matrix[x - 1, y]))
                                     {
                                         Node adj = BuildNetworkRecursive(location, node.ParentNetwork, x - 1, y);
                                         node.AddAdjacent(SideStruct.GetSides().East, adj);
                                     }
+                                }
+                                else if (DataAccess.ValidExtraNames.Contains(location.getObjectAtTile(x - 1, y).Name))
+                                {
+                                    Node adj = NodeFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x - 1, y));
+                                    matrix[x-1, y] = adj;
+                                    node.AddAdjacent(SideStruct.GetSides().North, adj);
                                 }
                             }
                         }

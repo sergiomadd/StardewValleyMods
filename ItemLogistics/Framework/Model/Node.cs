@@ -58,6 +58,7 @@ namespace ItemLogistics.Framework.Model
 
         public System.Object[] GetPathRecursive(Node target, List<Node> looked, bool reached)
         {
+            this.Print();
             System.Object[] returns = new System.Object[3];
             returns[2] = reached;
             Node adj;
@@ -178,7 +179,6 @@ namespace ItemLogistics.Framework.Model
             bool removed = false;
             foreach(KeyValuePair<Side, Node> adj in Adjacents.ToList())
             {
-                adj.Value.Print();
                 if(adj.Value != null)
                 {
                     removed = true;

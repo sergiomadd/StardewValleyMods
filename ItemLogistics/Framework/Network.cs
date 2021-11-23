@@ -15,7 +15,6 @@ namespace ItemLogistics.Framework
         public List<Output> Outputs { get; set; }
         public List<Input> Inputs { get; set; }
         public List<Connector> Connectors { get; set; }
-        public List<Container> Containers { get; set; }
         public bool IsPassable { get; set; }
 
         public Network()
@@ -24,7 +23,6 @@ namespace ItemLogistics.Framework
             Outputs = new List<Output>();
             Inputs = new List<Input>();
             Connectors = new List<Connector>();
-            Containers = new List<Container>();
             IsPassable = false;
         }
 
@@ -32,16 +30,20 @@ namespace ItemLogistics.Framework
         {
             foreach(Output output in Outputs)
             {
+                Printer.Info(output.Obj.name);
+                foreach (Input input in output.ConnectedInputs.Keys.ToList())
+                {
+                    Printer.Info(input.Obj.name);
+                    TryDisconnectInput(input);
+                }
                 TryConnectOutput(output);
             }
-            /*foreach(Input input in Inputs)
-            {
-                TryDisconnectInput(input);
-            }*/
+
         }
 
         public void ProcessExchanges()
         {
+            Update();
             foreach (Output output in Outputs)
             {
                 output.ProcessExchanges();
@@ -89,20 +91,6 @@ namespace ItemLogistics.Framework
             return added;
         }
 
-        public bool AddContainer(Container node)
-        {
-            bool added = false;
-            if (Nodes.Contains(node))
-            {
-                if (!Containers.Contains(node))
-                {
-                    added = true;
-                    Containers.Add(node);
-                }
-            }
-            return added;
-        }
-
         public bool RemoveNode(Node node)
         {
             bool removed = false;
@@ -116,12 +104,11 @@ namespace ItemLogistics.Framework
                 }
                 if (Inputs.Contains(node))
                 {
-                    TryDisconnectInput((Input)node);
                     Inputs.Remove((Input)node);
                 }
                 if (Connectors.Contains(node))
                 {
-                    Connectors.Remove((ConnectorPipe)node);
+                    Connectors.Remove((Connector)node);
                 }
             }
             return removed;
@@ -161,8 +148,7 @@ namespace ItemLogistics.Framework
                         {
                             Printer.Info("Connecting..");
                             input.Print();
-                            output.AddConnectedInput(input);
-                            canConnect = true;
+                            canConnect = output.AddConnectedInput(input);
                         }
                     }
                 }
@@ -176,13 +162,19 @@ namespace ItemLogistics.Framework
             bool canDisconnect = false;
             if (input != null)
             {
+                Printer.Info("Input not null");
                 foreach (Output output in Outputs)
                 {
+                    Printer.Info("Ouput has uinput?:" + output.IsInputConnected(input).ToString());
                     if (output.IsInputConnected(input))
                     {
-                        Printer.Info("Disconnecting..");
-                        output.RemoveConnectedInput(input);
-                        canDisconnect = true;
+                        if (!output.CanConnectedWith(input))
+                        {
+                            Printer.Info("Disconnecting..");
+                            canDisconnect = output.RemoveConnectedInput(input);
+                            Printer.Info("Disconnect: " + canDisconnect.ToString());
+                        }
+
                     }
                 }
             }
@@ -244,13 +236,6 @@ namespace ItemLogistics.Framework
                 graph.Append(conn.Obj.Name + conn.Position.ToString() + conn.GetHashCode().ToString() + ", ");
             }
             graph.Append("\n");
-            graph.Append("Containers: \n");
-            foreach (Container cont in Containers)
-            {
-                graph.Append(cont.Obj.Name + cont.Position.ToString() + cont.GetHashCode().ToString() + ", ");
-            }
-            graph.Append("\n");
-            graph.Append("Chests: \n");
             return graph.ToString();
         }
     }

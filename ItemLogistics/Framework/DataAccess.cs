@@ -18,20 +18,25 @@ namespace ItemLogistics.Framework
         private static DataAccess myDataAccess;
         public Dictionary<GameLocation, List<Network>> LocationNetworks { get; set; }
         public Dictionary<GameLocation, Node[,]> LocationMatrix  { get; set; }
-        public List<string> ValidItemNames { get; set; }
+        public List<string> ValidNetworkItems { get; set; }
         public List<string> ValidLocations { get; set; }
         public List<string> ValidIOPipeNames { get; set; }
         public List<string> ValidPipeNames { get; set; }
+        public List<string> ValidExtraNames { get; set; }
+        public List<string> ValidItems { get; set; }
+        
 
 
         private DataAccess()
         {
             LocationNetworks = new Dictionary<GameLocation, List<Network>>();
             LocationMatrix  = new Dictionary<GameLocation, Node[,]>();
-            ValidItemNames = new List<string>();
+            ValidNetworkItems = new List<string>();
             ValidLocations = new List<string>();
             ValidIOPipeNames = new List<string>();
             ValidPipeNames = new List<string>();
+            ValidExtraNames = new List<string>();
+            ValidItems = new List<string>();
             /*ValidLocations = new List<string>
                 { 
                 "FarmHouse", "Farm", "FarmCave", "Beach", "Mountain", 

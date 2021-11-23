@@ -34,21 +34,14 @@ namespace ItemLogistics.Framework
                 added = true;
                 Adjacents[side] = entity;
                 entity.AddAdjacent(Sides.GetInverse(side), this);
-                try
+                if (ConnectedContainer == null && entity is Container)
                 {
-                    if (ConnectedContainer == null && entity is Container)
-                    {
-                        ConnectedContainer = (Container)entity;
-                    }
-                    else
-                    {
-                        Printer.Info("More than 1 container adjacent.");
-                    }
+                    Printer.Info("Container es null");
+                    ConnectedContainer = (Container)entity;
                 }
-                catch(Exception e)
+                else
                 {
-                    Printer.Info("More than 1 container adjacent.");
-                    Printer.Info(e.StackTrace);
+                    Printer.Info("Container no es null.");
                 }
             }
             return added;
@@ -87,8 +80,8 @@ namespace ItemLogistics.Framework
 
         public void ProcessExchanges()
         {
-            //Printer.Info(ConnectedInputs.Count.ToString());
-            if (!ConnectedContainer.IsEmpty() && ConnectedInputs.Count > 0)
+
+            if (ConnectedContainer != null && !ConnectedContainer.IsEmpty() && ConnectedInputs.Count > 0)
             {
                 Printer.Info("Output empty? " + ConnectedContainer.IsEmpty().ToString());
                 //mirar de sacar el item en cuanto empieza al exchange
@@ -105,7 +98,7 @@ namespace ItemLogistics.Framework
         public void StartExchage()
         {
             Printer.Info(ConnectedInputs.Count.ToString());
-            bool sent = false;
+            Item item = null;
             int index = 0;
             Dictionary<Input, List<Node>> priorityInputs = ConnectedInputs;
             priorityInputs = priorityInputs.
@@ -113,7 +106,7 @@ namespace ItemLogistics.Framework
                 ThenBy(pair => pair.Value.Count).
                 ToDictionary(x => x.Key, x => x.Value);
             index = 0;
-            while (index < priorityInputs.Count && sent == false)
+            while (index < priorityInputs.Count && item == null)
             {
                 Input input = priorityInputs.Keys.ToList()[index];
                 Printer.Info("INPUT");
@@ -130,16 +123,16 @@ namespace ItemLogistics.Framework
                     FilterPipe filter = input as FilterPipe;
                     filter.UpdateFilter();
                 }
-                sent = ConnectedContainer.CanSendItem(input.ConnectedContainer);
-                Printer.Info("Can send: " + sent.ToString());
-                if (sent)
+                item = ConnectedContainer.CanSendItem(input.ConnectedContainer);
+                Printer.Info("Can send: " + (item != null).ToString());
+                if (item != null)
                 {
-                    Item item = ConnectedContainer.GetItemToSend(input.ConnectedContainer);
-                    List<Node> path = ConnectedContainer.GetPath(input.ConnectedContainer);
+                    List<Node> path = GetPath(input);
                     AnimatePath(path);
-                    Printer.Info("END animation");
+                    
                     if(!ConnectedContainer.SendItem(input.ConnectedContainer, item))
                     {
+                        Printer.Info("CANT ENTER, REVERSE");
                         path.Reverse();
                         AnimatePath(path);
                     }
@@ -157,7 +150,8 @@ namespace ItemLogistics.Framework
                             filter.UpdateFilter();
                         }
                     }
-                    
+                    Printer.Info("END animation");
+
                 }
 
                 index++;
@@ -179,9 +173,14 @@ namespace ItemLogistics.Framework
             bool added = false;
             if (!ConnectedInputs.Keys.Contains(input))
             {
-                added = true;
-                List<Node> path = ConnectedContainer.GetPath(input.ConnectedContainer);
-                ConnectedInputs.Add(input, path);
+                Printer.Info("input container: "+ (input.ConnectedContainer == null).ToString());
+                if (input.ConnectedContainer != null)
+                {
+                    added = true;
+                    List<Node> path;
+                    path = ConnectedContainer.GetPath(input.ConnectedContainer);
+                    ConnectedInputs.Add(input, path);
+                }  
             }
             return added;
         }
@@ -189,10 +188,11 @@ namespace ItemLogistics.Framework
         public bool RemoveConnectedInput(Input input)
         {
             bool removed = false;
-            if (!ConnectedInputs.Keys.Contains(input))
+            if (ConnectedInputs.Keys.Contains(input))
             {
                 removed = true;
                 ConnectedInputs.Remove(input);
+                Printer.Info("HAS STILL INPUT: "+ ConnectedInputs.Keys.Contains(input).ToString());
             }
             return removed;
         }

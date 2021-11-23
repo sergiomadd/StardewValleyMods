@@ -40,7 +40,7 @@ namespace ItemLogistics
             try
             {
                 data = this.Helper.Data.ReadJsonFile<DataModel>(dataPath);
-                if (data.ValidItemNames == null)
+                if (data.ValidNetworkItems == null)
                 {
                     this.Monitor.Log($"The {dataPath} file seems to be missing or invalid.", LogLevel.Error);
                 }
@@ -50,11 +50,13 @@ namespace ItemLogistics
                 this.Monitor.Log($"The {dataPath} file seems to be invalid.\n{ex}", LogLevel.Error);
             }
 
-            DataAccess.ValidItemNames = data.ValidItemNames;
+            DataAccess.ValidNetworkItems = data.ValidNetworkItems;
             DataAccess.ValidPipeNames = data.ValidPipeNames;
             DataAccess.ValidIOPipeNames = data.ValidIOPipeNames;
             DataAccess.ValidLocations = data.ValidLocations;
-            
+            DataAccess.ValidExtraNames = data.ValidExtraNames;
+            DataAccess.ValidItems = data.ValidItems;
+
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
             FencePatcher.Apply(harmony);
@@ -71,6 +73,7 @@ namespace ItemLogistics
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
+            Globals.Debug = true;
             JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
             if (JsonAssets == null)
             {
@@ -114,7 +117,10 @@ namespace ItemLogistics
                     NetworkBuilder.BuildLocationNetworks(location);
                     NetworkManager.UpdateLocationNetworks(location);
                     Monitor.Log(location.Name + " LOADED!", LogLevel.Info);
-                    NetworkManager.PrintLocationNetworks(location);
+                    if(Globals.Debug)
+                    {
+                        NetworkManager.PrintLocationNetworks(location);
+                    }
                 }
             }
         }
@@ -126,12 +132,13 @@ namespace ItemLogistics
                 if (e.IsMultipleOf(120))
                 {
                     DataAccess DataAccess = DataAccess.GetDataAccess();
-                    List<Network> logisticGroups;
-                    if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out logisticGroups))
+                    List<Network> networks;
+                    if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networks))
                     {
-                        foreach (Network group in logisticGroups)
+                        Printer.Info(networks.Count.ToString());
+                        foreach (Network network in networks)
                         {
-                            group.ProcessExchanges();
+                            //network.ProcessExchanges();
                         }
                     }
                 }

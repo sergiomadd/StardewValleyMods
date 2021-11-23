@@ -97,10 +97,10 @@ namespace ItemLogistics.Framework.Patches
                 {
 					if(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] != null)
                     {
-						Printer.Info("NOT NULL");
+						//Printer.Info("NOT NULL");
 						if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentNetwork is Network)
 						{
-							Printer.Info("HAS LG");
+							//Printer.Info("HAS LG");
 							Network lg = (Network)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentNetwork;
 							if (lg.IsPassable)
 							{
@@ -195,7 +195,9 @@ namespace ItemLogistics.Framework.Patches
 					Node[,] locationMatrix;
 					if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
 					{
-						if(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] is Connector)
+						//Printer.Info("Connector null?");
+						//Printer.Info((locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] == null).ToString());
+						if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] is Connector)
                         {
 							//Printer.Info("IS CONNECTOR");
 							Connector connector = (Connector) locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
@@ -427,7 +429,7 @@ namespace ItemLogistics.Framework.Patches
         {
 			Dictionary<int, int> DrawGuide = new Dictionary<int, int>();
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			if (DataAccess.ValidItemNames.Contains(fence.Name))
+			if (DataAccess.ValidNetworkItems.Contains(fence.Name))
 			{
 				if (fence.Name.Equals("Connector Pipe"))
 				{
@@ -447,17 +449,22 @@ namespace ItemLogistics.Framework.Patches
 					DrawGuide.Add(1110, 13);
 					DrawGuide.Add(610, 14);
 					DrawGuide.Add(1610, 15);
-					DrawGuide.Add(1505, 17);
-					DrawGuide.Add(1105, 18);
-					DrawGuide.Add(1015, 19);
-					DrawGuide.Add(605, 20);
-					DrawGuide.Add(515, 21);
-					DrawGuide.Add(115, 22);
-					DrawGuide.Add(1605, 23);
-					DrawGuide.Add(1515, 24);
-					DrawGuide.Add(1115, 25);
-					DrawGuide.Add(615, 26);
-					DrawGuide.Add(1615, 27);
+					DrawGuide.Add(5, 0);
+					DrawGuide.Add(1005, 16);
+					DrawGuide.Add(505, 17); ;
+					DrawGuide.Add(105, 18);
+					DrawGuide.Add(15, 19);
+					DrawGuide.Add(1505, 20);
+					DrawGuide.Add(1105, 21);
+					DrawGuide.Add(1015, 22);
+					DrawGuide.Add(605, 23);
+					DrawGuide.Add(515, 24);
+					DrawGuide.Add(115, 25);
+					DrawGuide.Add(1605, 26);
+					DrawGuide.Add(1515, 27);
+					DrawGuide.Add(1115, 28);
+					DrawGuide.Add(615, 29);
+					DrawGuide.Add(1615, 30);
 				}
 				else
 				{

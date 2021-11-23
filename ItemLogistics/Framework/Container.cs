@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
 using ItemLogistics.Framework.Model;
+using Netcode;
 
 namespace ItemLogistics.Framework
 {
@@ -23,50 +24,57 @@ namespace ItemLogistics.Framework
             Filter = new List<string>();
         }
 
-        public bool CanSendItem(Container input)
-        {
-            bool can = false;
-            if (!IsEmpty() && input != null)
-            {
-                int index = Chest.items.Count - 1;
-                while (index >= 0 && can == false)
-                {
-                    if (Chest.items[index] != null)
-                    {
-                        Item item = Chest.items[index];
-                        Printer.Info("Has filter: " + input.HasFilter().ToString());
-                        if (input.HasFilter())
-                        {
-                            if (input.Filter.Contains(item.Name))
-                            {
-                                can = true;
-                            }
-                        }
-                        else
-                        {
-                            can = true;
-                        }
-                    }
-                    index--;
-                }
-            }
-            return can;
-        }
-
-        public Item GetItemToSend(Container input)
+        public Item CanSendItem(Container input)
         {
             Item item = null;
-            if (!IsEmpty())
+            if (!IsEmpty() && input != null)
             {
-                int index = Chest.items.Count - 1;
+                NetObjectList<Item> sourceItemList;
+                if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
+                {
+                    Printer.Info("JUMINO");
+                    sourceItemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
+                }
+                else
+                {
+                    sourceItemList = Chest.items;
+                }
+                int index = sourceItemList.Count - 1;
                 while (index >= 0 && item == null)
                 {
-                    Printer.Info(index.ToString());
-                    if (Chest.items[index] != null)
+                    Printer.Info(sourceItemList[index].Name);
+                    if (input.HasFilter())
                     {
-                        item = Chest.items[index];
-                        Chest.items.RemoveAt(index);
-                        Chest.clearNulls();
+                        if (input.Filter.Contains(item.Name))
+                        {
+                            if(input.CanStackItem(sourceItemList[index]))
+                            {
+                                item = sourceItemList[index];
+                                sourceItemList.RemoveAt(index);
+                                Chest.clearNulls();
+                            }
+                            else if (input.CanReceiveItems())
+                            {
+                                item = sourceItemList[index];
+                                sourceItemList.RemoveAt(index);
+                                Chest.clearNulls();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (input.CanStackItem(sourceItemList[index]))
+                        {
+                            item = sourceItemList[index];
+                            sourceItemList.RemoveAt(index);
+                            Chest.clearNulls();
+                        }
+                        else if (input.CanReceiveItems())
+                        {
+                            item = sourceItemList[index];
+                            sourceItemList.RemoveAt(index);
+                            Chest.clearNulls();
+                        }
                     }
                     index--;
                 }
@@ -77,9 +85,9 @@ namespace ItemLogistics.Framework
         public bool SendItem(Container input, Item item)
         {
             bool sent = false;
-            if (input.HasFilter())
+            if (!IsEmpty() && input != null && input.HasFilter())
             {
-                //Printer.Info("FILTERED");
+                Printer.Info("FILTERED");
                 if (input.Filter.Contains(item.Name))
                 {
                     //Printer.Info($"SENDING FILTERED: {item.Name}");
@@ -87,13 +95,14 @@ namespace ItemLogistics.Framework
                     {
                         //Printer.Info("Stacking");
                         input.ReceiveStack(item);
+                        sent = true;
                     }
                     else if (input.CanReceiveItems())
                     {
                         //Printer.Info("New Stack");
                         input.ReceiveItem(item);
+                        sent = true;
                     }
-                    sent = true;
                 }
                 else
                 {
@@ -102,52 +111,100 @@ namespace ItemLogistics.Framework
                     {
                         //Printer.Info("Stacking");
                         ReceiveStack(item);
+                        sent = false;
                     }
                     else if (CanReceiveItems())
                     {
                         //Printer.Info("New Stack");
                         ReceiveItem(item);
+                        sent = false;
                     }
-                    sent = false;
                 }
 
             }
             else
             {
-                //Printer.Info($"SENDING: {item.Name}");
+                Printer.Info($"SENDING: {item.Name}");
                 if (input.CanStackItem(item))
                 {
-                    //Printer.Info("Stacking");
+                    Printer.Info("Stacking");
                     input.ReceiveStack(item);
+                    sent = true;
                 }
                 else if (input.CanReceiveItems())
                 {
-                    //Printer.Info("New Stack");
+                    Printer.Info("New Stack");
                     input.ReceiveItem(item);
+                    sent = true;
                 }
-                sent = true;
+                else
+                {
+                    if (CanStackItem(item))
+                    {
+                        Printer.Info("Stacking");
+                        ReceiveStack(item);
+                        sent = false;
+                    }
+                    else if (CanReceiveItems())
+                    {
+                        Printer.Info("New Stack");
+                        ReceiveItem(item);
+                        sent = false;
+                    }
+                }
+                
             }
-            //Printer.Info("Item sent? " + sent.ToString());
+            Printer.Info("Item sent? " + sent.ToString());
             return sent;
         }
 
-        public bool CanReceiveItems()
+        //See if any stacks isnt full
+        public bool CanStack()
         {
-            bool canReceive = false;
-            if (Chest.items.Capacity < Chest.GetActualCapacity())
+            bool canStack = false;
+            NetObjectList<Item> itemList;
+            if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
             {
-                canReceive = true;
+                itemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
             }
-            return canReceive;
-        }
+            else
+            {
+                itemList = Chest.items;
+            }
 
+            int index = itemList.Count - 1;
+            while (index >= 0 && !canStack)
+            {
+                if (itemList[index] != null)
+                {
+                    Printer.Info(itemList[index].getRemainingStackSpace().ToString());
+                    if (itemList[index].getRemainingStackSpace() > 0)
+                    {
+                        canStack = true;
+                    }
+                }
+                index--;
+            }
+
+            return canStack;
+        }
+        //See if an especific item can stack with another
         public bool CanStackItem(Item item)
         {
             bool canStack = false;
-            if(Chest.items.Contains(item))
+            NetObjectList<Item> itemList;
+            if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
             {
-                int index = Chest.items.IndexOf(item);
-                if (Chest.items[index].canStackWith(item))
+                itemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
+            }
+            else
+            {
+                itemList = Chest.items;
+            }
+            if (itemList.Contains(item))
+            {
+                int index = itemList.IndexOf(item);
+                if (itemList[index].canStackWith(item))
                 {
                     canStack = true;
                 }
@@ -155,14 +212,34 @@ namespace ItemLogistics.Framework
             return canStack;
         }
 
-        public void ReceiveItem(Item item)
+        //See if any slot if free
+        public bool CanReceiveItems()
         {
-            Chest.addItem(item);
+            bool canReceive = false;
+            NetObjectList<Item> itemList;
+            if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
+            {
+                itemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
+            }
+            else
+            {
+                itemList = Chest.items;
+            }
+            if (itemList.Count < Chest.GetActualCapacity())
+            {
+                canReceive = true;
+            }
+            return canReceive;
         }
-
         public void ReceiveStack(Item item)
         {
             Chest.addToStack(item);
+        }
+
+        public void ReceiveItem(Item item)
+        {
+            Printer.Info("Receiving item");
+            Chest.addItem(item);
         }
 
         public void UpdateFilter()

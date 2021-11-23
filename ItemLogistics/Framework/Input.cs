@@ -32,6 +32,7 @@ namespace ItemLogistics.Framework
                     if (ConnectedContainer == null && entity is Container)
                     {
                         ConnectedContainer = (Container)entity;
+                        Printer.Info("CONNECTED CONTAINER ADDED");
                     }
                     else
                     {

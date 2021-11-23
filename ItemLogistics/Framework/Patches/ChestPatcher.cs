@@ -8,6 +8,7 @@ using StardewValley;
 using StardewValley.Objects;
 using StardewModdingAPI;
 using ItemLogistics.Framework.Model;
+using ItemLogistics.Framework.Objects;
 using Netcode;
 using StardewValley.Menus;
 
@@ -23,21 +24,8 @@ namespace ItemLogistics.Framework.Patches
             try
             {
                 /*harmony.Patch(
-                    original: AccessTools.Method(typeof(Chest), nameof(Chest.ShowMenu)),
-                    postfix: new HarmonyMethod(typeof(ChestPatcher), nameof(ChestPatcher.Chest_ShowMenu_Postfix))
-                );*/
-                /*harmony.Patch(
                     original: AccessTools.Method(typeof(Chest), nameof(Chest.addItem)),
                     postfix: new HarmonyMethod(typeof(ChestPatcher), nameof(ChestPatcher.Chest_addItem_Postfix))
-                );*/
-                /*harmony.Patch(
-                    original: AccessTools.Method(typeof(Chest), nameof(Chest.grabItemFromChest)),
-                    postfix: new HarmonyMethod(typeof(ChestPatcher), nameof(ChestPatcher.Chest_grabItemFromChest_Postfix))
-                );*/
-                /*
-                harmony.Patch(
-                    original: AccessTools.Method(typeof(Chest), nameof(Chest.grabItemFromInventory)),
-                    prefix: new HarmonyMethod(typeof(ChestPatcher), nameof(ChestPatcher.Chest_grabItemFromInventory_Prefix))
                 );*/
             }
             catch (Exception ex)
@@ -45,6 +33,41 @@ namespace ItemLogistics.Framework.Patches
                 Framework.Printer.Info($"Failed to add chest postfix: {ex}");
             }
         }
+        private static void Chest_addItem_Postfix(Chest __instance, Item item, ref Item __result)
+        {
+            Printer.Info("CHEST POSTFIX");
+            item.resetState();
+            __instance.clearNulls();
+            NetObjectList<Item> item_list = __instance.items;
+            DataAccess DataAccess = DataAccess.GetDataAccess();
+            if (__instance.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || __instance.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
+            {
+                item_list = __instance.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
+            }
+
+            for (int i = 0; i < item_list.Count; i++)
+            {
+                if (item_list[i] != null && item_list[i].canStackWith(item))
+                {
+                    item.Stack = item_list[i].addToStack(item);
+                    if (item.Stack <= 0)
+                    {
+                        __result = null;
+                    }
+                }
+            }
+            if (item_list.Count < __instance.GetActualCapacity())
+            {
+                item_list.Add(item);
+                __result = null;
+            }
+            else
+            {
+                __result = item;
+            }
+        }
+
+
         /*
         private static void Chest_ShowMenu_Postfix(Chest __instance, Item item)
         {
@@ -214,48 +237,6 @@ namespace ItemLogistics.Framework.Patches
                 }
             }
         }
-
-        /*private static void Chest_addItem_Postfix(Chest __instance, Item item, ref Item __result)
-        {
-            Printer.Info("CHEST POSTFIX");
-            SGraphDB DataAccess = SGraphDB.GetSGraphDB();
-            //Jumino
-            SGNode[,] locationMatrix;
-            if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
-            {
-                if(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] is FilterPipe)
-                {
-                    Printer.Info("LOADING INTO FILTER");
-                }
-            }
-            else
-            {
-                Printer.Info("NOT FILTER");
-            }
-                
-            item.resetState();
-            __instance.clearNulls();
-            NetObjectList<Item> item_list = __instance.items;
-            for (int i = 0; i < item_list.Count; i++)
-            {
-                if (item_list[i] != null && item_list[i].canStackWith(item))
-                {
-                    item.Stack = item_list[i].addToStack(item);
-                    if (item.Stack <= 0)
-                    {
-                        __result = null;
-                    }
-                }
-            }
-            if (item_list.Count < __instance.GetActualCapacity())
-            {
-                item_list.Add(item);
-                __result = null;
-            }
-            else
-            {
-                __result = item;
-            }
-        }*/
+        */
     }
 }

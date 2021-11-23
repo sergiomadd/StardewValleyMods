@@ -7,7 +7,7 @@ using ItemLogistics.Framework.Model;
 using Microsoft.Xna.Framework;
 using StardewValley;
 
-namespace ItemLogistics.Framework
+namespace ItemLogistics.Framework.Objects
 {
     class ConnectorPipe : Connector
     {

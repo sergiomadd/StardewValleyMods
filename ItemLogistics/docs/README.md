@@ -7,17 +7,17 @@ Item Logistics is a mod that provides item transportation and item sorting.
 This mod is in beta version. Backup your saves or create a new save before playing with it. You might lose items and get crashes.
 
 ## Contents:
-- [Current Features for 0.1.0](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#current-features-for-010)
+- [Current Features for 0.1.0](#current-features-for-010)
 	- [Pipes](#pipes)
-		- [Connectors](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#connectors)
-		- [Outputs](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#outputs)
-		- [Inputs](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#inputs)
-	-  [#Supported containers](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#supported-containers)
-	-  [#Supported buildings](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#supported-buildings)
-	-  [#Network Building](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#network-building)
-	-  [#misc](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#misc)
-	-  [#Planned Features](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#planned-features)
-	-  [#See also](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#see-also)
+		- [Connectors](#connectors)
+		- [Outputs](#outputs)
+		- [Inputs](#inputs)
+	-  [Supported containers](#supported-containers)
+	-  [Supported buildings](#supported-buildings)
+	-  [Network Building](#network-building)
+	-  [misc](#misc)
+	-  [Planned Features](#planned-features)
+	-  [See also](#see-also)
 
 ---
 

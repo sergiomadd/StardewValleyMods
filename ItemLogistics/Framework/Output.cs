@@ -16,12 +16,14 @@ namespace ItemLogistics.Framework
     {
         public Dictionary<Input, List<Node>> ConnectedInputs { get; set; }
         public Container ConnectedContainer { get; set; }
+        public ShipBin ConnectedShippingBin { get; set; }
         public List<Item> Filter { get; set; }
 
         public Output(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedInputs = new Dictionary<Input, List<Node>>();
             ConnectedContainer = null;
+            ConnectedShippingBin = null;
             Filter = new List<Item>();
         }
 
@@ -38,6 +40,11 @@ namespace ItemLogistics.Framework
                 {
                     //Printer.Info("Container es null");
                     ConnectedContainer = (Container)entity;
+                }
+                else if (ConnectedContainer == null && entity is ShipBin)
+                {
+                    ConnectedShippingBin = (ShipBin)entity;
+                    Printer.Info("CONNECTED ShippingBin ADDED");
                 }
                 else
                 {
@@ -81,6 +88,8 @@ namespace ItemLogistics.Framework
 
         public void ProcessExchanges()
         {
+            Printer.Info("Procesing Exchanges...");
+            Printer.Info("Inputs: "+(ConnectedInputs.Count > 0).ToString());
             if (ConnectedContainer != null && !ConnectedContainer.IsEmpty() && ConnectedInputs.Count > 0)
             {
                 Printer.Info("Output empty? " + ConnectedContainer.IsEmpty().ToString());
@@ -121,21 +130,38 @@ namespace ItemLogistics.Framework
                 }
                 Printer.Info("INPUT");
                 input.Print();
-                item = ConnectedContainer.CanSendItem(input.ConnectedContainer);
-                Printer.Info("Can send: " + (item != null).ToString());
-                if (item != null)
+                if (input.ConnectedShippingBin != null)
                 {
-                    List<Node> path = GetPath(input);
-                    AnimatePath(path);
-                    if(!ConnectedContainer.SendItem(input.ConnectedContainer, item))
+                    item = ConnectedContainer.GetItemToShip(input);
+                    if (item != null)
                     {
-                        Printer.Info("CANT ENTER, REVERSE");
-                        path.Reverse();
+                        List<Node> path = GetPath(input);
                         AnimatePath(path);
+                        input.ConnectedShippingBin.ShipItem(item, Game1.player);
+                        Printer.Info("END animation");
                     }
-                    Printer.Info("END animation");
-
+                    
                 }
+                else if (input.ConnectedContainer != null)
+                {
+                    item = ConnectedContainer.CanSendItem(input.ConnectedContainer);
+                    Printer.Info("Can send: " + (item != null).ToString());
+                    if (item != null)
+                    {
+                        List<Node> path = GetPath(input);
+                        AnimatePath(path);
+                        if (!ConnectedContainer.SendItem(input.ConnectedContainer, item))
+                        {
+                            Printer.Info("CANT ENTER, REVERSE");
+                            path.Reverse();
+                            AnimatePath(path);
+                        }
+                        Printer.Info("END animation");
+
+                    }
+                }
+
+
 
                 index++;
             }
@@ -163,7 +189,15 @@ namespace ItemLogistics.Framework
                     List<Node> path;
                     path = ConnectedContainer.GetPath(input.ConnectedContainer);
                     ConnectedInputs.Add(input, path);
-                }  
+                }
+                if (ConnectedContainer != null && input.ConnectedShippingBin != null)
+                {
+                    added = true;
+                    List<Node> path;
+                    //HACER QUE EL PATH SEA HASTA EL INPUT
+                    path = ConnectedContainer.GetPath(input);
+                    ConnectedInputs.Add(input, path);
+                }
             }
             return added;
         }

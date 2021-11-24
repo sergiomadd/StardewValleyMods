@@ -86,9 +86,12 @@ namespace ItemLogistics.Framework
                     int x = (int)newNode.Position.X;
                     int y = (int)newNode.Position.Y;
                     matrix[x, y] = newNode;
+                    Printer.Info("BIN");
+                    Printer.Info((matrix[x, y - 1] != null).ToString());
                     if (matrix[x, y - 1] != null)
                     {
                         newNode.AddAdjacent(SideStruct.GetSides().North, matrix[x, y - 1]);
+                        Printer.Info(matrix[x, y - 1].Name);
                     }
                     if (matrix[x, y + 1] != null)
                     {
@@ -97,7 +100,6 @@ namespace ItemLogistics.Framework
                     if (matrix[x + 1, y] != null)
                     {
                         newNode.AddAdjacent(SideStruct.GetSides().West, matrix[x + 1, y]);
-                        matrix[x + 1, y].Print();
                     }
                     if (matrix[x - 1, y] != null)
                     {
@@ -200,7 +202,7 @@ namespace ItemLogistics.Framework
             {
                 if (adj.Value != null)
                 {
-                    if (DataAccess.ValidNetworkItems.Contains(adj.Value.Obj.name))
+                    if (DataAccess.ValidNetworkItems.Contains(adj.Value.Name))
                     {
                         adj.Value.Print();
                         if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networkList))

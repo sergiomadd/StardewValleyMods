@@ -43,8 +43,9 @@ namespace ItemLogistics.Framework.Objects
             }
             return added;
         }
-        public void UpdateFilter()
+        public override void UpdateFilter()
         {
+            Filter = ConnectedContainer.UpdateFilter(null);
             ConnectedContainer.UpdateFilter(null);
         }
     }

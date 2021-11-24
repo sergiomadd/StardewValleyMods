@@ -30,6 +30,9 @@
   "ValidExtraNames": [
     "Chest"
   ],
+  "ValidBuildings": [
+    "Shipping Bin"
+  ],
   "ValidLocations": [
     "Farm"
   ]

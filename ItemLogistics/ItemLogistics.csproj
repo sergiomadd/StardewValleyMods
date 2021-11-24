@@ -74,11 +74,13 @@
     <Compile Include="Framework\Patches\ObjectPatcher.cs" />
     <Compile Include="Framework\Objects\ConnectorPipe.cs" />
     <Compile Include="Framework\Objects\PolymorphicPipe.cs" />
+    <Compile Include="Framework\ShipBin.cs" />
     <Compile Include="ModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\BigCraftables\" />
+    <Folder Include="docs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\content-pack.json" />

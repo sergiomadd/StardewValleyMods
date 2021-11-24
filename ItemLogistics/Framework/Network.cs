@@ -132,7 +132,7 @@ namespace ItemLogistics.Framework
 
         public bool TryConnectOutput(Output output)
         {
-            //Printer.Info("Trying connection");
+            Printer.Info("Trying connection");
             bool canConnect = false;
             if (output != null)
             {
@@ -141,12 +141,13 @@ namespace ItemLogistics.Framework
                     input.Print();
                     if (!output.IsInputConnected(input))
                     {
-                        //Printer.Info("Not connected");
+                        Printer.Info("Not connected");
                         if (output.CanConnectedWith(input))
                         {
-                            //Printer.Info("Connecting..");
+                            Printer.Info("Connecting..");
                             input.Print();
                             canConnect = output.AddConnectedInput(input);
+                            Printer.Info("CONNECTED?"+canConnect.ToString());
                         }
                     }
                 }

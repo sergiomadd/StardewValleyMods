@@ -67,7 +67,7 @@ namespace ItemLogistics.Framework.Patches
 				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
 				{
 					FilterPipe pipe = (FilterPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
-					pipe.Filter.ShowMenu();
+					pipe.Chest.ShowMenu();
 				}
 				return false;
 			}

@@ -13,11 +13,11 @@ namespace ItemLogistics.Framework.Objects
 {
     class FilterPipe : Input
     {
-        public Chest Filter { get; set; }
+        public Chest Chest { get; set; }
         public FilterPipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            Filter = new Chest(true, position, 130);
+            Chest = new Chest(true, position, 130);
             Priority = 3;
         }
         public override bool AddAdjacent(Side side, Node entity)
@@ -44,9 +44,9 @@ namespace ItemLogistics.Framework.Objects
             }
             return added;
         }
-        public void UpdateFilter()
+        public override void UpdateFilter()
         {
-            ConnectedContainer.UpdateFilter(Filter.items);
+            Filter = ConnectedContainer.UpdateFilter(Chest.items);
         }
 
 

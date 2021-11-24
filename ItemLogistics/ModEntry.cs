@@ -135,10 +135,10 @@ namespace ItemLogistics
                     List<Network> networks;
                     if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networks))
                     {
-                        Printer.Info(networks.Count.ToString());
+                        Printer.Info("Network amount: "+networks.Count.ToString());
                         foreach (Network network in networks)
                         {
-                            //network.ProcessExchanges();
+                            network.ProcessExchanges();
                         }
                     }
                 }

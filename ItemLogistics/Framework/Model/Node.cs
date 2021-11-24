@@ -10,6 +10,7 @@ namespace ItemLogistics.Framework.Model
 {
     public class Node
     {
+        public string Name { get; set; }
         public Vector2 Position { get; set; }
         public GameLocation Location { get; set; }
         public StardewValley.Object Obj { get; set; }
@@ -20,6 +21,7 @@ namespace ItemLogistics.Framework.Model
 
         public Node(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
+            if (obj != null) { Name = obj.name; }
             Position = position;
             Location = location;
             Obj = obj;
@@ -58,6 +60,7 @@ namespace ItemLogistics.Framework.Model
 
         public System.Object[] GetPathRecursive(Node target, List<Node> looked, bool reached)
         {
+            //Print();
             System.Object[] returns = new System.Object[3];
             returns[2] = reached;
             Node adj;

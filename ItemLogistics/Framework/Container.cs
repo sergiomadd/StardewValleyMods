@@ -24,6 +24,36 @@ namespace ItemLogistics.Framework
             Filter = new List<string>();
         }
 
+        public Item GetItemToShip(Input input)
+        {
+            Item item = null;
+            if (!IsEmpty() && input != null)
+            {
+                NetObjectList<Item> itemList = GetItemList();
+                int index = itemList.Count - 1;
+                while (index >= 0 && item == null)
+                {
+                    if (input.HasFilter())
+                    {
+                        if (input.Filter.Contains(itemList[index].Name))
+                        {
+                            item = itemList[index];
+                            itemList.RemoveAt(index);
+                            Chest.clearNulls();
+                        }
+                    }
+                    else
+                    {
+                        item = itemList[index];
+                        itemList.RemoveAt(index);
+                        Chest.clearNulls();
+                    }
+                    index--;
+                }
+            }
+            return item;
+        }
+
         public Item TrySendItem(Container input, NetObjectList<Item> itemList, int index)
         {
             Item item = null;
@@ -217,7 +247,7 @@ namespace ItemLogistics.Framework
             Chest.addItem(item);
         }
 
-        public void UpdateFilter(NetObjectList<Item> filteredItems)
+        public List<string> UpdateFilter(NetObjectList<Item> filteredItems)
         {
             Filter = new List<string>();
             if (filteredItems == null)
@@ -237,6 +267,7 @@ namespace ItemLogistics.Framework
                     Filter.Add(item.Name);
                 }
             }
+            return Filter;
 
         }
         public bool HasFilter()

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
+using StardewValley.Buildings;
 using ItemLogistics.Framework.Objects;
 
 namespace ItemLogistics.Framework.Model
@@ -36,6 +37,17 @@ namespace ItemLogistics.Framework.Model
             else if (obj.name.Equals("Chest"))
             {
                 return new Container(position, location, obj);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public static Node CreateElement(Vector2 position, GameLocation location, StardewValley.Buildings.Building building)
+        {
+            if (building.GetType().Equals(typeof(ShippingBin)))
+            {
+                return new ShipBin(position, location, null, building);
             }
             else
             {

@@ -12,11 +12,15 @@ namespace ItemLogistics.Framework
     public class Input : Node
     {
         public Container ConnectedContainer { get; set; }
+        public ShipBin ConnectedShippingBin { get; set; }
+        public List<string> Filter { get; set; }
         public int Priority { get; set; }
 
         public Input(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
+            ConnectedShippingBin = null;
+            Filter = new List<string>();
         }
 
         public override bool AddAdjacent(Side side, Node entity)
@@ -33,6 +37,11 @@ namespace ItemLogistics.Framework
                     {
                         ConnectedContainer = (Container)entity;
                         Printer.Info("CONNECTED CONTAINER ADDED");
+                    }
+                    else if (ConnectedContainer == null && entity is ShipBin)
+                    {
+                        ConnectedShippingBin = (ShipBin)entity;
+                        Printer.Info("CONNECTED ShippingBin ADDED");
                     }
                     else
                     {
@@ -76,6 +85,20 @@ namespace ItemLogistics.Framework
                 }
             }
             return removed;
+        }
+
+        public bool HasFilter()
+        {
+            bool hasFilter = false;
+            if (Filter.Count > 0)
+            {
+                hasFilter = true;
+            }
+            return hasFilter;
+        }
+        public virtual void UpdateFilter()
+        {
+            Filter = ConnectedContainer.UpdateFilter(null);
         }
     }
 }

@@ -8,7 +8,7 @@ This mod is in beta version. Backup your saves or create a new save before playi
 
 ## Contents:
 - [Current Features for 0.1.0](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#current-features-for-010)
-	- [Pipes](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#pipes)
+	- [Pipes](#pipes)
 		- [Connectors](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#connectors)
 		- [Outputs](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#outputs)
 		- [Inputs](https://github.com/sergiomadd/StardewValleyMods/tree/main/ItemLogistics#inputs)

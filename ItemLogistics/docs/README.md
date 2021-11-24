@@ -1,12 +1,12 @@
 # Item Logistics
 Item Logistics is a mod that provides item transportation and item sorting.
 
-## Current Version: 0.1.0
+# Current Version: 0.1.0
 
-## WARNING:
+# WARNING:
 This mod is in beta version. Backup your saves or create a new save before playing with it. You might lose items and get crashes.
 
-## Contents:
+# Contents:
 - [Current Features for 0.1.0](#current-features-for-010)
 	- [Pipes](#pipes)
 		- [Connectors](#connectors)
@@ -21,10 +21,10 @@ This mod is in beta version. Backup your saves or create a new save before playi
 
 ---
 
-## Current Features (for 0.1.0):
+# Current Features (for 0.1.0):
 
-## Pipes:
-#### Connectors:
+# Pipes:
+## Connectors:
 - ##### Connector Pipe: 
 Connector Pipes act as the link between Output and Input pipes.
 It moves items at 2 tiles/1 second
@@ -32,14 +32,14 @@ It moves items at 2 tiles/1 second
 
 ---
 
-#### Outputs:
+## Outputs:
 - Extractor Pipe:
 Extractor Pipes extract items from an adjacent container, at 1 stack/3 seconds.
 Note: Each output can only have 1 container adjacent. 
 
 ---
 
-#### Inputs:
+## Inputs:
 - Inserter Pipe:
 Inserter Pipes insert items into an adjacent container. It does not filter any item.
 - Polymorphic Pipe:
@@ -49,7 +49,7 @@ Filter Pipes insert items into an adjacent container. It filters items based on 
 
 ---
 
-### Supported containers:
+## Supported containers:
 - Chest:
 Regular vanilla chests.
 - Junimo Chest:
@@ -61,14 +61,14 @@ Mini-Shipping Bin work as chests.
 
 ---
 
-### Supported buildings:
+## Supported buildings:
 - Shipping Bin:
 The Shipping Bin doesn't work like a regular chest, but you can insert items into it if and input is adjacent. These items will be shipped at the end of the day. 
 Be careful, as you may not be able to get the items back once the get piped.
 
 ---
 
-### Network Building:
+# Network Building:
 A valid network has to have **at least 1 Output Pipe and 1 Input Pipe**.
 Also for the output to start pumping items, the input has to have a valid adjacent container.
 That said, you can have as many outputs and inputs as you like.
@@ -76,14 +76,14 @@ That said, you can have as many outputs and inputs as you like.
 
 ---
 
-### misc:
+# misc:
 You wont lose items
 
 ---
 
-### Planned Features:
+# Planned Features:
 Crossable 
 
-## See also
+# See also
 - [release-notes](https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemLogistics/docs/release-notes.md)
 - [Nexus Mod Page].()

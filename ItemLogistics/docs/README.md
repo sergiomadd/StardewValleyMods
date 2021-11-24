@@ -14,10 +14,10 @@ This mod is in beta version. Backup your saves or create a new save before playi
 		- [[#Inputs]]
 	-  [[#Supported containers]]
 	-  [[#Supported buildings]]
-	-  [[#Network Building]]
-	-  [[#misc]]
-	-  [[#Planned Features]]
-	-  [[#See also]]
+-  [[#Network Building]]
+-  [[#misc]]
+-  [[#Planned Features]]
+-  [[#See also]]
 
 ---
 

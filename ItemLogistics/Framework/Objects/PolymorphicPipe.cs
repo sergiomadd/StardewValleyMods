@@ -13,11 +13,9 @@ namespace ItemLogistics.Framework.Objects
 {
     class PolymorphicPipe : Input
     {
-        public List<Item> Filter { get; set; }
         public PolymorphicPipe(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            Filter = new List<Item>();
             Priority = 2;
         }
 
@@ -47,7 +45,7 @@ namespace ItemLogistics.Framework.Objects
         }
         public void UpdateFilter()
         {
-            ConnectedContainer.UpdateFilter();
+            ConnectedContainer.UpdateFilter(null);
         }
     }
 }

@@ -20,9 +20,33 @@ namespace ItemLogistics.Framework.Objects
             Filter = new Chest(true, position, 130);
             Priority = 3;
         }
+        public override bool AddAdjacent(Side side, Node entity)
+        {
+            bool added = false;
+            if (Adjacents[side] == null)
+            {
+                added = true;
+                Adjacents[side] = entity;
+                entity.AddAdjacent(Sides.GetInverse(side), this);
+                try
+                {
+                    if (ConnectedContainer == null && entity is Container)
+                    {
+                        ConnectedContainer = (Container)entity;
+                        UpdateFilter();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Printer.Info("More than 1 container adjacent.");
+                    Printer.Info(e.StackTrace);
+                }
+            }
+            return added;
+        }
         public void UpdateFilter()
         {
-            ConnectedContainer.UpdateFilter();
+            ConnectedContainer.UpdateFilter(Filter.items);
         }
 
 

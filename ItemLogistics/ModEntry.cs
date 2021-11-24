@@ -138,7 +138,7 @@ namespace ItemLogistics
                         Printer.Info(networks.Count.ToString());
                         foreach (Network network in networks)
                         {
-                            network.ProcessExchanges();
+                            //network.ProcessExchanges();
                         }
                     }
                 }

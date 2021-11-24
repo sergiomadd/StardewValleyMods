@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using StardewValley;
 using StardewValley.Objects;
+using StardewValley.Tools;
 using StardewModdingAPI;
 using ItemLogistics.Framework.Model;
 using ItemLogistics.Framework.Objects;
@@ -26,8 +27,8 @@ namespace ItemLogistics.Framework.Patches
 			try
 			{
 				harmony.Patch(
-					original: AccessTools.Method(typeof(StardewValley.Object), nameof(StardewValley.Object.clicked)),
-					postfix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Object_clicked_Postfix))
+					original: AccessTools.Method(typeof(Fence), nameof(Fence.checkForAction)),
+					prefix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Fence_checkForAction_Prefix))
 				);
 				harmony.Patch(
 					original: AccessTools.Method(typeof(Fence), nameof(Fence.getDrawSum)),
@@ -54,6 +55,25 @@ namespace ItemLogistics.Framework.Patches
 			catch (Exception ex)
 			{
 				Printer.Info($"Failed to add fence patch: {ex}");
+			}
+		}
+		
+		private static bool Fence_checkForAction_Prefix(Fence __instance)
+		{
+			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true) && __instance.Name.Equals("Filter Pipe"))
+            {
+				DataAccess DataAccess = DataAccess.GetDataAccess();
+				Node[,] locationMatrix;
+				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
+				{
+					FilterPipe pipe = (FilterPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
+					pipe.Filter.ShowMenu();
+				}
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 
@@ -275,24 +295,6 @@ namespace ItemLogistics.Framework.Patches
 					break;
 			}
 			return drawSum;
-		}
-
-		private static void Object_clicked_Postfix(Fence __instance, Farmer who)
-		{
-			Printer.Info("FENCE: CLICKED");
-			if (__instance.Name.Equals("Filter Pipe"))
-			{
-
-				//Printer.Info("Filterpipe PATCH");
-				DataAccess DataAccess = DataAccess.GetDataAccess();
-				Node[,] locationMatrix;
-				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
-				{
-					FilterPipe pipe = (FilterPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
-					//pipe.FilterChest.checkForAction(Game1.player, false);
-					pipe.Filter.ShowMenu();
-				}
-			}
 		}
 		
 		private static bool Fence_drawInMenu_Prefix(Fence __instance, SpriteBatch spriteBatch, Vector2 location, float scale, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)

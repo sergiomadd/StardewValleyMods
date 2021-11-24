@@ -51,10 +51,11 @@ namespace ItemLogistics.Framework
                 int index = itemList.Count - 1;
                 while (index >= 0 && item == null)
                 {
-                    //Printer.Info(itemList[index].Name);
+                    Printer.Info(itemList[index].Name);
                     if (input.HasFilter())
                     {
-                        if (input.Filter.Contains(item.Name))
+                        Printer.Info(input.Filter.Count.ToString());
+                        if (input.Filter.Contains(itemList[index].Name))
                         {
                             item = TrySendItem(input, itemList, index);
                         }
@@ -216,15 +217,27 @@ namespace ItemLogistics.Framework
             Chest.addItem(item);
         }
 
-        public void UpdateFilter()
+        public void UpdateFilter(NetObjectList<Item> filteredItems)
         {
-            Printer.Info($"Filter items: {Chest.items.Count}");
             Filter = new List<string>();
-            NetObjectList<Item> itemList = GetItemList();
-            foreach (Item item in itemList.ToList())
+            if (filteredItems == null)
             {
-                Filter.Add(item.Name);
+                NetObjectList<Item> itemList = GetItemList();
+                foreach (Item item in itemList.ToList())
+                {
+                    //Printer.Info("NAME:" + item.Name);
+                    Filter.Add(item.Name);
+                }
             }
+            else
+            {
+                foreach (Item item in filteredItems.ToList())
+                {
+                    //Printer.Info("NAME:" + item.Name);
+                    Filter.Add(item.Name);
+                }
+            }
+
         }
         public bool HasFilter()
         {

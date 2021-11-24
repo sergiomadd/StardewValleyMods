@@ -109,46 +109,29 @@ namespace ItemLogistics.Framework
             while (index < priorityInputs.Count && item == null)
             {
                 Input input = priorityInputs.Keys.ToList()[index];
-                Printer.Info("INPUT");
-                input.Print();
                 if (input is PolymorphicPipe)
                 {
-                    //Printer.Info("Filter");
                     PolymorphicPipe poly = (PolymorphicPipe)input;
                     poly.UpdateFilter();
                 }
                 else if (input is FilterPipe)
                 {
-                    //Printer.Info("Filter");
                     FilterPipe filter = input as FilterPipe;
                     filter.UpdateFilter();
                 }
+                Printer.Info("INPUT");
+                input.Print();
                 item = ConnectedContainer.CanSendItem(input.ConnectedContainer);
                 Printer.Info("Can send: " + (item != null).ToString());
                 if (item != null)
                 {
                     List<Node> path = GetPath(input);
                     AnimatePath(path);
-                    
                     if(!ConnectedContainer.SendItem(input.ConnectedContainer, item))
                     {
                         Printer.Info("CANT ENTER, REVERSE");
                         path.Reverse();
                         AnimatePath(path);
-                    }
-                    else
-                    {
-                        if(input is PolymorphicPipe)
-                        {
-                            PolymorphicPipe poly = (PolymorphicPipe)input;
-                            poly.UpdateFilter();
-                        }
-                        else if (input is FilterPipe)
-                        {
-                            //Printer.Info("Filter");
-                            FilterPipe filter = input as FilterPipe;
-                            filter.UpdateFilter();
-                        }
                     }
                     Printer.Info("END animation");
 

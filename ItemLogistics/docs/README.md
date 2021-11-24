@@ -38,32 +38,32 @@ Note: Each output can only have 1 container adjacent.
 
 - ### Inputs:
 	- **Inserter Pipe**  
-Inserter Pipes insert items into an adjacent container. It does not filter any item.
+Inserter Pipes insert items into an adjacent container. It does not filter any item.  
 	- **Polymorphic Pipe**  
-Polymorphic Pipes insert items into an adjacent container. It filters items based on the container's current items. If the container is empty, it acts like an Inserter Pipe, until 1 item enters the container.
+Polymorphic Pipes insert items into an adjacent container. It filters items based on the container's current items. If the container is empty, it acts like an Inserter Pipe, until 1 item enters the container.  
 	- **Filter Pipe**  
-Filter Pipes insert items into an adjacent container. It filters items based on the pipes inventory. To open the inventory simple left click the Filter Pipe like a chest. Then add the items you want filtered. If the container is empty, it acts like an Inserter Pipe, until alteast 1 item is added to the invertory.
+Filter Pipes insert items into an adjacent container. It filters items based on the pipes inventory. To open the inventory simple left click the Filter Pipe like a chest. Then add the items you want filtered. If the container is empty, it acts like an Inserter Pipe, until alteast 1 item is added to the invertory.  
 
 - ### Supported containers:
 	- **Chest**  
-Regular vanilla chests.
+Regular vanilla chests.  
 	- **Junimo Chest**  
-Junimo chests work as chests. But as their inventory is linked, you can move items wirelessly.
+Junimo chests work as chests. But as their inventory is linked, you can move items wirelessly.  
 	- **Fridge**  
 
 	- **Mini-Shipping Bin**
-Mini-Shipping Bin work as chests.
+Mini-Shipping Bin work as chests.  
 
 - ### Supported buildings:
 	- **Shipping Bin**  
 The Shipping Bin doesn't work like a regular chest, but you can insert items into it if and input is adjacent. These items will be shipped at the end of the day. 
-Be careful, as you may not be able to get the items back once the get piped.
+Be careful, as you may not be able to get the items back once the get piped.  
 
 ---
 
 ## Network Building:
-A valid network has to have **at least 1 Output Pipe and 1 Input Pipe**.
-Also for the output to start pumping items, the input has to have a valid adjacent container.
+A valid network has to have **at least 1 Output Pipe and 1 Input Pipe**.  
+Also for the output to start pumping items, the input has to have a valid adjacent container.  
 That said, you can have as many outputs and inputs as you like.
 
 
@@ -79,4 +79,4 @@ Crossable
 
 ## See also
 - [Release Notes](https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemLogistics/docs/release-notes.md)
-- [Nexus Mod Page].()
+- [Nexus Mod Page]

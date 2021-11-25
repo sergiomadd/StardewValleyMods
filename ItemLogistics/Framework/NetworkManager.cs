@@ -76,7 +76,7 @@ namespace ItemLogistics.Framework
         public static void AddObject(KeyValuePair<Vector2, StardewValley.Object> obj)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            Printer.Info("ADDING: " + obj.Key.ToString() + obj.Value.Name);
+            if (Globals.Debug) { Printer.Info("ADDING: " + obj.Key.ToString() + obj.Value.Name); }
             if (DataAccess.ValidItems.Contains(obj.Value.Name))
             {
                 Node[,] matrix;
@@ -143,10 +143,10 @@ namespace ItemLogistics.Framework
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
 
-            //Printer.Info(network.Count.ToString());
+            if (Globals.Debug) { Printer.Info(network.Count.ToString()); }
             for (int i = 1; i < network.Count; i++)
             {
-                //Printer.Info("G size:" + network[i].Nodes.Count.ToString());
+                if (Globals.Debug) { Printer.Info("G size:" + network[i].Nodes.Count.ToString()); }
                 foreach (Node elem in network[i].Nodes)
                 {
                     elem.ParentNetwork = network[0];
@@ -164,7 +164,7 @@ namespace ItemLogistics.Framework
         public static void RemoveObject(KeyValuePair<Vector2, StardewValley.Object> obj)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            Printer.Info("REMOVE: " + obj.Key.ToString() + obj.Value.Name);
+            if (Globals.Debug) { Printer.Info("REMOVE: " + obj.Key.ToString() + obj.Value.Name); }
             if (DataAccess.ValidItems.Contains(obj.Value.Name))
             {
                 Node[,] matrix;
@@ -172,7 +172,6 @@ namespace ItemLogistics.Framework
                 {
                     Node node = matrix[(int)obj.Key.X, (int)obj.Key.Y];
                     matrix[(int)node.Position.X, (int)node.Position.Y] = null;
-                    Printer.Info("Removed from matrix");
                     if (DataAccess.ValidNetworkItems.Contains(obj.Value.Name))
                     {
                         if (node.ParentNetwork != null)
@@ -188,9 +187,9 @@ namespace ItemLogistics.Framework
                             {
                                 RemakeNetwork(node);
                             }
-                            node.RemoveAllAdjacents();
                         }
                     }
+                    node.RemoveAllAdjacents();
                 }
             }
         }
@@ -198,7 +197,7 @@ namespace ItemLogistics.Framework
         public static void RemakeNetwork(Node node)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            Printer.Info("Remaking");
+            if (Globals.Debug) { Printer.Info("Remaking"); }
             List<Network> networkList;
             foreach (KeyValuePair<Side, Node> adj in node.Adjacents)
             {
@@ -209,7 +208,6 @@ namespace ItemLogistics.Framework
                         adj.Value.Print();
                         if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networkList))
                         {
-                            Printer.Info("REMOVING NETWORKL FROM MATRIX");
                             networkList.Remove(adj.Value.ParentNetwork);
                         }
                         if (adj.Value.ParentNetwork != null)
@@ -217,7 +215,6 @@ namespace ItemLogistics.Framework
                             adj.Value.ParentNetwork.Delete();
                         }
                         Node newNode = NetworkBuilder.BuildNetworkRecursive(Game1.currentLocation, null, (int)adj.Value.Position.X, (int)adj.Value.Position.Y);
-                        Printer.Info((newNode != null).ToString());
                     }
                 }
             }

@@ -30,7 +30,8 @@ namespace ItemLogistics
 
         public override void Entry(IModHelper helper)
         {
-            Framework.Printer.SetMonitor(this.Monitor);
+            Printer.SetMonitor(this.Monitor);
+            Framework.Helper.SetHelper(helper);
             LogisticItemIds = new Dictionary<string, int>();
             DataAccess = DataAccess.GetDataAccess();
 
@@ -143,7 +144,7 @@ namespace ItemLogistics
                     List<Network> networks;
                     if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networks))
                     {
-                        Printer.Info("Network amount: "+networks.Count.ToString());
+                        if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
                         foreach (Network network in networks)
                         {
                            network.ProcessExchanges();

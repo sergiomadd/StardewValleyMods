@@ -54,6 +54,8 @@
     <Compile Include="Framework\Connector.cs" />
     <Compile Include="Framework\Container.cs" />
     <Compile Include="Framework\Globals.cs" />
+    <Compile Include="Framework\Helper.cs" />
+    <Compile Include="Framework\IOPipe.cs" />
     <Compile Include="Framework\Objects\ChestContainer.cs" />
     <Compile Include="Framework\Objects\FilterPipe.cs" />
     <Compile Include="Framework\Input.cs" />

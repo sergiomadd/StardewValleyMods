@@ -12,76 +12,14 @@ using StardewValley.Objects;
 
 namespace ItemLogistics.Framework
 {
-    public class Output : Node
+    public class Output : IOPipe
     {
         public Dictionary<Input, List<Node>> ConnectedInputs { get; set; }
-        public Container ConnectedContainer { get; set; }
-        public ShippingBinContainer ConnectedShippingBin { get; set; }
-        public List<Item> Filter { get; set; }
 
         public Output(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedInputs = new Dictionary<Input, List<Node>>();
-            ConnectedContainer = null;
-            ConnectedShippingBin = null;
-            Filter = new List<Item>();
-        }
 
-        public override bool AddAdjacent(Side side, Node entity)
-        {
-            bool added = false;
-            if (Adjacents[side] == null)
-            {
-                if (ConnectedContainer == null && entity is Container)
-                {
-                    Container container = (Container)entity;
-                    if (container.Output == null)
-                    {
-                        ConnectedContainer = (Container)entity;
-                        Printer.Info("CONNECTED CONTAINER ADDED");
-                    }
-
-                }
-                else
-                {
-                    Printer.Info("Didnt add adj container");
-                }
-                added = true;
-                Adjacents[side] = entity;
-                entity.AddAdjacent(Sides.GetInverse(side), this);
-            }
-            return added;
-        }
-
-        public override bool RemoveAdjacent(Side side, Node entity)
-        {
-            bool removed = false;
-            if (Adjacents[side] != null)
-            {
-                removed = true;
-                if (ConnectedContainer != null && entity is Container)
-                {
-                    ConnectedContainer = null;
-                }
-                Adjacents[side] = null;
-                entity.RemoveAdjacent(Sides.GetInverse(side), this);
-            }
-            return removed;
-        }
-
-        public override bool RemoveAllAdjacents()
-        {
-            bool removed = false;
-            foreach (KeyValuePair<Side, Node> adj in Adjacents.ToList())
-            {
-                if (adj.Value != null)
-                {
-                    removed = true;
-                    RemoveAdjacent(adj.Key, adj.Value);
-                    Adjacents[adj.Key] = null;
-                }
-            }
-            return removed;
         }
 
         public void ProcessExchanges()

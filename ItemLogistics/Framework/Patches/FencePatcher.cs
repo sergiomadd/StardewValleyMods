@@ -22,6 +22,7 @@ namespace ItemLogistics.Framework.Patches
 	public static class FencePatcher
     {
 
+
 		public static void Apply(Harmony harmony)
 		{
 			try
@@ -306,18 +307,6 @@ namespace ItemLogistics.Framework.Patches
 				int sourceRectPosition = 1;
 				int drawSum = __instance.getDrawSum(Game1.currentLocation);
 				sourceRectPosition = GetNewDrawGuide(__instance)[drawSum];
-				if ((bool)__instance.isGate)
-				{
-					switch (drawSum)
-					{
-						case 110:
-							spriteBatch.Draw(__instance.fenceTexture.Value, location + new Vector2(6f, 6f), new Rectangle(0, 512, 88, 24), color, 0f, Vector2.Zero, scale, SpriteEffects.None, layerDepth);
-							return false;
-						case 1500:
-							spriteBatch.Draw(__instance.fenceTexture.Value, location + new Vector2(6f, 6f), new Rectangle(112, 512, 16, 64), color, 0f, Vector2.Zero, scale, SpriteEffects.None, layerDepth);
-							return false;
-					}
-				}
 				spriteBatch.Draw(__instance.fenceTexture.Value, location + new Vector2(32f, 32f) * scale, Game1.getArbitrarySourceRect(__instance.fenceTexture.Value, 64, 128, sourceRectPosition), color * transparency, 0f, new Vector2(32f, 32f) * scale, scale, SpriteEffects.None, layerDepth);
 				return false;
 			}
@@ -335,89 +324,25 @@ namespace ItemLogistics.Framework.Patches
 			if (DataAccess.ValidPipeNames.Contains(__instance.Name))
 			{
 				int sourceRectPosition = 1;
-				if ((float)__instance.health > 1f || __instance.repairQueued.Value)
+				int drawSum = __instance.getDrawSum(Game1.currentLocation);
+				sourceRectPosition = GetNewDrawGuide(__instance)[drawSum];
+				Node[,] locationMatrix;
+				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
 				{
-					int drawSum = __instance.getDrawSum(Game1.currentLocation);
-					sourceRectPosition = GetNewDrawGuide(__instance)[drawSum];
-					if ((bool)__instance.isGate)
+					if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] != null && 
+						DataAccess.ValidIOPipeNames.Contains(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].Name))
 					{
-						Vector2 offset = new Vector2(0f, 0f);
-						_ = (Vector2)__instance.tileLocation;
-						_ = __instance.tileLocation + new Vector2(-1f, 0f);
-						switch (drawSum)
-						{
-							case 10:
-								b.Draw(__instance.fenceTexture.Value, Game1.GlobalToLocal(Game1.viewport, offset + new Vector2(x * 64 - 16, y * 64 - 128)), new Rectangle(((int)__instance.gatePosition == 88) ? 24 : 0, 192, 24, 48), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 32 + 1) / 10000f);
-								break;
-							case 100:
-								b.Draw(__instance.fenceTexture.Value, Game1.GlobalToLocal(Game1.viewport, offset + new Vector2(x * 64 - 16, y * 64 - 128)), new Rectangle(((int)__instance.gatePosition == 88) ? 24 : 0, 240, 24, 48), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 32 + 1) / 10000f);
-								break;
-							case 1000:
-								b.Draw(__instance.fenceTexture.Value, Game1.GlobalToLocal(Game1.viewport, offset + new Vector2(x * 64 + 20, y * 64 - 64 - 20)), new Rectangle(((int)__instance.gatePosition == 88) ? 24 : 0, 288, 24, 32), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 - 32 + 2) / 10000f);
-								break;
-							case 500:
-								b.Draw(__instance.fenceTexture.Value, Game1.GlobalToLocal(Game1.viewport, offset + new Vector2(x * 64 + 20, y * 64 - 64 - 20)), new Rectangle(((int)__instance.gatePosition == 88) ? 24 : 0, 320, 24, 32), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 96 - 1) / 10000f);
-								break;
-							case 110:
-								b.Draw(__instance.fenceTexture.Value, Game1.GlobalToLocal(Game1.viewport, offset + new Vector2(x * 64 - 16, y * 64 - 64)), new Rectangle(((int)__instance.gatePosition == 88) ? 24 : 0, 128, 24, 32), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 32 + 1) / 10000f);
-								break;
-							case 1500:
-								b.Draw(__instance.fenceTexture.Value, Game1.GlobalToLocal(Game1.viewport, offset + new Vector2(x * 64 + 20, y * 64 - 64 - 20)), new Rectangle(((int)__instance.gatePosition == 88) ? 16 : 0, 160, 16, 16), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 - 32 + 2) / 10000f);
-								b.Draw(__instance.fenceTexture.Value, Game1.GlobalToLocal(Game1.viewport, offset + new Vector2(x * 64 + 20, y * 64 - 64 + 44)), new Rectangle(((int)__instance.gatePosition == 88) ? 16 : 0, 176, 16, 16), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 96 - 1) / 10000f);
-								break;
-						}
-						sourceRectPosition = 17;
+						IOPipe IO = (IOPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
+						//Printer.Info(IO.Name);
+						Texture2D signalTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IO.Name}/{IO.State.ToString()}.png");
+						b.Draw(signalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % __instance.fenceTexture.Value.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / __instance.fenceTexture.Value.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 32) / 10000f);
 					}
-					else if (__instance.heldObject.Value != null)
-					{
-						Vector2 offset2 = Vector2.Zero;
-						switch (drawSum)
-						{
-							case 10:
-								if (__instance.whichType.Value == 2)
-								{
-									offset2.X = -4f;
-								}
-								else if (__instance.whichType.Value == 3)
-								{
-									offset2.X = 8f;
-								}
-								else
-								{
-									offset2.X = 0f;
-								}
-								break;
-							case 100:
-								if (__instance.whichType.Value == 2)
-								{
-									offset2.X = 0f;
-								}
-								else if (__instance.whichType.Value == 3)
-								{
-									offset2.X = -8f;
-								}
-								else
-								{
-									offset2.X = -4f;
-								}
-								break;
-						}
-						if ((int)__instance.whichType == 2)
-						{
-							offset2.Y = 16f;
-						}
-						else if ((int)__instance.whichType == 3)
-						{
-							offset2.Y -= 8f;
-						}
-						if ((int)__instance.whichType == 3)
-						{
-							offset2.X -= 2f;
-						}
-						__instance.heldObject.Value.draw(b, x * 64 + (int)offset2.X, (y - 1) * 64 - 16 + (int)offset2.Y, (float)(y * 64 + 64) / 10000f, 1f);
+					else
+                    {
+						b.Draw(__instance.fenceTexture.Value, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % __instance.fenceTexture.Value.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / __instance.fenceTexture.Value.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 32) / 10000f);
 					}
 				}
-				b.Draw(__instance.fenceTexture.Value, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % __instance.fenceTexture.Value.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / __instance.fenceTexture.Value.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 32) / 10000f);
+				
 				return false;
 			}
 			else

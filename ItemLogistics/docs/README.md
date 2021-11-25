@@ -15,7 +15,7 @@ This mod is in beta version. Backup your saves or create a new save before playi
 	-  [Supported containers](#supported-containers)
 	-  [Supported buildings](#supported-buildings)
 -  [Network Building](#network-building)
--  [misc](#misc)
+-  [Misc](#misc)
 -  [Planned Features](#planned-features)
 -  [See also](#see-also)
 
@@ -30,6 +30,9 @@ Connector Pipes act as the link between Output and Input pipes.
 It moves items at 2 tiles/1 second
 !(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemLogistics/docs/img/ConnectorPipe.png)
 
+## IOPipes:
+- ### Signaling:
+Three colors  
 
 - ### Outputs:
 	- **Extractor Pipe**  
@@ -42,13 +45,13 @@ Inserter Pipes insert items into an adjacent container. It does not filter any i
 	- **Polymorphic Pipe**  
 Polymorphic Pipes insert items into an adjacent container. It filters items based on the container's current items. If the container is empty, it acts like an Inserter Pipe, until 1 item enters the container.  
 	- **Filter Pipe**  
-Filter Pipes insert items into an adjacent container. It filters items based on the pipes inventory. To open the inventory simple left click the Filter Pipe like a chest. Then add the items you want filtered. If the container is empty, it acts like an Inserter Pipe, until alteast 1 item is added to the invertory.  
+Filter Pipes insert items into an adjacent container. It filters items based on the pipe's internal inventory. To open the inventory simply left click the Filter Pipe like a chest. Then add the items you want filtered. If the internal inventory is empty, it acts like an Inserter Pipe, until alteast 1 item is added to the internal inventory.  
 
 - ### Supported containers:
 	- **Chest**  
 Regular vanilla chests.  
 	- **Junimo Chest**  
-Junimo chests work as chests. But as their inventory is linked, you can move items wirelessly.  
+Junimo chests work as chests. But as their inventory is linked, so you can move items wirelessly.  
 	- **Fridge**  
 
 	- **Mini-Shipping Bin**
@@ -69,13 +72,29 @@ That said, you can have as many outputs and inputs as you like.
 
 ---
 
-## misc:
-You wont lose items
+## Misc:
+
 
 ---
 
+## Planned Features (For 1.0.0 release):
+- Custom Filter Chest UI
+- Add whitelist and blacklist to Filter Chest?
+- Add ghosts items in filter
+- Add thread stopping when unloading save
+- Add config file with debug mode
+
 ## Planned Features:
-Crossable 
+**Short term:**
+- Add machine that if connected to a network, it will turn that network pipes crossable
+- Add IOPipe state message, so to not rely only on colors.
+- Add a way to switch on/off outputs
+- Add more pipe feedback (like when a network is correctly build)
+- Add Extractor Filter Pipe?
+
+**Long Term:**
+- Storage Hub: A central storage chest. Like in AE from minecraft.
+- Pipes working between locations.
 
 ## See also
 - [Release Notes](https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemLogistics/docs/release-notes.md)

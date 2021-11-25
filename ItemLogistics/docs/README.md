@@ -33,19 +33,19 @@ It moves items at 2 tiles/1 second
 ## IOPipes:
 - ### Signaling:
 Three colors  
+Each IO Pipe can only have 1 container adjacent. To attach a new IO Pipe to a container, you must remove all IO Pipes surrounding the container, then you could place the new one.
 
 - ### Outputs:
 	- **Extractor Pipe**  
-Extractor Pipes extract items from an adjacent container, at 1 stack/3 seconds.
-Note: Each output can only have 1 container adjacent. 
+Extractor Pipes extract items from an adjacent container, at 1 stack/3 seconds. 
 
 - ### Inputs:
 	- **Inserter Pipe**  
-Inserter Pipes insert items into an adjacent container. It does not filter any item.  
+Inserter Pipes insert items into an adjacent container. They do not filter any item.  
 	- **Polymorphic Pipe**  
-Polymorphic Pipes insert items into an adjacent container. It filters items based on the container's current items. If the container is empty, it acts like an Inserter Pipe, until 1 item enters the container.  
+Polymorphic Pipes insert items into an adjacent container. They filter items based on the container's current items. If the container is empty, it acts like an Inserter Pipe, until 1 item enters the container.  
 	- **Filter Pipe**  
-Filter Pipes insert items into an adjacent container. It filters items based on the pipe's internal inventory. To open the inventory simply left click the Filter Pipe like a chest. Then add the items you want filtered. If the internal inventory is empty, it acts like an Inserter Pipe, until alteast 1 item is added to the internal inventory.  
+Filter Pipes insert items into an adjacent container. They filter items based on the pipe's internal inventory. To open the inventory simply left click the Filter Pipe like a chest. Then add the items you want filtered. If the internal inventory is empty, it acts like an Inserter Pipe, until alteast 1 item is added to the internal inventory.  
 
 - ### Supported containers:
 	- **Chest**  

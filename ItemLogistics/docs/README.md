@@ -83,6 +83,7 @@ That said, you can have as many outputs and inputs as you like.
 - Add ghosts items in filter
 - Add thread stopping when unloading save
 - Add config file with debug mode
+- Pipe tiers
 
 ## Planned Features:
 **Short term:**

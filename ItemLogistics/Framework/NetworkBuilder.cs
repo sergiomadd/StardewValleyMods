@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ItemLogistics.Framework.Model;
 using StardewValley;
+using StardewValley.Network;
 using StardewValley.Buildings;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -17,23 +18,51 @@ namespace ItemLogistics.Framework
         public static void BuildLocationNetworks(GameLocation location)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            for (int x = 0; x < location.map.DisplayWidth; x++)
+            if(location.Name.Equals(Game1.getFarm().Name))
             {
-                for (int y = 0; y < location.map.DisplayHeight; y++)
+                Printer.Info("LOADING FARM BUILDINGS");
+                foreach (Building building in Game1.getFarm().buildings)
                 {
-                    if (Game1.getFarm().getBuildingAt(new Vector2(x, y)) != null)
+                    if (building != null)
                     {
-                        Printer.Info(Game1.getFarm().getBuildingAt(new Vector2(x, y)).buildingType.ToString());
-                        Printer.Info(new Vector2(x, y).ToString());
-                        BuildNetworkRecursive(location, null, x, y);
-                    }
-                    else if (location.getObjectAtTile(x, y) != null)
-                    {
-                        if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x, y).name))
+                        if (DataAccess.ValidBuildings.Contains(building.buildingType.ToString()))
                         {
-                            BuildNetworkRecursive(location, null, x, y);
+                            for (int i = 0; i < building.tilesWide; i++)
+                            {
+                                for (int j = 0; j < building.tilesHigh; j++)
+                                {
+                                    int x = building.tileX + i;
+                                    int y = building.tileY + j;
+                                    BuildBuildings(location, null, x, y);
+                                }
+                            }
                         }
                     }
+                }
+            }
+
+            foreach (KeyValuePair<Vector2, StardewValley.Object> obj in location.Objects.Pairs)
+            {
+                if (obj.Value != null)
+                {
+                    if (DataAccess.ValidNetworkItems.Contains(obj.Value.Name))
+                    {
+                        BuildNetworkRecursive(location, null, (int)obj.Key.X, (int)obj.Key.Y);
+                    }
+                }
+            }
+
+        }
+
+        public static void BuildBuildings(GameLocation location, Network inNetwork, int x, int y)
+        {
+            DataAccess DataAccess = DataAccess.GetDataAccess();
+            Node[,] matrix;
+            if (DataAccess.LocationMatrix.TryGetValue(location, out matrix))
+            {
+                if ((Game1.getFarm().getBuildingAt(new Vector2(x, y)) != null) && DataAccess.ValidBuildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x, y)).buildingType.ToString()))
+                {
+                    matrix[x, y] = NodeFactory.CreateElement(new Vector2(x, y), location, Game1.getFarm().getBuildingAt(new Vector2(x, y)));
                 }
             }
         }
@@ -43,18 +72,36 @@ namespace ItemLogistics.Framework
             DataAccess DataAccess = DataAccess.GetDataAccess();
             Node node = null;
             Node[,] matrix;
-            if (location.getObjectAtTile(x, y) != null)
+            string inType = "";
+            if((location.getObjectAtTile(x, y) != null) && (DataAccess.ValidItems.Contains(location.getObjectAtTile(x, y).name)))
             {
-                if (DataAccess.ValidItems.Contains(location.getObjectAtTile(x, y).name))
+                inType = "object";
+            }
+            else if ((Game1.getFarm().getBuildingAt(new Vector2(x, y)) != null) && DataAccess.ValidBuildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x, y)).buildingType.ToString()))
+            {
+                inType = "building";
+            }
+            if (inType.Equals("object") || inType.Equals("building"))
+            {
+                if (DataAccess.LocationMatrix.TryGetValue(location, out matrix) )
                 {
-                    if (DataAccess.LocationMatrix.TryGetValue(location, out matrix))
+                    if (matrix[x, y] == null)
                     {
-                        if (matrix[x, y] == null)
+                        if(inType.Equals("object"))
                         {
                             matrix[x, y] = NodeFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x, y));
                         }
+                        else if(inType.Equals("building"))
+                        {
+                            matrix[x, y] = NodeFactory.CreateElement(new Vector2(x, y), location, Game1.getFarm().getBuildingAt(new Vector2(x, y)));
+                        }
+                        
+                    }
+                    if (inType.Equals("object"))
+                    {
                         node = matrix[x, y];
-                        if(node.ParentNetwork == null)
+                        node.Print();
+                        if (node.ParentNetwork == null)
                         {
 
                             if (inNetwork == null)
@@ -84,20 +131,26 @@ namespace ItemLogistics.Framework
                                     node.AddAdjacent(SideStruct.GetSides().North, adj);
                                 }
                             }
-                            else if(Game1.getFarm().getBuildingAt(new Vector2(x, y - 1)) != null && y - 1 >= 0)
+                            else if (Game1.getFarm().getBuildingAt(new Vector2(x, y - 1)) != null && y - 1 >= 0)
                             {
-                                Printer.Info("ADDING BUILDING TO " + matrix[x, y].Name);
-                                Printer.Info(Game1.getFarm().getBuildingAt(new Vector2(x, y - 1)).buildingType.ToString());
-                                Printer.Info(new Vector2(x, y - 1).ToString());
-                                Printer.Info((Game1.getFarm().getBuildingAt(new Vector2(x, y - 1)).GetType().Equals(typeof(ShippingBin)).ToString()));
-                                if (Game1.getFarm().getBuildingAt(new Vector2(x, y - 1)).GetType().Equals(typeof(ShippingBin)))
+                                /*Printer.Info("EXISTING BUILDING AJD");
+                                Node adj = matrix[x, y - 1];
+                                node.AddAdjacent(SideStruct.GetSides().North, adj);
+                                */
+                                if (matrix[x, y - 1] == null)
                                 {
+                                    Printer.Info("CREATING BUILDING AJD");
                                     Node adj = NodeFactory.CreateElement(new Vector2(x, y - 1), location, Game1.getFarm().getBuildingAt(new Vector2(x, y - 1)));
                                     matrix[x, y - 1] = adj;
                                     node.AddAdjacent(SideStruct.GetSides().North, adj);
-                                    Printer.Info("SHIPPING BIUN ADJ");
-                                    Printer.Info(matrix[x, y - 1].Name);
                                 }
+                                else
+                                {
+                                    Printer.Info("EXISTING BUILDING AJD");
+                                    Node adj = matrix[x, y - 1];
+                                    node.AddAdjacent(SideStruct.GetSides().North, adj);
+                                }
+                                
                             }
 
                             //South
@@ -120,12 +173,25 @@ namespace ItemLogistics.Framework
                             }
                             else if (Game1.getFarm().getBuildingAt(new Vector2(x, y + 1)) != null && y + 1 < location.map.DisplayHeight)
                             {
-                                if (Game1.getFarm().getBuildingAt(new Vector2(x, y + 1)).buildingType.Equals(typeof(ShipBin)))
+                                /*
+                                Printer.Info("EXISTING BUILDING AJD");
+                                Node adj = matrix[x, y + 1];
+                                node.AddAdjacent(SideStruct.GetSides().South, adj);
+                                */
+                                if (matrix[x, y + 1] == null)
                                 {
+                                    Printer.Info("CREATING BUILDING AJD");
                                     Node adj = NodeFactory.CreateElement(new Vector2(x, y + 1), location, Game1.getFarm().getBuildingAt(new Vector2(x, y + 1)));
                                     matrix[x, y + 1] = adj;
                                     node.AddAdjacent(SideStruct.GetSides().South, adj);
                                 }
+                                else
+                                {
+                                    Printer.Info("EXISTING BUILDING AJD");
+                                    Node adj = matrix[x, y + 1];
+                                    node.AddAdjacent(SideStruct.GetSides().South, adj);
+                                }
+                                
                             }
                             //West
                             if (location.getObjectAtTile(x + 1, y) != null && x + 1 < location.map.DisplayWidth)
@@ -147,12 +213,25 @@ namespace ItemLogistics.Framework
                             }
                             else if (Game1.getFarm().getBuildingAt(new Vector2(x + 1, y)) != null && x + 1 < location.map.DisplayWidth)
                             {
-                                if (Game1.getFarm().getBuildingAt(new Vector2(x + 1, y)).buildingType.Equals(typeof(ShipBin)))
+                                /*
+                                Printer.Info("EXISTING BUILDING AJD");
+                                Node adj = matrix[x + 1, y];
+                                node.AddAdjacent(SideStruct.GetSides().West, adj);
+                                */
+                                if (matrix[x + 1, y] == null)
                                 {
+                                    Printer.Info("CREATING BUILDING AJD");
                                     Node adj = NodeFactory.CreateElement(new Vector2(x + 1, y), location, Game1.getFarm().getBuildingAt(new Vector2(x + 1, y)));
                                     matrix[x + 1, y] = adj;
                                     node.AddAdjacent(SideStruct.GetSides().West, adj);
                                 }
+                                else
+                                {
+                                    Printer.Info("EXISTING BUILDING AJD");
+                                    Node adj = matrix[x + 1, y];
+                                    node.AddAdjacent(SideStruct.GetSides().West, adj);
+                                }
+                                
                             }
                             //East
                             if (location.getObjectAtTile(x - 1, y) != null && x - 1 >= 0)
@@ -168,22 +247,43 @@ namespace ItemLogistics.Framework
                                 else if (DataAccess.ValidExtraNames.Contains(location.getObjectAtTile(x - 1, y).Name))
                                 {
                                     Node adj = NodeFactory.CreateElement(new Vector2(x - 1, y), location, location.getObjectAtTile(x - 1, y));
-                                    matrix[x-1, y] = adj;
+                                    matrix[x - 1, y] = adj;
                                     node.AddAdjacent(SideStruct.GetSides().East, adj);
                                 }
                             }
                             else if (Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)) != null && x - 1 >= 0)
                             {
-                                if (Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)).buildingType.Equals(typeof(ShipBin)))
+                                if (DataAccess.ValidBuildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)).buildingType.ToString()))
                                 {
-                                    Node adj = NodeFactory.CreateElement(new Vector2(x - 1, y), location, Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)));
-                                    matrix[x - 1, y] = adj;
+                                    /*
+                                    Printer.Info("EXISTING BUILDING AJD");
+                                    Node adj = matrix[x - 1, y];
                                     node.AddAdjacent(SideStruct.GetSides().East, adj);
+                                    */
+                                    if (matrix[x - 1, y] == null)
+                                    {
+                                        Printer.Info("CREATING BUILDING AJD");
+                                        Node adj = NodeFactory.CreateElement(new Vector2(x - 1, y), location, Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)));
+                                        matrix[x - 1, y] = adj;
+                                        node.AddAdjacent(SideStruct.GetSides().East, adj);
+                                    }
+                                    else
+                                    {
+                                        Printer.Info("EXISTING BUILDING AJD");
+                                        Node adj = matrix[x - 1, y];
+                                        node.AddAdjacent(SideStruct.GetSides().East, adj);
+                                    }
+                                    
                                 }
                             }
                         }
                     }
+
                 }
+            }
+            else
+            {
+                Printer.Info("NOT VALID ITEM");
             }
             return node;
         }

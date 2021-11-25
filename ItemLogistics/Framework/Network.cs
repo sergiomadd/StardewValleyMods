@@ -17,8 +17,9 @@ namespace ItemLogistics.Framework
         public List<Connector> Connectors { get; set; }
         public bool IsPassable { get; set; }
 
-        public Network()
+        public Network(int id)
         {
+            ID = id;
             Nodes = new List<Node>();
             Outputs = new List<Output>();
             Inputs = new List<Input>();
@@ -132,7 +133,7 @@ namespace ItemLogistics.Framework
 
         public bool TryConnectOutput(Output output)
         {
-            Printer.Info("Trying connection");
+            if (Globals.Debug) { Printer.Info($"[{ID}] Trying connection"); }
             bool canConnect = false;
             if (output != null)
             {
@@ -141,13 +142,13 @@ namespace ItemLogistics.Framework
                     input.Print();
                     if (!output.IsInputConnected(input))
                     {
-                        Printer.Info("Not connected");
+                        if (Globals.Debug) { Printer.Info($"[{ID}] Not connected"); }
                         if (output.CanConnectedWith(input))
                         {
-                            Printer.Info("Connecting..");
+                            if (Globals.Debug) { Printer.Info($"[{ID}] Connecting.."); }
                             input.Print();
                             canConnect = output.AddConnectedInput(input);
-                            Printer.Info("CONNECTED?"+canConnect.ToString());
+                            if (Globals.Debug) { Printer.Info($"[{ID}] CONNECTED?" + canConnect.ToString()); }
                         }
                     }
                 }
@@ -157,21 +158,21 @@ namespace ItemLogistics.Framework
 
         public bool TryDisconnectInput(Input input)
         {
-            //Printer.Info("Trying disconnection");
+            if (Globals.Debug) { Printer.Info($"[{ID}] Trying disconnection"); Print(); }
             bool canDisconnect = false;
             if (input != null)
             {
-                //Printer.Info("Input not null");
+                if (Globals.Debug) { Printer.Info($"[{ID}] Input not null"); }
                 foreach (Output output in Outputs)
                 {
-                    //Printer.Info("Ouput has uinput?:" + output.IsInputConnected(input).ToString());
+                    if (Globals.Debug) { Printer.Info($"[{ID}] Ouput has uinput?:" + output.IsInputConnected(input).ToString()); }
                     if (output.IsInputConnected(input))
                     {
                         if (!output.CanConnectedWith(input))
                         {
-                            //Printer.Info("Disconnecting..");
+                            if (Globals.Debug) { Printer.Info($"[{ID}] Disconnecting.."); }
                             canDisconnect = output.RemoveConnectedInput(input);
-                            //Printer.Info("Disconnect: " + canDisconnect.ToString());
+                            if (Globals.Debug) { Printer.Info($"[{ID}] Disconnect: " + canDisconnect.ToString()); }
                         }
 
                     }

@@ -36,7 +36,7 @@ namespace ItemLogistics.Framework.Model
             }
             else if (obj.name.Equals("Chest"))
             {
-                return new Container(position, location, obj);
+                return new ChestContainer(position, location, obj);
             }
             else
             {
@@ -47,7 +47,7 @@ namespace ItemLogistics.Framework.Model
         {
             if (building.GetType().Equals(typeof(ShippingBin)))
             {
-                return new ShipBin(position, location, null, building);
+                return new ShippingBinContainer(position, location, null, building);
             }
             else
             {

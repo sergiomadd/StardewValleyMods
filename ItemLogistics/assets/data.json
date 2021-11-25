@@ -5,7 +5,8 @@
     "Inserter Pipe",
     "Polymorphic Pipe",
     "Filter Pipe",
-    "Chest"
+    "Chest",
+    "Shipping Bin"
   ],
   "ValidNetworkItems": [
     "Connector Pipe",

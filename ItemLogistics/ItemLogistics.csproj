@@ -54,6 +54,7 @@
     <Compile Include="Framework\Connector.cs" />
     <Compile Include="Framework\Container.cs" />
     <Compile Include="Framework\Globals.cs" />
+    <Compile Include="Framework\Objects\ChestContainer.cs" />
     <Compile Include="Framework\Objects\FilterPipe.cs" />
     <Compile Include="Framework\Input.cs" />
     <Compile Include="Framework\Objects\InserterPipe.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="Framework\Patches\ObjectPatcher.cs" />
     <Compile Include="Framework\Objects\ConnectorPipe.cs" />
     <Compile Include="Framework\Objects\PolymorphicPipe.cs" />
-    <Compile Include="Framework\ShipBin.cs" />
+    <Compile Include="Framework\Objects\ShippingBinContainer.cs" />
     <Compile Include="ModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

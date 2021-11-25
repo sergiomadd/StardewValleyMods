@@ -19,34 +19,12 @@ namespace ItemLogistics.Framework.Objects
             Priority = 2;
         }
 
-        public override bool AddAdjacent(Side side, Node entity)
-        {
-            bool added = false;
-            if (Adjacents[side] == null)
-            {
-                added = true;
-                Adjacents[side] = entity;
-                entity.AddAdjacent(Sides.GetInverse(side), this);
-                try
-                {
-                    if (ConnectedContainer == null && entity is Container)
-                    {
-                        ConnectedContainer = (Container)entity;
-                        UpdateFilter();
-                    }
-                }
-                catch (Exception e)
-                {
-                    Printer.Info("More than 1 container adjacent.");
-                    Printer.Info(e.StackTrace);
-                }
-            }
-            return added;
-        }
         public override void UpdateFilter()
         {
-            Filter = ConnectedContainer.UpdateFilter(null);
-            ConnectedContainer.UpdateFilter(null);
+            if(ConnectedContainer != null)
+            {
+                Filter = ConnectedContainer.UpdateFilter(null);
+            }
         }
     }
 }

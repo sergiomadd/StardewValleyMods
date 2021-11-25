@@ -43,7 +43,7 @@ namespace ItemLogistics.Framework.Model
             List<Node> looked = new List<Node>();
             if ((bool)GetPathRecursive(target, looked, false)[2])
             {
-                Printer.Info("CAN CONNECT");
+                if (Globals.Debug) { Printer.Info("CAN CONNECT"); }
                 connected = true;
             }
             return connected;
@@ -60,15 +60,14 @@ namespace ItemLogistics.Framework.Model
 
         public System.Object[] GetPathRecursive(Node target, List<Node> looked, bool reached)
         {
-            //Print();
+            if (Globals.Debug) { Print(); }
             System.Object[] returns = new System.Object[3];
             returns[2] = reached;
             Node adj;
             if (this.Equals(target))
             {
                 reached = true;
-                Printer.Info("Reached");
-                Printer.Info(looked.Count.ToString());
+                if (Globals.Debug) { Printer.Info("Reached"); Printer.Info(looked.Count.ToString()); }
                 returns[0] = this;
                 returns[1] = looked;
                 returns[2] = reached;
@@ -116,7 +115,7 @@ namespace ItemLogistics.Framework.Model
          
         public void AnimatePath(List<Node> path)
         {
-            foreach(Node node in path)
+            foreach(Node node in path.ToList())
             {
                 if(node != null && node is Connector)
                 {
@@ -205,8 +204,15 @@ namespace ItemLogistics.Framework.Model
 
         public void Print()
         {
-            Printer.Info(Obj.Name + Position.X.ToString() + Position.Y.ToString());
-            Printer.Info(GetHashCode().ToString());
+            if(ParentNetwork != null)
+            {
+                Printer.Info($"[{ParentNetwork.ID}] " + Name + Position.X.ToString() + Position.Y.ToString() +" "+ GetHashCode().ToString());
+            }
+            else
+            {
+                Printer.Info("NO PARENT NETWORK");
+                Printer.Info(Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());            }
+
         }
     }
 }

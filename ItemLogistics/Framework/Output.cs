@@ -16,7 +16,7 @@ namespace ItemLogistics.Framework
     {
         public Dictionary<Input, List<Node>> ConnectedInputs { get; set; }
         public Container ConnectedContainer { get; set; }
-        public ShipBin ConnectedShippingBin { get; set; }
+        public ShippingBinContainer ConnectedShippingBin { get; set; }
         public List<Item> Filter { get; set; }
 
         public Output(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
@@ -29,28 +29,26 @@ namespace ItemLogistics.Framework
 
         public override bool AddAdjacent(Side side, Node entity)
         {
-            Printer.Info(entity.Obj.name);
             bool added = false;
             if (Adjacents[side] == null)
             {
-                added = true;
-                Adjacents[side] = entity;
-                entity.AddAdjacent(Sides.GetInverse(side), this);
                 if (ConnectedContainer == null && entity is Container)
                 {
-                    //Printer.Info("Container es null");
-                    ConnectedContainer = (Container)entity;
-                }
-                else if (ConnectedContainer == null && entity is ShipBin)
-                {
-                    ConnectedShippingBin = (ShipBin)entity;
-                    Printer.Info("CONNECTED ShippingBin ADDED");
+                    Container container = (Container)entity;
+                    if (container.Output == null)
+                    {
+                        ConnectedContainer = (Container)entity;
+                        Printer.Info("CONNECTED CONTAINER ADDED");
+                    }
+
                 }
                 else
                 {
-                    
-                    //Printer.Info("Container no es null.");
+                    Printer.Info("Didnt add adj container");
                 }
+                added = true;
+                Adjacents[side] = entity;
+                entity.AddAdjacent(Sides.GetInverse(side), this);
             }
             return added;
         }
@@ -88,13 +86,13 @@ namespace ItemLogistics.Framework
 
         public void ProcessExchanges()
         {
-            Printer.Info("Procesing Exchanges...");
-            Printer.Info("Inputs: "+(ConnectedInputs.Count > 0).ToString());
+            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Procesing Exchanges..."); }
+            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Inputs: " + (ConnectedInputs.Count > 0).ToString()); }
             if (ConnectedContainer != null && !ConnectedContainer.IsEmpty() && ConnectedInputs.Count > 0)
             {
-                Printer.Info("Output empty? " + ConnectedContainer.IsEmpty().ToString());
+                if (Globals.Debug) { Printer.Info($"[{ ParentNetwork.ID}] Output empty? " + ConnectedContainer.IsEmpty().ToString()); }
                 //mirar de sacar el item en cuanto empieza al exchange
-                Printer.Info("NEW THREAD");
+                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] NEW THREAD"); }
                 Thread thread = new Thread(new ThreadStart(StartExchage));
                 thread.Start();
             }
@@ -106,7 +104,7 @@ namespace ItemLogistics.Framework
 
         public void StartExchage()
         {
-            Printer.Info(ConnectedInputs.Count.ToString());
+            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Number of inpiuts: " + ConnectedInputs.Count.ToString()); }
             Item item = null;
             int index = 0;
             Dictionary<Input, List<Node>> priorityInputs = ConnectedInputs;
@@ -118,6 +116,7 @@ namespace ItemLogistics.Framework
             while (index < priorityInputs.Count && item == null)
             {
                 Input input = priorityInputs.Keys.ToList()[index];
+                List<Node> path = priorityInputs.Values.ToList()[index];
                 if (input is PolymorphicPipe)
                 {
                     PolymorphicPipe poly = (PolymorphicPipe)input;
@@ -128,41 +127,51 @@ namespace ItemLogistics.Framework
                     FilterPipe filter = input as FilterPipe;
                     filter.UpdateFilter();
                 }
-                Printer.Info("INPUT");
-                input.Print();
-                if (input.ConnectedShippingBin != null)
+
+                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] INPUT"); input.Print(); }
+                if (ConnectedContainer != null && input.ConnectedContainer != null)
                 {
-                    item = ConnectedContainer.GetItemToShip(input);
-                    if (item != null)
+                    if (ConnectedContainer.Type.Equals("Chest") && input.ConnectedContainer.Type.Equals("ShippingBin"))
                     {
-                        List<Node> path = GetPath(input);
-                        AnimatePath(path);
-                        input.ConnectedShippingBin.ShipItem(item, Game1.player);
-                        Printer.Info("END animation");
-                    }
-                    
-                }
-                else if (input.ConnectedContainer != null)
-                {
-                    item = ConnectedContainer.CanSendItem(input.ConnectedContainer);
-                    Printer.Info("Can send: " + (item != null).ToString());
-                    if (item != null)
-                    {
-                        List<Node> path = GetPath(input);
-                        AnimatePath(path);
-                        if (!ConnectedContainer.SendItem(input.ConnectedContainer, item))
+                        ShippingBinContainer shipBin = (ShippingBinContainer)input.ConnectedContainer;
+                        ChestContainer outChest = (ChestContainer)ConnectedContainer;
+                        item = outChest.GetItemToShip(input);
+                        if (item != null)
                         {
-                            Printer.Info("CANT ENTER, REVERSE");
-                            path.Reverse();
                             AnimatePath(path);
+                            shipBin.ShipItem(item);
+                            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] END animation"); }
                         }
-                        Printer.Info("END animation");
-
+                    }
+                    else if(ConnectedContainer.Type.Equals("Chest") && input.ConnectedContainer.Type.Equals("Chest"))
+                    {
+                        ChestContainer inChest = (ChestContainer)input.ConnectedContainer;
+                        ChestContainer outChest = (ChestContainer)ConnectedContainer;
+                        item = outChest.CanSendItem(inChest);
+                        if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Can send: " + (item != null).ToString()); }
+                        if (item != null)
+                        {
+                            if (Globals.Debug)
+                            {
+                                Printer.Info($"[{ParentNetwork.ID}] PINRTING PATH");
+                                foreach (Node node in path)
+                                {
+                                    Printer.Info($"[{ParentNetwork.ID}] PATH");
+                                    node.Print();
+                                }
+                            }
+                            AnimatePath(path);
+                            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] SENT----------------"); }
+                            if (outChest != null && inChest != null && !outChest.SendItem(inChest, item))
+                            {
+                                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] CANT ENTER, REVERSE"); }
+                                List<Node> reversePath = path;
+                                reversePath.Reverse();
+                                AnimatePath(reversePath);
+                            }
+                        }
                     }
                 }
-
-
-
                 index++;
             }
         }
@@ -182,20 +191,13 @@ namespace ItemLogistics.Framework
             bool added = false;
             if (!ConnectedInputs.Keys.Contains(input))
             {
-                //Printer.Info("input container: "+ (input.ConnectedContainer == null).ToString());
+                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] output container null? " + (ConnectedContainer == null).ToString()); }
+                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] input container null? " + (input.ConnectedContainer == null).ToString()); }
                 if (ConnectedContainer != null && input.ConnectedContainer != null)
                 {
                     added = true;
                     List<Node> path;
                     path = ConnectedContainer.GetPath(input.ConnectedContainer);
-                    ConnectedInputs.Add(input, path);
-                }
-                if (ConnectedContainer != null && input.ConnectedShippingBin != null)
-                {
-                    added = true;
-                    List<Node> path;
-                    //HACER QUE EL PATH SEA HASTA EL INPUT
-                    path = ConnectedContainer.GetPath(input);
                     ConnectedInputs.Add(input, path);
                 }
             }

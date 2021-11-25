@@ -6,20 +6,19 @@ using System.Threading.Tasks;
 using ItemLogistics.Framework.Model;
 using Microsoft.Xna.Framework;
 using StardewValley;
+using StardewValley.Buildings;
 
 namespace ItemLogistics.Framework
 {
     public class Input : Node
     {
         public Container ConnectedContainer { get; set; }
-        public ShipBin ConnectedShippingBin { get; set; }
         public List<string> Filter { get; set; }
         public int Priority { get; set; }
 
         public Input(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            ConnectedShippingBin = null;
             Filter = new List<string>();
         }
 
@@ -28,31 +27,23 @@ namespace ItemLogistics.Framework
             bool added = false;
             if (Adjacents[side] == null)
             {
-                added = true;
-                Adjacents[side] = entity;
-                entity.AddAdjacent(Sides.GetInverse(side), this);
-                try
+                if (ConnectedContainer == null && entity is Container)
                 {
-                    if (ConnectedContainer == null && entity is Container)
+                    Container container = (Container)entity;
+                    if (container.Input == null)
                     {
                         ConnectedContainer = (Container)entity;
                         Printer.Info("CONNECTED CONTAINER ADDED");
                     }
-                    else if (ConnectedContainer == null && entity is ShipBin)
-                    {
-                        ConnectedShippingBin = (ShipBin)entity;
-                        Printer.Info("CONNECTED ShippingBin ADDED");
-                    }
-                    else
-                    {
-                        Printer.Info("More than 1 container adjacent.");
-                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    Printer.Info("More than 1 container adjacent.");
-                    Printer.Info(e.StackTrace);
+                    Printer.Info("Didnt add adj container");
                 }
+                added = true;
+                Adjacents[side] = entity;
+                entity.AddAdjacent(Sides.GetInverse(side), this);
+                UpdateFilter();
             }
             return added;
         }
@@ -98,7 +89,6 @@ namespace ItemLogistics.Framework
         }
         public virtual void UpdateFilter()
         {
-            Filter = ConnectedContainer.UpdateFilter(null);
         }
     }
 }

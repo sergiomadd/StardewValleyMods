@@ -86,12 +86,9 @@ namespace ItemLogistics.Framework
                     int x = (int)newNode.Position.X;
                     int y = (int)newNode.Position.Y;
                     matrix[x, y] = newNode;
-                    Printer.Info("BIN");
-                    Printer.Info((matrix[x, y - 1] != null).ToString());
                     if (matrix[x, y - 1] != null)
                     {
                         newNode.AddAdjacent(SideStruct.GetSides().North, matrix[x, y - 1]);
-                        Printer.Info(matrix[x, y - 1].Name);
                     }
                     if (matrix[x, y + 1] != null)
                     {
@@ -108,7 +105,7 @@ namespace ItemLogistics.Framework
                     newNode.Print();
                     if (DataAccess.ValidNetworkItems.Contains(Game1.currentLocation.getObjectAtTile(x, y).Name))
                     {
-                        Printer.Info("ADDING GRAPH");
+                        //Printer.Info("ADDING GRAPH");
                         if (newNode is Input)
                         {
                             Input input = (Input)newNode;
@@ -122,7 +119,7 @@ namespace ItemLogistics.Framework
                                 adjNetworks.Add(network);
                             }
                         }
-                        Printer.Info("Adj graphs: " + adjNetworks.Count.ToString());
+                        //Printer.Info("Adj graphs: " + adjNetworks.Count.ToString());
                         if (adjNetworks.Count == 0)
                         {
                             Network network = CreateLocationNetwork(Game1.currentLocation);
@@ -135,8 +132,8 @@ namespace ItemLogistics.Framework
                             AddNewElement(newNode, orderedAdjNetworks[0]);
                             MergeNetworks(orderedAdjNetworks);
                         }
-                        newNode.Print();
-                        Printer.Info(newNode.ParentNetwork.Print());
+                        //newNode.Print();
+                        //Printer.Info(newNode.ParentNetwork.Print());
                     }
                 }
             }
@@ -146,10 +143,10 @@ namespace ItemLogistics.Framework
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
 
-            Printer.Info(network.Count.ToString());
+            //Printer.Info(network.Count.ToString());
             for (int i = 1; i < network.Count; i++)
             {
-                Printer.Info("G size:" + network[i].Nodes.Count.ToString());
+                //Printer.Info("G size:" + network[i].Nodes.Count.ToString());
                 foreach (Node elem in network[i].Nodes)
                 {
                     elem.ParentNetwork = network[0];
@@ -182,6 +179,11 @@ namespace ItemLogistics.Framework
                         {
                             List<Network> adjNetwork = node.Scan();
                             node.ParentNetwork.RemoveNode(node);
+                            List<Network> networkList;
+                            if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networkList))
+                            {
+                                networkList.Remove(node.ParentNetwork);
+                            }
                             if (adjNetwork.Count > 0)
                             {
                                 RemakeNetwork(node);
@@ -207,13 +209,15 @@ namespace ItemLogistics.Framework
                         adj.Value.Print();
                         if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networkList))
                         {
-                            networkList.Remove((Network)adj.Value.ParentNetwork);
+                            Printer.Info("REMOVING NETWORKL FROM MATRIX");
+                            networkList.Remove(adj.Value.ParentNetwork);
                         }
                         if (adj.Value.ParentNetwork != null)
                         {
                             adj.Value.ParentNetwork.Delete();
                         }
                         Node newNode = NetworkBuilder.BuildNetworkRecursive(Game1.currentLocation, null, (int)adj.Value.Position.X, (int)adj.Value.Position.Y);
+                        Printer.Info((newNode != null).ToString());
                     }
                 }
             }
@@ -231,7 +235,7 @@ namespace ItemLogistics.Framework
         public static Network CreateLocationNetwork(GameLocation location)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            Network newNetwork = new Network();
+            Network newNetwork = new Network(DataAccess.GetNewNetworkID());
             List<Network> networkList;
             if (DataAccess.LocationNetworks.TryGetValue(location, out networkList))
             {

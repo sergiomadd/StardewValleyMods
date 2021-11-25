@@ -28,7 +28,6 @@ namespace ItemLogistics
         public Dictionary<string, int> LogisticItemIds;
         public DataAccess DataAccess { get; set; }
 
-
         public override void Entry(IModHelper helper)
         {
             Framework.Printer.SetMonitor(this.Monitor);
@@ -56,6 +55,7 @@ namespace ItemLogistics
             DataAccess.ValidLocations = data.ValidLocations;
             DataAccess.ValidExtraNames = data.ValidExtraNames;
             DataAccess.ValidItems = data.ValidItems;
+            DataAccess.ValidBuildings = data.ValidBuildings;
 
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
@@ -106,6 +106,7 @@ namespace ItemLogistics
                 }
             }
 
+            Reload();
             
             foreach (GameLocation location in Game1.locations)
             {
@@ -125,6 +126,13 @@ namespace ItemLogistics
             }
         }
 
+        private void Reload()
+        {
+            DataAccess.LocationMatrix.Clear();
+            DataAccess.LocationNetworks.Clear();
+            DataAccess.UsedNetworkIDs.Clear();
+        }
+
         private void OnOneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
         {
             if (Context.IsWorldReady)
@@ -138,7 +146,7 @@ namespace ItemLogistics
                         Printer.Info("Network amount: "+networks.Count.ToString());
                         foreach (Network network in networks)
                         {
-                            network.ProcessExchanges();
+                           network.ProcessExchanges();
                         }
                     }
                 }

@@ -14,5 +14,7 @@ namespace ItemLogistics.Framework.Model
         public List<string> ValidLocations { get; set; }
         public List<string> ValidItems { get; set; }
         public List<string> ValidExtraNames { get; set; }
+        public List<string> ValidBuildings { get; set; }
+
     }
 }

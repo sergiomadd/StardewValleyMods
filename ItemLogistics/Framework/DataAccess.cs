@@ -24,7 +24,12 @@ namespace ItemLogistics.Framework
         public List<string> ValidPipeNames { get; set; }
         public List<string> ValidExtraNames { get; set; }
         public List<string> ValidItems { get; set; }
-        
+        public List<string> ValidBuildings { get; set; }
+
+
+        public List<int> UsedNetworkIDs { get; set; }
+
+
 
 
         private DataAccess()
@@ -37,12 +42,15 @@ namespace ItemLogistics.Framework
             ValidPipeNames = new List<string>();
             ValidExtraNames = new List<string>();
             ValidItems = new List<string>();
+            ValidBuildings = new List<string>();
             /*ValidLocations = new List<string>
                 { 
                 "FarmHouse", "Farm", "FarmCave", "Beach", "Mountain", 
                 "Forest", "RailRoad", "Greenhouse", "Tunnel", "Cellar", "Cellar2", "Cellar3", "Cellar4"
                 };
             */
+
+            UsedNetworkIDs = new List<int>();
         }
 
         public static DataAccess GetDataAccess()
@@ -52,6 +60,21 @@ namespace ItemLogistics.Framework
                 myDataAccess = new DataAccess();
             }
             return myDataAccess;
+        }
+
+        public int GetNewNetworkID()
+        {
+            if(UsedNetworkIDs.Count == 0)
+            {
+                UsedNetworkIDs.Add(1);
+                return 1;
+            }
+            else
+            {
+                int newID = UsedNetworkIDs[UsedNetworkIDs.Count - 1] + 1;
+                UsedNetworkIDs.Add(newID);
+                return newID;
+            }
         }
 
         public List<Network> GetNetworkList(GameLocation location)

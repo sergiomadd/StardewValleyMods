@@ -51,8 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Framework\API\ApiManager.cs" />
+    <Compile Include="Framework\API\DynamicGameAssetsApi.cs" />
     <Compile Include="Framework\Connector.cs" />
     <Compile Include="Framework\Container.cs" />
+    <Compile Include="Framework\ContentPackUtil\CPManifestExtra.cs" />
+    <Compile Include="Framework\ContentPackUtil\CPManifest.cs" />
+    <Compile Include="Framework\ContentPackUtil\Manifest.cs" />
     <Compile Include="Framework\Globals.cs" />
     <Compile Include="Framework\Helper.cs" />
     <Compile Include="Framework\IOPipe.cs" />
@@ -84,16 +89,17 @@
   <ItemGroup>
     <Folder Include="assets\BigCraftables\" />
     <Folder Include="docs\" />
+    <Folder Include="Framework\Util\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\content-pack.json" />
     <None Include="assets\data.json" />
     <None Include="assets\Fences\Extractor Pipe\fence.json" />
-    <None Include="assets\Fences\Pipe\fence.json" />
     <None Include="assets\Objects\Extractor Pipe E\big-craftable.json" />
     <None Include="assets\Objects\Extractor Pipe N\big-craftable.json" />
     <None Include="assets\Objects\Extractor Pipe S\big-craftable.json" />
     <None Include="assets\Objects\Extractor Pipe W\big-craftable.json" />
+    <None Include="assets\Objects\Glue\object.json" />
     <None Include="manifest.json" />
     <None Include="packages.config" />
   </ItemGroup>

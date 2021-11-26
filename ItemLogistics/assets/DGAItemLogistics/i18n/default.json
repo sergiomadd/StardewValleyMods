@@ -1,0 +1,10 @@
+{
+  "fence.Connector Pipe.name": "Connector Pipe",
+  "fence.Connector Pipe.description": "Connector Pipe",
+
+  "crafting.ConnectorPipeRecipe.name": "Connector Pipe",
+  "crafting.ConnectorPipeRecipe.description": "Connector Pipe",
+
+  "crafting.SapPipeRecipe.name": "SAP Pipe",
+  "crafting.SapPipeRecipe.description": "SAP Pipe"
+}

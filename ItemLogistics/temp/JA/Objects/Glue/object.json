@@ -1,0 +1,21 @@
+{
+  "Name": "Glue",
+  "Price": 20,
+  "Description": "Used for gluing things together.",
+  "Category": "Crafting",
+  "Edibility": null,
+  "Recipe": {
+    "ResultCount": 1,
+    "Ingredients": [
+      {
+        "Object": "Connector Pipe",
+        "Count": 1
+      },
+      {
+        "Object": 60,
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}

@@ -1,0 +1,61 @@
+[
+  {
+    // Connector Pipe
+    "$ItemType": "Fence",
+    "ID": "Connector Pipe",
+    "ObjectTexture": "Assets/Pipes/ConnectorPipe.png",
+    "PlacedTilesheet": "Assets/Pipes/ConnectorPipeTileSheet.png",
+    "MaxHealth": 100,
+    "RepairMaterial": {
+      "Type": "VanillaObject",
+      "Value": 335
+    },
+    "BreakTool": "Pickaxe",
+    "PlacementSound": "coin",
+    "RepairSound": "coin"
+  },
+  {
+    "$ItemType": "CraftingRecipe",
+    "ID": "ConnectorPipeRecipe",
+    "IsCooking": false,
+    "KnownByDefault": true,
+    "Result": [
+      {
+        "Value": {
+          "Type": "DGAItem",
+          "Value": "Sergiomadd.ItemLogistics/Connector Pipe",
+          "Quantity": 5
+        }
+      }
+    ],
+    "Ingredients": [
+      {
+        "Type": "VanillaObject",
+        "Value": 335,
+        "Quantity": 2
+      }
+    ]
+  },
+  {
+    "$ItemType": "CraftingRecipe",
+    "ID": "SapPipeRecipe",
+    "IsCooking": false,
+    "KnownByDefault": true,
+    "Result": [
+      {
+        "Value": {
+          "Type": "VanillaObject",
+          "Value": 335,
+          "Quantity": 5
+        }
+      }
+    ],
+    "Ingredients": [
+      {
+        "Type": "VanillaObject",
+        "Value": "Sap",
+        "Quantity": 2
+      }
+    ]
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "Name": "Connector Pipe",
+  "Description": "Type: Connector Pipe | The link between IO pipes. It moves items at 2 tiles-1 second.",
+  "Category": "Crafting",
+  "MaxHealth": 100,
+  "BreakTool": "Pickaxe",
+  "Recipe": {
+    "ResultCount": 5,
+    "Ingredients": [
+      {
+        "Object": 335,
+        "Count": 2
+      },
+      {
+        "Object": "Glue",
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}

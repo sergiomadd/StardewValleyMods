@@ -12,21 +12,24 @@ using SVObject = StardewValley.Objects;
 using ItemLogistics.Framework;
 using ItemLogistics.Framework.Model;
 using ItemLogistics.Framework.Patches;
+using ItemLogistics.Framework.API;
+using ItemLogistics.Framework.ContentPackUtil;
 using HarmonyLib;
 
 namespace ItemLogistics
 {
-    public interface IJsonAssetsApi
+    /*public interface IJsonAssetsApi
     {
         int GetObjectId(string name);
         void LoadAssets(string path);
     }
-
+    */
     class ModEntry : Mod
     {
-        private IJsonAssetsApi JsonAssets;
+        //private IJsonAssetsApi JsonAssets;
         public Dictionary<string, int> LogisticItemIds;
         public DataAccess DataAccess { get; set; }
+        internal static readonly string ContentPackPath = Path.Combine("assets", "DGAItemLogistics");
 
         public override void Entry(IModHelper helper)
         {
@@ -75,15 +78,21 @@ namespace ItemLogistics
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             Globals.Debug = true;
-            JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
-            if (JsonAssets == null)
+            // Check if spacechase0's DynamicGameAssets is in the current mod list
+            if (Helper.ModRegistry.IsLoaded("spacechase0.DynamicGameAssets"))
             {
-                Monitor.Log("Can't load Json Assets API, which is needed for Home Sewing Kit to function", LogLevel.Error);
-            }
-            else
-            {
-                JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets"));
+                Printer.Info("Attempting to hook into spacechase0.DynamicGameAssets.");
+                ApiManager.HookIntoDynamicGameAssets();
 
+                Manifest manifest = new Manifest();
+                manifest = Helper.Data.ReadJsonFile<Manifest>("manifest.json");
+                //It doesn't read the extra fields, don't know why
+                manifest.ExtraFields = new Dictionary<string, object>();
+                manifest.ExtraFields.Add("DGA.FormatVersion", 2);
+                manifest.ExtraFields.Add("DGA.ConditionsFormatVersion", "1.24.2");
+                Printer.Info(manifest.UniqueID);
+                var contentPackManifest = new CPManifest(manifest);
+                ApiManager.GetDynamicGameAssetsInterface().AddEmbeddedPack(contentPackManifest, Path.Combine(Helper.DirectoryPath, ContentPackPath));
             }
         }
 
@@ -91,7 +100,7 @@ namespace ItemLogistics
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            if (JsonAssets != null)
+            /*if (JsonAssets != null)
             {
                 foreach (KeyValuePair<string, int> item in LogisticItemIds)
                 {
@@ -106,7 +115,7 @@ namespace ItemLogistics
                     }
                 }
             }
-
+            */
             Reload();
             
             foreach (GameLocation location in Game1.locations)

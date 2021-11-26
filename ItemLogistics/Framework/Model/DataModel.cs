@@ -8,13 +8,13 @@ namespace ItemLogistics.Framework.Model
 {
     class DataModel
     {
-        public List<string> ValidNetworkItems { get; set; }
-        public List<string> ValidPipeNames { get; set; }
-        public List<string> ValidIOPipeNames { get; set; }
-        public List<string> ValidLocations { get; set; }
-        public List<string> ValidItems { get; set; }
-        public List<string> ValidExtraNames { get; set; }
-        public List<string> ValidBuildings { get; set; }
+        public List<string> ModItems { get; set; }
+        public List<string> PipeNames { get; set; }
+        public List<string> IOPipeNames { get; set; }
+        public List<string> Locations { get; set; }
+        public List<string> Items { get; set; }
+        public List<string> ExtraNames { get; set; }
+        public List<string> Buildings { get; set; }
 
     }
 }

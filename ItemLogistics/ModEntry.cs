@@ -43,7 +43,7 @@ namespace ItemLogistics
             try
             {
                 data = this.Helper.Data.ReadJsonFile<DataModel>(dataPath);
-                if (data.ValidNetworkItems == null)
+                if (data.ModItems == null)
                 {
                     this.Monitor.Log($"The {dataPath} file seems to be missing or invalid.", LogLevel.Error);
                 }
@@ -53,13 +53,13 @@ namespace ItemLogistics
                 this.Monitor.Log($"The {dataPath} file seems to be invalid.\n{ex}", LogLevel.Error);
             }
 
-            DataAccess.ValidNetworkItems = data.ValidNetworkItems;
-            DataAccess.ValidPipeNames = data.ValidPipeNames;
-            DataAccess.ValidIOPipeNames = data.ValidIOPipeNames;
-            DataAccess.ValidLocations = data.ValidLocations;
-            DataAccess.ValidExtraNames = data.ValidExtraNames;
-            DataAccess.ValidItems = data.ValidItems;
-            DataAccess.ValidBuildings = data.ValidBuildings;
+            DataAccess.NetworkItems = data.ModItems;
+            DataAccess.PipeNames = data.PipeNames;
+            DataAccess.IOPipeNames = data.IOPipeNames;
+            DataAccess.Locations = data.Locations;
+            DataAccess.ExtraNames = data.ExtraNames;
+            DataAccess.ModItems = data.Items;
+            DataAccess.Buildings = data.Buildings;
 
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
@@ -103,7 +103,7 @@ namespace ItemLogistics
             
             foreach (GameLocation location in Game1.locations)
             {
-                if (DataAccess.ValidLocations.Contains(location.Name))
+                if (DataAccess.Locations.Contains(location.Name))
                 {
                     Monitor.Log("LOADING " + location.Name, LogLevel.Info);
                     DataAccess.LocationNetworks.Add(location, new List<Network>());
@@ -174,7 +174,7 @@ namespace ItemLogistics
             {
                 foreach (Fence fence in location.Objects.Values.OfType<Fence>())
                 {
-                    if (DataAccess.ValidPipeNames.Contains(fence.name))
+                    if (DataAccess.PipeNames.Contains(fence.name))
                     {
                         fence.health.Value = 100f;
                         fence.maxHealth.Value = fence.health.Value;

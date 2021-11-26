@@ -84,7 +84,7 @@ namespace ItemLogistics.Framework.Patches
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			//Add when JA obj IDs is done
 			//if (DataAccess.ValidPipeNames.Contains(__instance.Name) && DataAccess.ValidPipeIDs.Contains(type))
-			if (DataAccess.ValidPipeNames.Contains(__instance.Name) && IsDefaultFence(type))
+			if (DataAccess.PipeNames.Contains(__instance.Name) && IsDefaultFence(type))
 			{
 				__result = true;
 				return false;
@@ -111,7 +111,7 @@ namespace ItemLogistics.Framework.Patches
 		{
 			__result = false;
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			if (DataAccess.ValidPipeNames.Contains(__instance.Name))
+			if (DataAccess.PipeNames.Contains(__instance.Name))
 			{
 				Node[,] locationMatrix;
 				if(DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
@@ -141,7 +141,7 @@ namespace ItemLogistics.Framework.Patches
 		private static bool Fence_getDrawSum_Prefix(ref int __result, Fence __instance, GameLocation location)
 		{
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			if (DataAccess.ValidPipeNames.Contains(__instance.Name))
+			if (DataAccess.PipeNames.Contains(__instance.Name))
 			{
 				bool CN = false;
 				bool CS = false;
@@ -202,7 +202,7 @@ namespace ItemLogistics.Framework.Patches
 				{
 					CN = true;
 				}
-				if (DataAccess.ValidIOPipeNames.Contains(__instance.Name))
+				if (DataAccess.IOPipeNames.Contains(__instance.Name))
 				{
 					//Que pasa si no hay ningun chest adjacent
 					//Que pasa si un connector tiene un chest adjacent
@@ -301,7 +301,7 @@ namespace ItemLogistics.Framework.Patches
 		private static bool Fence_drawInMenu_Prefix(Fence __instance, SpriteBatch spriteBatch, Vector2 location, float scale, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			if (DataAccess.ValidPipeNames.Contains(__instance.Name))
+			if (DataAccess.PipeNames.Contains(__instance.Name))
 			{
 				location.Y -= 64f * scale;
 				int sourceRectPosition = 1;
@@ -321,7 +321,7 @@ namespace ItemLogistics.Framework.Patches
 		private static bool Fence_draw_Prefix(Fence __instance, SpriteBatch b, int x, int y, float alpha = 1f)
 		{
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			if (DataAccess.ValidPipeNames.Contains(__instance.Name))
+			if (DataAccess.PipeNames.Contains(__instance.Name))
 			{
 				int sourceRectPosition = 1;
 				int drawSum = __instance.getDrawSum(Game1.currentLocation);
@@ -330,7 +330,7 @@ namespace ItemLogistics.Framework.Patches
 				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
 				{
 					if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] != null && 
-						DataAccess.ValidIOPipeNames.Contains(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].Name))
+						DataAccess.IOPipeNames.Contains(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].Name))
 					{
 						IOPipe IO = (IOPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
 						Texture2D signalTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IO.Name}/{IO.State.ToString()}.png");
@@ -355,7 +355,7 @@ namespace ItemLogistics.Framework.Patches
         {
 			Dictionary<int, int> DrawGuide = new Dictionary<int, int>();
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			if (DataAccess.ValidNetworkItems.Contains(fence.Name))
+			if (DataAccess.NetworkItems.Contains(fence.Name))
 			{
 				if (fence.Name.Equals("ConnectorPipe"))
 				{

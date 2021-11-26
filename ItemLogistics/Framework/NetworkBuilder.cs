@@ -25,7 +25,7 @@ namespace ItemLogistics.Framework
                 {
                     if (building != null)
                     {
-                        if (DataAccess.ValidBuildings.Contains(building.buildingType.ToString()))
+                        if (DataAccess.Buildings.Contains(building.buildingType.ToString()))
                         {
                             for (int i = 0; i < building.tilesWide; i++)
                             {
@@ -45,7 +45,7 @@ namespace ItemLogistics.Framework
             {
                 if (obj.Value != null)
                 {
-                    if (DataAccess.ValidNetworkItems.Contains(obj.Value.Name))
+                    if (DataAccess.NetworkItems.Contains(obj.Value.Name))
                     {
                         BuildNetworkRecursive(location, null, (int)obj.Key.X, (int)obj.Key.Y);
                     }
@@ -60,7 +60,7 @@ namespace ItemLogistics.Framework
             Node[,] matrix;
             if (DataAccess.LocationMatrix.TryGetValue(location, out matrix))
             {
-                if ((Game1.getFarm().getBuildingAt(new Vector2(x, y)) != null) && DataAccess.ValidBuildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x, y)).buildingType.ToString()))
+                if ((Game1.getFarm().getBuildingAt(new Vector2(x, y)) != null) && DataAccess.Buildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x, y)).buildingType.ToString()))
                 {
                     matrix[x, y] = NodeFactory.CreateElement(new Vector2(x, y), location, Game1.getFarm().getBuildingAt(new Vector2(x, y)));
                 }
@@ -73,11 +73,11 @@ namespace ItemLogistics.Framework
             Node node = null;
             Node[,] matrix;
             string inType = "";
-            if((location.getObjectAtTile(x, y) != null) && (DataAccess.ValidItems.Contains(location.getObjectAtTile(x, y).name)))
+            if((location.getObjectAtTile(x, y) != null) && (DataAccess.ModItems.Contains(location.getObjectAtTile(x, y).name)))
             {
                 inType = "object";
             }
-            else if ((Game1.getFarm().getBuildingAt(new Vector2(x, y)) != null) && DataAccess.ValidBuildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x, y)).buildingType.ToString()))
+            else if ((Game1.getFarm().getBuildingAt(new Vector2(x, y)) != null) && DataAccess.Buildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x, y)).buildingType.ToString()))
             {
                 inType = "building";
             }
@@ -116,7 +116,7 @@ namespace ItemLogistics.Framework
                             //North
                             if (location.getObjectAtTile(x, y - 1) != null && y - 1 >= 0)
                             {
-                                if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x, y - 1).Name))
+                                if (DataAccess.NetworkItems.Contains(location.getObjectAtTile(x, y - 1).Name))
                                 {
                                     if (!node.ParentNetwork.Nodes.Contains(matrix[x, y - 1]))
                                     {
@@ -124,7 +124,7 @@ namespace ItemLogistics.Framework
                                         node.AddAdjacent(SideStruct.GetSides().North, adj);
                                     }
                                 }
-                                else if (DataAccess.ValidExtraNames.Contains(location.getObjectAtTile(x, y - 1).Name))
+                                else if (DataAccess.ExtraNames.Contains(location.getObjectAtTile(x, y - 1).Name))
                                 {
                                     Node adj = NodeFactory.CreateElement(new Vector2(x, y - 1), location, location.getObjectAtTile(x, y - 1));
                                     matrix[x, y - 1] = adj;
@@ -156,7 +156,7 @@ namespace ItemLogistics.Framework
                             //South
                             if (location.getObjectAtTile(x, y + 1) != null && y + 1 < location.map.DisplayHeight)
                             {
-                                if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x, y + 1).Name))
+                                if (DataAccess.NetworkItems.Contains(location.getObjectAtTile(x, y + 1).Name))
                                 {
                                     if (!node.ParentNetwork.Nodes.Contains(matrix[x, y + 1]))
                                     {
@@ -164,7 +164,7 @@ namespace ItemLogistics.Framework
                                         node.AddAdjacent(SideStruct.GetSides().South, adj);
                                     }
                                 }
-                                else if (DataAccess.ValidExtraNames.Contains(location.getObjectAtTile(x, y + 1).Name))
+                                else if (DataAccess.ExtraNames.Contains(location.getObjectAtTile(x, y + 1).Name))
                                 {
                                     Node adj = NodeFactory.CreateElement(new Vector2(x, y + 1), location, location.getObjectAtTile(x, y + 1));
                                     matrix[x, y + 1] = adj;
@@ -196,7 +196,7 @@ namespace ItemLogistics.Framework
                             //West
                             if (location.getObjectAtTile(x + 1, y) != null && x + 1 < location.map.DisplayWidth)
                             {
-                                if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x + 1, y).Name))
+                                if (DataAccess.NetworkItems.Contains(location.getObjectAtTile(x + 1, y).Name))
                                 {
                                     if (!node.ParentNetwork.Nodes.Contains(matrix[x + 1, y]))
                                     {
@@ -204,7 +204,7 @@ namespace ItemLogistics.Framework
                                         node.AddAdjacent(SideStruct.GetSides().West, adj);
                                     }
                                 }
-                                else if (DataAccess.ValidExtraNames.Contains(location.getObjectAtTile(x + 1, y).Name))
+                                else if (DataAccess.ExtraNames.Contains(location.getObjectAtTile(x + 1, y).Name))
                                 {
                                     Node adj = NodeFactory.CreateElement(new Vector2(x + 1, y), location, location.getObjectAtTile(x + 1, y));
                                     matrix[x + 1, y] = adj;
@@ -236,7 +236,7 @@ namespace ItemLogistics.Framework
                             //East
                             if (location.getObjectAtTile(x - 1, y) != null && x - 1 >= 0)
                             {
-                                if (DataAccess.ValidNetworkItems.Contains(location.getObjectAtTile(x - 1, y).Name))
+                                if (DataAccess.NetworkItems.Contains(location.getObjectAtTile(x - 1, y).Name))
                                 {
                                     if (!node.ParentNetwork.Nodes.Contains(matrix[x - 1, y]))
                                     {
@@ -244,7 +244,7 @@ namespace ItemLogistics.Framework
                                         node.AddAdjacent(SideStruct.GetSides().East, adj);
                                     }
                                 }
-                                else if (DataAccess.ValidExtraNames.Contains(location.getObjectAtTile(x - 1, y).Name))
+                                else if (DataAccess.ExtraNames.Contains(location.getObjectAtTile(x - 1, y).Name))
                                 {
                                     Node adj = NodeFactory.CreateElement(new Vector2(x - 1, y), location, location.getObjectAtTile(x - 1, y));
                                     matrix[x - 1, y] = adj;
@@ -253,7 +253,7 @@ namespace ItemLogistics.Framework
                             }
                             else if (Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)) != null && x - 1 >= 0)
                             {
-                                if (DataAccess.ValidBuildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)).buildingType.ToString()))
+                                if (DataAccess.Buildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)).buildingType.ToString()))
                                 {
                                     /*
                                     Printer.Info("EXISTING BUILDING AJD");

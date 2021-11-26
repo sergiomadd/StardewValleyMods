@@ -1,4 +1,5 @@
 [
+  //Connector Pipe Recipe
   {
     "$ItemType": "CraftingRecipe",
     "ID": "ConnectorPipeRecipe",
@@ -21,6 +22,7 @@
       }
     ]
   },
+  //Extractor Pipe Recipe
   {
     "$ItemType": "CraftingRecipe",
     "ID": "ExtractorPipeRecipe",
@@ -28,9 +30,14 @@
     "KnownByDefault": true,
     "Ingredients": [
       {
+        "Type": "DGAItem",
+        "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+        "Quantity": 1
+      },
+      {
         "Type": "VanillaObject",
-        "Value": 335,
-        "Quantity": 2
+        "Value": "Ruby",
+        "Quantity": 1
       }
     ],
     "Result": [
@@ -43,6 +50,7 @@
       }
     ]
   },
+  //Inserter Pipe Recipe
   {
     "$ItemType": "CraftingRecipe",
     "ID": "InserterPipeRecipe",
@@ -50,9 +58,14 @@
     "KnownByDefault": true,
     "Ingredients": [
       {
+        "Type": "DGAItem",
+        "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+        "Quantity": 1
+      },
+      {
         "Type": "VanillaObject",
-        "Value": 335,
-        "Quantity": 2
+        "Value": "Aquamarine",
+        "Quantity": 1
       }
     ],
     "Result": [
@@ -65,6 +78,7 @@
       }
     ]
   },
+  //Polymorphic Pipe Recipe
   {
     "$ItemType": "CraftingRecipe",
     "ID": "PolymorphicPipeRecipe",
@@ -72,9 +86,14 @@
     "KnownByDefault": true,
     "Ingredients": [
       {
+        "Type": "DGAItem",
+        "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+        "Quantity": 1
+      },
+      {
         "Type": "VanillaObject",
-        "Value": 335,
-        "Quantity": 2
+        "Value": "Topaz",
+        "Quantity": 1
       }
     ],
     "Result": [
@@ -87,6 +106,7 @@
       }
     ]
   },
+  //Filter Pipe Recipe
   {
     "$ItemType": "CraftingRecipe",
     "ID": "FilterPipeRecipe",
@@ -94,9 +114,14 @@
     "KnownByDefault": true,
     "Ingredients": [
       {
+        "Type": "DGAItem",
+        "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+        "Quantity": 1
+      },
+      {
         "Type": "VanillaObject",
-        "Value": 335,
-        "Quantity": 2
+        "Value": "Emerald",
+        "Quantity": 1
       }
     ],
     "Result": [

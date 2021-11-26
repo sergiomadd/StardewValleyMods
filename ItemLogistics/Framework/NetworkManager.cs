@@ -77,7 +77,7 @@ namespace ItemLogistics.Framework
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if (Globals.Debug) { Printer.Info("ADDING: " + obj.Key.ToString() + obj.Value.Name); }
-            if (DataAccess.ValidItems.Contains(obj.Value.Name))
+            if (DataAccess.ModItems.Contains(obj.Value.Name))
             {
                 Node[,] matrix;
                 if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out matrix))
@@ -103,7 +103,7 @@ namespace ItemLogistics.Framework
                         newNode.AddAdjacent(SideStruct.GetSides().East, matrix[x - 1, y]);
                     }
                     newNode.Print();
-                    if (DataAccess.ValidNetworkItems.Contains(Game1.currentLocation.getObjectAtTile(x, y).Name))
+                    if (DataAccess.NetworkItems.Contains(Game1.currentLocation.getObjectAtTile(x, y).Name))
                     {
                         //Printer.Info("ADDING GRAPH");
                         if (newNode is Input)
@@ -165,14 +165,14 @@ namespace ItemLogistics.Framework
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if (Globals.Debug) { Printer.Info("REMOVE: " + obj.Key.ToString() + obj.Value.Name); }
-            if (DataAccess.ValidItems.Contains(obj.Value.Name))
+            if (DataAccess.ModItems.Contains(obj.Value.Name))
             {
                 Node[,] matrix;
                 if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out matrix))
                 {
                     Node node = matrix[(int)obj.Key.X, (int)obj.Key.Y];
                     matrix[(int)node.Position.X, (int)node.Position.Y] = null;
-                    if (DataAccess.ValidNetworkItems.Contains(obj.Value.Name))
+                    if (DataAccess.NetworkItems.Contains(obj.Value.Name))
                     {
                         if (node.ParentNetwork != null)
                         {
@@ -203,7 +203,7 @@ namespace ItemLogistics.Framework
             {
                 if (adj.Value != null)
                 {
-                    if (DataAccess.ValidNetworkItems.Contains(adj.Value.Name))
+                    if (DataAccess.NetworkItems.Contains(adj.Value.Name))
                     {
                         adj.Value.Print();
                         if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networkList))

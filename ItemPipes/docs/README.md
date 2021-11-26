@@ -1,5 +1,5 @@
-# Item Logistics
-Item Logistics is a mod that provides item transportation and item sorting.
+# Item Pipes
+Item Pipes is a mod that provides item transportation and item sorting.
 
 **Current Version = 0.1.0 (Beta)**
 
@@ -98,5 +98,5 @@ That said, you can have as many outputs and inputs as you like.
 - Pipes working between locations.
 
 ## See also
-- [Release Notes](https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemLogistics/docs/release-notes.md)
+- [Release Notes](https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/release-notes.md)
 - [Nexus Mod Page]

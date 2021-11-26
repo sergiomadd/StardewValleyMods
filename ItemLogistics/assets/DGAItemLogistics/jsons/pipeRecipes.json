@@ -1,0 +1,112 @@
+[
+  {
+    "$ItemType": "CraftingRecipe",
+    "ID": "ConnectorPipeRecipe",
+    "IsCooking": false,
+    "KnownByDefault": true,
+    "Ingredients": [
+      {
+        "Type": "VanillaObject",
+        "Value": 335,
+        "Quantity": 2
+      }
+    ],
+    "Result": [
+      {
+        "Value": {
+          "Type": "DGAItem",
+          "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+          "Quantity": 5
+        }
+      }
+    ]
+  },
+  {
+    "$ItemType": "CraftingRecipe",
+    "ID": "ExtractorPipeRecipe",
+    "IsCooking": false,
+    "KnownByDefault": true,
+    "Ingredients": [
+      {
+        "Type": "VanillaObject",
+        "Value": 335,
+        "Quantity": 2
+      }
+    ],
+    "Result": [
+      {
+        "Value": {
+          "Type": "DGAItem",
+          "Value": "Sergiomadd.ItemLogistics/ExtractorPipe",
+          "Quantity": 5
+        }
+      }
+    ]
+  },
+  {
+    "$ItemType": "CraftingRecipe",
+    "ID": "InserterPipeRecipe",
+    "IsCooking": false,
+    "KnownByDefault": true,
+    "Ingredients": [
+      {
+        "Type": "VanillaObject",
+        "Value": 335,
+        "Quantity": 2
+      }
+    ],
+    "Result": [
+      {
+        "Value": {
+          "Type": "DGAItem",
+          "Value": "Sergiomadd.ItemLogistics/InserterPipe",
+          "Quantity": 5
+        }
+      }
+    ]
+  },
+  {
+    "$ItemType": "CraftingRecipe",
+    "ID": "PolymorphicPipeRecipe",
+    "IsCooking": false,
+    "KnownByDefault": true,
+    "Ingredients": [
+      {
+        "Type": "VanillaObject",
+        "Value": 335,
+        "Quantity": 2
+      }
+    ],
+    "Result": [
+      {
+        "Value": {
+          "Type": "DGAItem",
+          "Value": "Sergiomadd.ItemLogistics/PolymorphicPipe",
+          "Quantity": 5
+        }
+      }
+    ]
+  },
+  {
+    "$ItemType": "CraftingRecipe",
+    "ID": "FilterPipeRecipe",
+    "IsCooking": false,
+    "KnownByDefault": true,
+    "Ingredients": [
+      {
+        "Type": "VanillaObject",
+        "Value": 335,
+        "Quantity": 2
+      }
+    ],
+    "Result": [
+      {
+        "Value": {
+          "Type": "DGAItem",
+          "Value": "Sergiomadd.ItemLogistics/FilterPipe",
+          "Quantity": 5
+        }
+      }
+    ]
+  }
+]

@@ -90,7 +90,6 @@ namespace ItemLogistics
                 manifest.ExtraFields = new Dictionary<string, object>();
                 manifest.ExtraFields.Add("DGA.FormatVersion", 2);
                 manifest.ExtraFields.Add("DGA.ConditionsFormatVersion", "1.24.2");
-                Printer.Info(manifest.UniqueID);
                 var contentPackManifest = new CPManifest(manifest);
                 ApiManager.GetDynamicGameAssetsInterface().AddEmbeddedPack(contentPackManifest, Path.Combine(Helper.DirectoryPath, ContentPackPath));
             }
@@ -100,22 +99,6 @@ namespace ItemLogistics
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            /*if (JsonAssets != null)
-            {
-                foreach (KeyValuePair<string, int> item in LogisticItemIds)
-                {
-                    LogisticItemIds.Add(item.Key, JsonAssets.GetObjectId(item.Key));
-                    if (item.Value == -1)
-                    {
-                        Printer.Warn($"Can't get ID for {item.Key}");
-                    }
-                    else
-                    {
-                        Printer.Info($"{item.Key} ID is {item.Key}");
-                    }
-                }
-            }
-            */
             Reload();
             
             foreach (GameLocation location in Game1.locations)

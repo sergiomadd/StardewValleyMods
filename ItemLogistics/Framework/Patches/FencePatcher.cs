@@ -211,7 +211,7 @@ namespace ItemLogistics.Framework.Patches
 						drawSum = GetAdjChestsSum(drawSum, CN, CS, CW, CE);
 					}
 				}
-				if (__instance.Name.Equals("Connector Pipe"))
+				if (__instance.Name.Equals("ConnectorPipe"))
 				{
 					Node[,] locationMatrix;
 					if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
@@ -333,7 +333,6 @@ namespace ItemLogistics.Framework.Patches
 						DataAccess.ValidIOPipeNames.Contains(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].Name))
 					{
 						IOPipe IO = (IOPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
-						//Printer.Info(IO.Name);
 						Texture2D signalTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IO.Name}/{IO.State.ToString()}.png");
 						b.Draw(signalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % __instance.fenceTexture.Value.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / __instance.fenceTexture.Value.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 32) / 10000f);
 					}
@@ -358,7 +357,7 @@ namespace ItemLogistics.Framework.Patches
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (DataAccess.ValidNetworkItems.Contains(fence.Name))
 			{
-				if (fence.Name.Equals("Connector Pipe"))
+				if (fence.Name.Equals("ConnectorPipe"))
 				{
 					DrawGuide.Add(0, 0);
 					DrawGuide.Add(1000, 1);

@@ -14,23 +14,23 @@ namespace ItemLogistics.Framework.Model
     {
         public static Node CreateElement(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
-            if (obj.name.Equals("Extractor Pipe"))
+            if (obj.name.Equals("ExtractorPipe"))
             {
                 return new ExtractorPipe(position, location, obj);
             }
-            else if (obj.name.Equals("Inserter Pipe"))
+            else if (obj.name.Equals("InserterPipe"))
             {
                 return new InserterPipe(position, location, obj);
             }
-            else if (obj.name.Equals("Polymorphic Pipe"))
+            else if (obj.name.Equals("PolymorphicPipe"))
             {
                 return new PolymorphicPipe(position, location, obj);
             }
-            else if (obj.name.Equals("Filter Pipe"))
+            else if (obj.name.Equals("FilterPipe"))
             {
                 return new FilterPipe(position, location, obj);
             }
-            else if (obj.name.Equals("Connector Pipe"))
+            else if (obj.name.Equals("ConnectorPipe"))
             {
                 return new ConnectorPipe(position, location, obj);
             }

@@ -1,10 +1,40 @@
 {
-  "fence.Connector Pipe.name": "Connector Pipe",
-  "fence.Connector Pipe.description": "Connector Pipe",
+  //Pipes
+  //Connector Pipe
+  "fence.ConnectorPipe.name": "Connector Pipe",
+  "fence.ConnectorPipe.description": "Type: Connector Pipe | The link between IO pipes. It moves items at 2 tiles-1 second.",
+  //Extractor Pipe
+  "fence.ExtractorPipe.name": "Extractor Pipe",
+  "fence.ExtractorPipe.description": "Type: IO Pipe | Extracts items from an adjacent container, and sends them through the network.",
+  //Inserter Pipe
+  "fence.InserterPipe.name": "Inserter Pipe",
+  "fence.InserterPipe.description": "Type: IO Pipe\nInserts items to an adjacent container, it does not filter items.",
+  //Polymorphic Pipe
+  "fence.PolymorphicPipe.name": "Polymorphic Pipe",
+  "fence.PolymorphicPipe.description": "Type: IO Pipe | Inserts items to an adjacent container, it filters only the items already on the adjacent container.",
+  //Filter Pipe
+  "fence.FilterPipe.name": "Filter Pipe",
+  "fence.FilterPipe.description": "Type: IO Pipe | Inserts items to an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.",
 
+  //Recipes
+  //Connector Pipe Recipe
   "crafting.ConnectorPipeRecipe.name": "Connector Pipe",
   "crafting.ConnectorPipeRecipe.description": "Connector Pipe",
+  //Extractor Pipe Recipe
+  "crafting.ExtractorPipeRecipe.name": "Connector Pipe",
+  "crafting.ExtractorPipeRecipe.description": "Connector Pipe",
+  //Inserter Pipe Recipe
+  "crafting.InserterPipeRecipe.name": "Connector Pipe",
+  "crafting.InserterPipeRecipe.description": "Connector Pipe",
+  //Polymorphic Pipe Recipe
+  "crafting.PolymorphicPipeRecipe.name": "Connector Pipe",
+  "crafting.PolymorphicPipeRecipe.description": "Connector Pipe",
+  //Filter Pipe Recipe
+  "crafting.FilterPipeRecipe.name": "Connector Pipe",
+  "crafting.FilterPipeRecipe.description": "Connector Pipe",
 
+
+  //Objects
   "crafting.SapPipeRecipe.name": "SAP Pipe",
   "crafting.SapPipeRecipe.description": "SAP Pipe"
 }

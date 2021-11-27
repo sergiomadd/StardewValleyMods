@@ -1,0 +1,22 @@
+{
+  "Name": "PolymorphicPipe",
+  "Description": "Type: IO Pipe\nInserts items to an adjacent container, it filters only the items already on the adjacent container.",
+  "Category": "Crafting",
+  "MaxHealth": 100,
+  "BreakTool": "Pickaxe",
+  "PlacementSound": "hammer",
+  "Recipe": {
+    "ResultCount": 1,
+    "Ingredients": [
+      {
+        "Object": "ConnectorPipe",
+        "Count": 1
+      },
+      {
+        "Object": 68,
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}

@@ -204,15 +204,14 @@ namespace ItemPipes.Framework.Model
 
         public void Print()
         {
-            if(ParentNetwork != null)
+            if (ParentNetwork != null)
             {
-                Printer.Info($"[{ParentNetwork.ID}] " + Name + Position.X.ToString() + Position.Y.ToString() +" "+ GetHashCode().ToString());
+                Printer.Info($"[{ParentNetwork.ID}] " + Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());
             }
             else
             {
-                Printer.Info("NO PARENT NETWORK");
-                Printer.Info(Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());            }
-
+                Printer.Info($"[?] " + Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());
+            }
         }
     }
 }

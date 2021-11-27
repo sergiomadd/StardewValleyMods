@@ -1,0 +1,22 @@
+{
+  "Name": "InserterPipe",
+  "Description": "Type: IO Pipe\nInserts items to an adjacent container, it does not filter items.",
+  "Category": "Crafting",
+  "MaxHealth": 100,
+  "BreakTool": "Pickaxe",
+  "PlacementSound": "hammer",
+  "Recipe": {
+    "ResultCount": 1,
+    "Ingredients": [
+      {
+        "Object": "ConnectorPipe",
+        "Count": 1
+      },
+      {
+        "Object": 62,
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}

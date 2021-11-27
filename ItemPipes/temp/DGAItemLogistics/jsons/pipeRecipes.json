@@ -9,14 +9,14 @@
       {
         "Type": "VanillaObject",
         "Value": 335,
-        "Quantity": 2
+        "Quantity": 1
       }
     ],
     "Result": [
       {
         "Value": {
           "Type": "DGAItem",
-          "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+          "Value": "Sergiomadd.ItemPipes/ConnectorPipe",
           "Quantity": 5
         }
       }
@@ -31,7 +31,7 @@
     "Ingredients": [
       {
         "Type": "DGAItem",
-        "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+        "Value": "Sergiomadd.ItemPipes/ConnectorPipe",
         "Quantity": 1
       },
       {
@@ -44,7 +44,7 @@
       {
         "Value": {
           "Type": "DGAItem",
-          "Value": "Sergiomadd.ItemLogistics/ExtractorPipe",
+          "Value": "Sergiomadd.ItemPipes/ExtractorPipe",
           "Quantity": 5
         }
       }
@@ -59,7 +59,7 @@
     "Ingredients": [
       {
         "Type": "DGAItem",
-        "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+        "Value": "Sergiomadd.ItemPipes/ConnectorPipe",
         "Quantity": 1
       },
       {
@@ -72,7 +72,7 @@
       {
         "Value": {
           "Type": "DGAItem",
-          "Value": "Sergiomadd.ItemLogistics/InserterPipe",
+          "Value": "Sergiomadd.ItemPipes/InserterPipe",
           "Quantity": 5
         }
       }
@@ -87,7 +87,7 @@
     "Ingredients": [
       {
         "Type": "DGAItem",
-        "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+        "Value": "Sergiomadd.ItemPipes/ConnectorPipe",
         "Quantity": 1
       },
       {
@@ -100,7 +100,7 @@
       {
         "Value": {
           "Type": "DGAItem",
-          "Value": "Sergiomadd.ItemLogistics/PolymorphicPipe",
+          "Value": "Sergiomadd.ItemPipes/PolymorphicPipe",
           "Quantity": 5
         }
       }
@@ -115,7 +115,7 @@
     "Ingredients": [
       {
         "Type": "DGAItem",
-        "Value": "Sergiomadd.ItemLogistics/ConnectorPipe",
+        "Value": "Sergiomadd.ItemPipes/ConnectorPipe",
         "Quantity": 1
       },
       {
@@ -128,7 +128,30 @@
       {
         "Value": {
           "Type": "DGAItem",
-          "Value": "Sergiomadd.ItemLogistics/FilterPipe",
+          "Value": "Sergiomadd.ItemPipes/FilterPipe",
+          "Quantity": 5
+        }
+      }
+    ]
+  },
+  //TEST
+  {
+    "$ItemType": "CraftingRecipe",
+    "ID": "TESTRecipe",
+    "IsCooking": false,
+    "KnownByDefault": true,
+    "Ingredients": [
+      {
+        "Type": "VanillaObject",
+        "Value": "Emerald",
+        "Quantity": 1
+      }
+    ],
+    "Result": [
+      {
+        "Value": {
+          "Type": "VanillaObject",
+          "Value": "Topaz",
           "Quantity": 5
         }
       }

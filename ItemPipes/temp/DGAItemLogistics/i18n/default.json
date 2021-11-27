@@ -32,4 +32,8 @@
   //Filter Pipe Recipe
   "crafting.FilterPipeRecipe.name": "Filter Pipe",
   "crafting.FilterPipeRecipe.description": "Type: IO Pipe | Inserts items to an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.",
+  //TEST
+  "crafting.TESTRecipe.name": "TEST",
+  "crafting.TESTRecipe.description": "This is a test.This is a test.This is a test.This is a test.This is a test.This is a test."
+
 }

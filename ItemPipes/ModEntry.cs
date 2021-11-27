@@ -18,15 +18,15 @@ using HarmonyLib;
 
 namespace ItemPipes
 {
-    /*public interface IJsonAssetsApi
+    public interface IJsonAssetsApi
     {
         int GetObjectId(string name);
         void LoadAssets(string path);
     }
-    */
+    
     class ModEntry : Mod
     {
-        //private IJsonAssetsApi JsonAssets;
+        private IJsonAssetsApi JsonAssets;
         public Dictionary<string, int> LogisticItemIds;
         public DataAccess DataAccess { get; set; }
         internal static readonly string ContentPackPath = Path.Combine("assets", "DGAItemLogistics");
@@ -53,13 +53,13 @@ namespace ItemPipes
                 this.Monitor.Log($"The {dataPath} file seems to be invalid.\n{ex}", LogLevel.Error);
             }
 
-            DataAccess.NetworkItems = data.ModItems;
+            DataAccess.ModItems = data.ModItems;
+            DataAccess.NetworkItems = data.NetworkItems;
             DataAccess.PipeNames = data.PipeNames;
             DataAccess.IOPipeNames = data.IOPipeNames;
-            DataAccess.Locations = data.Locations;
             DataAccess.ExtraNames = data.ExtraNames;
-            DataAccess.ModItems = data.Items;
             DataAccess.Buildings = data.Buildings;
+            DataAccess.Locations = data.Locations;
 
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
@@ -78,8 +78,22 @@ namespace ItemPipes
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             Globals.Debug = true;
+
+            JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
+            if (JsonAssets == null)
+            {
+                Monitor.Log("Can't load Json Assets API, which is needed for Home Sewing Kit to function", LogLevel.Error);
+            }
+            else
+            {
+                JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets"));
+            }
+
+
+
+            //For when migrating to DGA
             // Check if spacechase0's DynamicGameAssets is in the current mod list
-            if (Helper.ModRegistry.IsLoaded("spacechase0.DynamicGameAssets"))
+            /*if (Helper.ModRegistry.IsLoaded("spacechase0.DynamicGameAssets"))
             {
                 Printer.Info("Attempting to hook into spacechase0.DynamicGameAssets.");
                 ApiManager.HookIntoDynamicGameAssets();
@@ -93,6 +107,7 @@ namespace ItemPipes
                 var contentPackManifest = new CPManifest(manifest);
                 ApiManager.GetDynamicGameAssetsInterface().AddEmbeddedPack(contentPackManifest, Path.Combine(Helper.DirectoryPath, ContentPackPath));
             }
+            */
         }
 
 

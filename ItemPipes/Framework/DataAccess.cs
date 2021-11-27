@@ -38,8 +38,8 @@ namespace ItemPipes.Framework
             LocationMatrix  = new Dictionary<GameLocation, Node[,]>();
             ModItems = new List<string>();
             NetworkItems = new List<string>();
-            IOPipeNames = new List<string>();
             PipeNames = new List<string>();
+            IOPipeNames = new List<string>();
             ExtraNames = new List<string>();
             Buildings = new List<string>();
             Locations = new List<string>();

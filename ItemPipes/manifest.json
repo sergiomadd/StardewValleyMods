@@ -1,15 +1,15 @@
 {
-  "Name": "Item Logistics",
-  "Author": "Sergiomadd",
+  "Name": "Item Pipes",
+  "Author": "sergiomadd",
   "Version": "1.0.0",
-  "Description": "Logistics for items.",
-  "UniqueID": "Sergiomadd.ItemLogistics",
-  "EntryDll": "ItemLogistics.dll",
+  "Description": "Transport pipes for items.",
+  "UniqueID": "sergiomadd.ItemPipes",
+  "EntryDll": "ItemPipes.dll",
   "MinimumApiVersion": "3.0.0",
   "UpdateKeys": [],
   "Dependencies": [
     {
-      "UniqueID": "spacechase0.DynamicGameAssets",
+      "UniqueID": "spacechase0.JsonAssets",
       "IsRequired": true
     }
   ],

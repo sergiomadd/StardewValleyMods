@@ -1,0 +1,22 @@
+{
+  "Name": "FilterPipe",
+  "Description": "Type: IO Pipe\nInserts items to an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.",
+  "Category": "Crafting",
+  "MaxHealth": 100,
+  "BreakTool": "Pickaxe",
+  "PlacementSound": "hammer",
+  "Recipe": {
+    "ResultCount": 1,
+    "Ingredients": [
+      {
+        "Object": "ConnectorPipe",
+        "Count": 1
+      },
+      {
+        "Object": 60,
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}

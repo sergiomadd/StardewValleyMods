@@ -32,6 +32,10 @@ namespace ItemPipes.Framework.Patches
 					prefix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Fence_checkForAction_Prefix))
 				);
 				harmony.Patch(
+					original: AccessTools.Method(typeof(StardewValley.Object), nameof(StardewValley.Object.clicked)),
+					prefix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Fence_clicked_Prefix))
+				);
+				harmony.Patch(
 					original: AccessTools.Method(typeof(Fence), nameof(Fence.getDrawSum)),
 					prefix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Fence_getDrawSum_Prefix))
 				);
@@ -61,9 +65,9 @@ namespace ItemPipes.Framework.Patches
 		
 		private static bool Fence_checkForAction_Prefix(Fence __instance)
 		{
-			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true) && __instance.Name.Equals("Filter Pipe"))
-            {
-				DataAccess DataAccess = DataAccess.GetDataAccess();
+			DataAccess DataAccess = DataAccess.GetDataAccess();
+			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true) && __instance.Name.Equals("FilterPipe"))
+			{
 				Node[,] locationMatrix;
 				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
 				{
@@ -72,10 +76,65 @@ namespace ItemPipes.Framework.Patches
 				}
 				return false;
 			}
+			else if (DataAccess.IOPipeNames.Contains(__instance.Name))
+			{
+				Node[,] locationMatrix;
+				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
+				{
+					IOPipe pipe = (IOPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
+					//Printer.Info("Pipe is: " + pipe.State);
+				}
+				return false;
+			}
 			else
 			{
 				return true;
 			}
+		}
+
+		private static bool Fence_clicked_Prefix(StardewValley.Object __instance)
+		{
+			if(__instance is Fence)
+            {
+				DataAccess DataAccess = DataAccess.GetDataAccess();
+				if (DataAccess.IOPipeNames.Contains(__instance.Name))
+				{
+					Node[,] locationMatrix;
+					if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
+					{
+						IOPipe pipe = (IOPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
+						switch (pipe.State)
+						{
+							case "off":
+								if (pipe.ConnectedContainer != null)
+								{
+									pipe.State = "on";
+								}
+								else
+								{
+									pipe.State = "unconnected";
+								}
+								break;
+							case "on":
+								pipe.State = "off";
+								break;
+							case "unconnected":
+								pipe.State = "off";
+								break;
+						}
+					}
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+			else
+            {
+				return true;
+            }
+
 		}
 
 		private static bool Fence_countsForDrawing_Prefix(Fence __instance, ref bool __result, int type)

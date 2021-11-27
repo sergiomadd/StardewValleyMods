@@ -1,13 +1,14 @@
 # Item Pipes
 Item Pipes is a mod that provides item transportation and item sorting.
 
-**Current Version = 0.1.0 (Beta)**
+**Current Version = 0.1.1 (Beta)**
+For testing purposes, for now the mod only works on the farm. 
 
 ## WARNING:
 This mod is in beta version. Backup your saves or create a new save before playing with it. You might lose items and get crashes.
 
 ## Contents:
-- [Current Features for 0.1.0](#current-features-for-010)
+- [Current Features for 0.1.1](#current-features-for-011)
 	- [Pipes](#pipes)
 		- [Connectors](#connectors)
 		- [Outputs](#outputs)
@@ -21,7 +22,7 @@ This mod is in beta version. Backup your saves or create a new save before playi
 
 ---
 
-## Current Features (for 0.1.0):
+## Current Features (for 0.1.1):
 
 ## Pipes:
 - ### Connectors:

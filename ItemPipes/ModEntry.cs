@@ -30,8 +30,10 @@ namespace ItemPipes
         public DataAccess DataAccess { get; set; }
 
         internal static readonly string ContentPackPath = Path.Combine("assets", "DGAItemLogistics");
+
         private IJsonAssetsApi JsonAssets;
 
+        private bool sentItems;
 
         public override void Entry(IModHelper helper)
         {
@@ -40,14 +42,20 @@ namespace ItemPipes
             LogisticItemIds = new Dictionary<string, int>();
             DataAccess = DataAccess.GetDataAccess();
 
-            const string dataPath = "assets/data.json";
+            string dataPath = "assets/data.json";
             DataModel data = null;
+            ModConfig config = null;
             try
             {
                 data = this.Helper.Data.ReadJsonFile<DataModel>(dataPath);
-                if (data.ModItems == null)
+                if (data == null)
                 {
                     this.Monitor.Log($"The {dataPath} file seems to be missing or invalid.", LogLevel.Error);
+                }
+                config = this.Helper.ReadConfig<ModConfig>();
+                if (config == null)
+                {
+                    this.Monitor.Log($"The config file seems to be missing or invalid.", LogLevel.Error);
                 }
             }
             catch (Exception ex)
@@ -63,6 +71,22 @@ namespace ItemPipes
             DataAccess.Buildings = data.Buildings;
             DataAccess.Locations = data.Locations;
 
+            if(config.DebugMode)
+            {
+                Globals.Debug = true;
+            }
+            else
+            {
+                Globals.Debug = false;
+            }
+            if (config.ItemSending)
+            {
+                Globals.ItemSending = true;
+            }
+            else
+            {
+                Globals.ItemSending = false;
+            }
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
             FencePatcher.Apply(harmony);
@@ -79,8 +103,6 @@ namespace ItemPipes
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            Globals.Debug = true;
-
             JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
             if (JsonAssets == null)
             {
@@ -149,19 +171,21 @@ namespace ItemPipes
 
         private void OnOneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
         {
-            //config if item sending enabled
-            if (Context.IsWorldReady)
+            if(Globals.ItemSending)
             {
-                if (e.IsMultipleOf(120))
+                if (Context.IsWorldReady)
                 {
-                    DataAccess DataAccess = DataAccess.GetDataAccess();
-                    List<Network> networks;
-                    if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networks))
+                    if (e.IsMultipleOf(120))
                     {
-                        if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
-                        foreach (Network network in networks)
+                        DataAccess DataAccess = DataAccess.GetDataAccess();
+                        List<Network> networks;
+                        if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networks))
                         {
-                           network.ProcessExchanges();
+                            if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
+                            foreach (Network network in networks)
+                            {
+                                network.ProcessExchanges();
+                            }
                         }
                     }
                 }

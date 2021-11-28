@@ -101,7 +101,6 @@ namespace ItemPipes.Framework
                     if (inType.Equals("object"))
                     {
                         node = matrix[x, y];
-                        node.Print();
                         if (node.ParentNetwork == null)
                         {
 

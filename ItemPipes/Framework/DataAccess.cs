@@ -26,13 +26,10 @@ namespace ItemPipes.Framework
         public List<string> Buildings { get; set; }
         public List<string> Locations { get; set; }
 
-
         public List<int> UsedNetworkIDs { get; set; }
 
 
-
-
-        private DataAccess()
+        public DataAccess()
         {
             LocationNetworks = new Dictionary<GameLocation, List<Network>>();
             LocationMatrix  = new Dictionary<GameLocation, Node[,]>();

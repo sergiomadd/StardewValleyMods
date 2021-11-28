@@ -139,7 +139,6 @@ namespace ItemPipes.Framework
             {
                 foreach (Input input in Inputs)
                 {
-                    input.Print();
                     if (!output.IsInputConnected(input))
                     {
                         if (Globals.Debug) { Printer.Info($"[{ID}] Input not connected"); }
@@ -212,7 +211,8 @@ namespace ItemPipes.Framework
         public string Print()
         {
             StringBuilder graph = new StringBuilder();
-            graph.Append("\nGroup: \n");
+            graph.Append("\nPriting Networks: \n");
+            graph.Append("Networks: \n");
             graph.Append("Inputs: \n");
             foreach (Input input in Inputs)
             {

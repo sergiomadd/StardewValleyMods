@@ -9,5 +9,6 @@ namespace ItemPipes.Framework
     public static class Globals
     {
         public static bool Debug { get; set; }
+        public static bool ItemSending { get; set; }
     }
 }

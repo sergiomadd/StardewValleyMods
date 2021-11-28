@@ -35,7 +35,6 @@ namespace ItemPipes.Framework.Patches
         }
         private static void Chest_addItem_Postfix(Chest __instance, Item item, ref Item __result)
         {
-            Printer.Info("CHEST POSTFIX");
             item.resetState();
             __instance.clearNulls();
             NetObjectList<Item> item_list = __instance.items;

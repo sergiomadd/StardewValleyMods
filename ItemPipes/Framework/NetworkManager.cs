@@ -202,7 +202,6 @@ namespace ItemPipes.Framework
                 {
                     if (DataAccess.NetworkItems.Contains(adj.Value.Name))
                     {
-                        adj.Value.Print();
                         if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networkList))
                         {
                             networkList.Remove(adj.Value.ParentNetwork);
@@ -218,10 +217,13 @@ namespace ItemPipes.Framework
 
             if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networkList))
             {
-                if (Globals.Debug) { Printer.Info("NUMBER OF GRAPGHS: " + networkList.Count.ToString()); }
-                foreach(Network network in networkList)
-                {
-                    Printer.Info(network.Print());
+                if (Globals.Debug) 
+                { 
+                    Printer.Info("NUMBER OF GRAPGHS: " + networkList.Count.ToString()); 
+                    foreach (Network network in networkList)
+                    {
+                        Printer.Info(network.Print());
+                    }
                 }
             }
         }

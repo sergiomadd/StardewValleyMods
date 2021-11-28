@@ -27,7 +27,6 @@ namespace ItemPipes.Framework
         }
         public override bool AddAdjacent(Side side, Node entity)
         {
-            Printer.Info(entity.Obj.name);
             bool added = false;
             if (Adjacents[side] == null)
             {

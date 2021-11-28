@@ -28,7 +28,7 @@ namespace ItemPipes.Framework.Objects
 		{
 			if (item != null && item is StardewValley.Object && Farm != null)
             {
-				Farm.getShippingBin(Game1.player).Add(item);
+				Farm.getShippingBin(Game1.MasterPlayer).Add(item);
 				ShippingBin.showShipment(item as StardewValley.Object, playThrowSound: false);
 				Farm.lastItemShipped = item;
 			}

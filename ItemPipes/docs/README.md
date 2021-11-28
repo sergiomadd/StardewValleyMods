@@ -30,8 +30,8 @@ This mod is in beta version. Backup your saves or create a new save before playi
 	- **Connector Pipe**  
 Connector Pipes act as the link between Output and Input pipes.  
 They moves items at 2 tiles/1 second  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/ConnectorPipe.png)  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/recipes/ConnectorPipeRecipe.png)  
+![alt text](https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/ConnectorPipe.png?raw=true)  
+![alt text](https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/recipes/ConnectorPipeRecipe.png?raw=true)    
 Items moving
 
 ## IOPipes:

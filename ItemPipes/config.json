@@ -1,4 +1,4 @@
 {
   "DebugMode": true,
-  "ItemSending": false
+  "DisableItemSending": false
 }

@@ -9,6 +9,6 @@ namespace ItemPipes.Framework
     public class ModConfig
     {
         public bool DebugMode { get; set; }
-        public bool ItemSending { get; set; }
+        public bool DisableItemSending { get; set; }
     }
 }

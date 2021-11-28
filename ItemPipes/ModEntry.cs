@@ -33,8 +33,6 @@ namespace ItemPipes
 
         private IJsonAssetsApi JsonAssets;
 
-        private bool sentItems;
-
         public override void Entry(IModHelper helper)
         {
             Printer.SetMonitor(this.Monitor);
@@ -79,13 +77,13 @@ namespace ItemPipes
             {
                 Globals.Debug = false;
             }
-            if (config.ItemSending)
+            if (!config.DisableItemSending)
             {
-                Globals.ItemSending = true;
+                Globals.DisableItemSending = true;
             }
             else
             {
-                Globals.ItemSending = false;
+                Globals.DisableItemSending = false;
             }
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
@@ -171,7 +169,7 @@ namespace ItemPipes
 
         private void OnOneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
         {
-            if(Globals.ItemSending)
+            if(Globals.DisableItemSending)
             {
                 if (Context.IsWorldReady)
                 {

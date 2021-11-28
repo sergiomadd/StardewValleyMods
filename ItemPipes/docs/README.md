@@ -32,14 +32,13 @@ Connector Pipes act as the link between Output and Input pipes.
 They moves items at 2 tiles/1 second  
 ![alt text](img/ConnectorPipe.png)  
 ![alt](img/recipes/ConnectorPipeRecipe.PNG)    
-Items moving
+![alt](gifs/ItemSendingGif.gif) 
 
 ## IOPipes:
 - ### Outputs:
 	- **Extractor Pipe**  
 Extractor Pipes extract items from an adjacent container, at 1 stack/2 seconds.  
-![alt](img/recipes/ExtractorPipeRecipe.PNG)  
-![alt](gifs/ItemSendingGif.gif)  
+![alt](img/recipes/ExtractorPipeRecipe.PNG)   
 - ### Inputs:
 	- **Inserter Pipe**  
 Inserter Pipes insert items into an adjacent container. They do not filter any item.  
@@ -53,21 +52,21 @@ Filter Pipes insert items into an adjacent container. They filter items based on
 
 - ### Supported containers:  
 	- **Chest**  
-Regular vanilla chests.  
+Regular vanilla chests. As you can see below, the items get out of a chest, and enter the other.
 ![alt](gifs/ChestSendingGif.gif)  
-![alt](ChestReceivingGif.gif)  
+![alt](gifs/ChestReceivingGif.gif)  
 	- **Junimo Chest**  
 Junimo chests work as chests. But as their inventory is linked, you can move items wirelessly.  
 ![alt](gifs/JunimoGif.gif)  
 	- **Fridge**  
 	Not yet implemented.  
 	- **Mini-Shipping Bin**  
-Mini-Shipping Bins work as chests.  
+Mini-Shipping Bins work the exact same as chests.  
 
 - ### Supported buildings:
 	- **Shipping Bin**  
 The Shipping Bin doesn't work like a regular chest, but you can insert items into it if an input is adjacent. These items will be shipped at the end of the day. 
-Be careful, as you may not be able to get the items back once the get piped in.  
+Be careful, as you may not be able to get the items back once the get piped in.  Also, as the Shipping Bin has 2 tiles, you can connect 2 inputs to it.
 ![alt](gifs/ShippingBinGif.gif)  
 
 ---
@@ -76,6 +75,7 @@ Be careful, as you may not be able to get the items back once the get piped in.
 A valid network has to have **at least 1 Output Pipe and 1 Input Pipe**.  
 Also for the output to start pumping items, the input has to have a valid adjacent container.  
 That said, you can have as many outputs and inputs as you like.  
+This is the shortest posibble network, from that, you can extend it as you like.
 ![alt](img/ShortestNetwork.PNG)  
 
 ---
@@ -88,10 +88,12 @@ That said, you can have as many outputs and inputs as you like.
 	The pipe is enabled and will send/receive items if possible.  
 	- **Orange/Disconnected**:  
 	The pipe isn't connected to an adjacent container. Since a container can only have 1 adjacent pipe of each pipe type, you will have to remove all adjacent pipes to the container, and then place the new one. (This will most likely change moving forward).  
-
+Here, the pipes aren't connected to any container, so they stay orange.
 ![alt](img/NoContainer.PNG)  
-![alt](HaveContainer.PNG)  
-![alt](IOAlreadyAttached.PNG)  
+Then, when a container is added, they turn green.
+![alt](img/HaveContainer.PNG)  
+Finally, there are 2 options. If you place a pipe of the same type, it won't connect to the container. But you can actually place a different pipe type, and it will connect.
+![alt](img/IOAlreadyAttached.PNG)  
 
 
 ---
@@ -105,7 +107,8 @@ Items get send to Input pipes based on their priority. The Output pipe will try 
 | 2  | Polymorphic Pipe  |
 | 1  | Inserter Pipe  |
 
-![alt](gifs/SortingGif.gif)  
+Sorting example:
+![Sorting example](gifs/SortingGif.gif)  
 
 
 ---

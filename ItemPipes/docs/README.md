@@ -51,7 +51,7 @@ Filter Pipes insert items into an adjacent container. They filter items based on
 
 - ### Supported containers:  
 	- **Chest**  
-Regular vanilla chests. As you can see below, the items get out of a chest, and enter the other.
+Regular vanilla chests. As you can see below, the items get out of one chest, and enter the other.  
 ![alt](gifs/ChestSendingGif.gif)  
 ![alt](gifs/ChestReceivingGif.gif)  
 	- **Junimo Chest**  

@@ -112,8 +112,7 @@ Items get send to Input pipes based on their priority. The Output pipe will try 
 | 1  | Inserter Pipe  |
 
 Sorting example:
-![Sorting example](gifs/SortingGif.gif)  
-
+![Alt text](https://www.youtube.com/watch?v=fsE97re6drE&ab_channel=sergiomadd)
 
 ---
 

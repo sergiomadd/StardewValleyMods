@@ -2,7 +2,7 @@
 This is a repository for all my Stardew Valley Mods
 
 ## Currently Work In Progress Mods:
-- [Item Pipes](https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemLogistics)
+- [Item Pipes](https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes)
 
 
 ## Planned Mods:

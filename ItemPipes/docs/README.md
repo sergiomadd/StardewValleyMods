@@ -118,7 +118,7 @@ Sorting example video (on YouTube):
 
 ---
 
-## Known Issues (For 1.0.0 release):
+## Known Issues:
 - Pipe states arent't well saved and loaded when a day passes or loading a save.
 - Item sending threads don't stop when sleeping or exiting a save.
 - Pipe coupling (2 lines of pipes next to each other) don't work correctly.

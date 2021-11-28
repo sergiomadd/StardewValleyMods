@@ -29,7 +29,7 @@ This mod is in beta version. Backup your saves or create a new save before playi
 
 ---
 
-## Current Features (for 0.1.1):
+## Current Features (for beta):
 
 ## Pipes:
 - ### Connectors:

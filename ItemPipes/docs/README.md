@@ -104,7 +104,7 @@ Finally, there are 2 options. If you place a pipe of the same type, it won't con
 ---
 
 - ### Pipe Priorities:
-Items get send to Input pipes based on their priority. The Output pipe will try send items to the highest priority Inputs first.
+Items are send to Input pipes based on their priority. The Output pipes will try to send items to the highest priority Inputs first.
 
 | Priority  | Input Type |
 | ------------- | ------------- |

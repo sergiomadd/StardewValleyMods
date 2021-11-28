@@ -112,7 +112,6 @@ Items get send to Input pipes based on their priority. The Output pipe will try 
 | 1  | Inserter Pipe  |
 
 Sorting example:
-![Sorting example](vids/SortingVid.mp4)  
 
 
 ---

@@ -65,7 +65,7 @@ Mini-Shipping Bins work the exact same as chests.
 - ### Supported buildings:
 	- **Shipping Bin**  
 The Shipping Bin doesn't work like a regular chest, but you can insert items into it if an input is adjacent. These items will be shipped at the end of the day. 
-Be careful, as you may not be able to get the items back once the get piped in.  Also, as the Shipping Bin has 2 tiles, you can connect 2 inputs to it.
+Be careful, as you may not be able to get the items back once the get piped in.  Also, as the Shipping Bin has 2 tiles, you can connect 2 inputs to it.  
 ![alt](gifs/ShippingBinGif.gif)  
 
 ---
@@ -80,16 +80,18 @@ This is the shortest posibble network, from that, you can extend it as you like.
 ---
 
 - ### Pipe Signaling: 
-- Pipe states are shown by pipe signaling. Each IOPipe can have 3 colors, each corresponding with a state:
+- Pipe state is shown through pipe signaling. Each IOPipe can have 3 colors, each corresponding with a state:
 	- **Red/Off**:  
-	The pipe is locked and wont send/receive items. You can manually turn on or off pipes by clicking them.  
+	The pipe is locked and wont send/receive items. You can manually turn on or off pipes by clicking on them.  
 	![alt](img/AllOff.PNG) 
 	- **Green/On**:  
 	The pipe is enabled and will send/receive items if possible.  
 	![alt](img/AllOn.PNG)
 	- **Orange/Disconnected**:  
 	The pipe isn't connected to an adjacent container. Since a container can only have 1 adjacent pipe of each pipe type, you will have to remove all adjacent pipes to the container, and then place the new one. (This will most likely change moving forward).  
-	![alt](img/AllUnconnected.PNG)
+	![alt](img/AllUnconnected.PNG)  
+
+Connection examples:  
 Here, the pipes aren't connected to any container, so they stay orange.  
 ![alt](img/NoContainer.PNG)  
 Then, when a container is added, they turn green.  

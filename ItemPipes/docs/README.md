@@ -30,35 +30,35 @@ This mod is in beta version. Backup your saves or create a new save before playi
 	- **Connector Pipe**  
 Connector Pipes act as the link between Output and Input pipes.  
 They moves items at 2 tiles/1 second  
-![alt text](img/ConnectorPipe.png?raw=true)  
-![alt text](img/recipes/ConnectorPipeRecipe.png?raw=true)    
+![alt text](img/ConnectorPipe.png)  
+![alt text](img/recipes/ConnectorPipeRecipe.PNG)    
 Items moving
 
 ## IOPipes:
 - ### Outputs:
 	- **Extractor Pipe**  
 Extractor Pipes extract items from an adjacent container, at 1 stack/2 seconds.  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/recipes/ExtractorPipeRecipe.png)  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/gifs/ItemSendingGif.gif)  
+!(img/recipes/ExtractorPipeRecipe.PNG)  
+!(gifs/ItemSendingGif.gif)  
 - ### Inputs:
 	- **Inserter Pipe**  
 Inserter Pipes insert items into an adjacent container. They do not filter any item.  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/recipes/InserterPipeRecipe.png)  
+!(img/recipes/InserterPipeRecipe.PNG)  
 	- **Polymorphic Pipe**  
 Polymorphic Pipes insert items into an adjacent container. They filter items based on the container's current items. If the container is empty, They act like an Inserter Pipe, until 1 item enters the container.  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/recipes/PolymorphicPipeRecipe.png)  
+!(img/recipes/PolymorphicPipeRecipe.PNG)  
 	- **Filter Pipe**  
 Filter Pipes insert items into an adjacent container. They filter items based on the pipe's internal inventory. To open the inventory, simply left click the Filter Pipe like you would with a chest. Then add the items you want filtered. If the internal inventory is empty, they act like an Inserter Pipe, until alteast 1 item is added to the internal inventory.  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/recipes/FilterPipeRecipe.png)  
+!(img/recipes/FilterPipeRecipe.PNG)  
 
 - ### Supported containers:  
 	- **Chest**  
 Regular vanilla chests.  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/gifs/ChestSendingGif.gif)  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/gifs/ChestReceivingGif.gif)  
+!(gifs/ChestSendingGif.gif)  
+!(ChestReceivingGif.gif)  
 	- **Junimo Chest**  
 Junimo chests work as chests. But as their inventory is linked, you can move items wirelessly.  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/gifs/JunimoGif.gif)  
+!(gifs/JunimoGif.gif)  
 	- **Fridge**  
 	Not yet implemented.  
 	- **Mini-Shipping Bin**  
@@ -68,7 +68,7 @@ Mini-Shipping Bins work as chests.
 	- **Shipping Bin**  
 The Shipping Bin doesn't work like a regular chest, but you can insert items into it if an input is adjacent. These items will be shipped at the end of the day. 
 Be careful, as you may not be able to get the items back once the get piped in.  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/gifs/ShippingBinGif.gif)  
+!(gifs/ShippingBinGif.gif)  
 
 ---
 
@@ -76,7 +76,7 @@ Be careful, as you may not be able to get the items back once the get piped in.
 A valid network has to have **at least 1 Output Pipe and 1 Input Pipe**.  
 Also for the output to start pumping items, the input has to have a valid adjacent container.  
 That said, you can have as many outputs and inputs as you like.  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/ShortestNetwork.png)  
+!(img/ShortestNetwork.PNG)  
 
 ---
 
@@ -89,9 +89,9 @@ That said, you can have as many outputs and inputs as you like.
 	- **Orange/Disconnected**:  
 	The pipe isn't connected to an adjacent container. Since a container can only have 1 adjacent pipe of each pipe type, you will have to remove all adjacent pipes to the container, and then place the new one. (This will most likely change moving forward).  
 
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/NoContainer.png)  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/HaveContainer.png)  
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/img/IOAlreadyAttached.png)  
+!(img/NoContainer.PNG)  
+!(HaveContainer.PNG)  
+!(IOAlreadyAttached.PNG)  
 
 
 ---
@@ -105,7 +105,7 @@ Items get send to Input pipes based on their priority. The Output pipe will try 
 | 2  | Polymorphic Pipe  |
 | 1  | Inserter Pipe  |
 
-!(https://github.com/sergiomadd/StardewValleyMods/edit/main/ItemPipes/docs/gifs/SortingGif.gif)  
+!(gifs/SortingGif.gif)  
 
 
 ---

@@ -23,13 +23,15 @@ namespace ItemPipes
         int GetObjectId(string name);
         void LoadAssets(string path);
     }
-    
+
     class ModEntry : Mod
     {
-        private IJsonAssetsApi JsonAssets;
         public Dictionary<string, int> LogisticItemIds;
         public DataAccess DataAccess { get; set; }
+
         internal static readonly string ContentPackPath = Path.Combine("assets", "DGAItemLogistics");
+        private IJsonAssetsApi JsonAssets;
+
 
         public override void Entry(IModHelper helper)
         {
@@ -89,7 +91,11 @@ namespace ItemPipes
                 JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets"));
             }
 
-
+            /*if (Helper.ModRegistry.IsLoaded("spacechase0.JsonAssets"))
+            {
+                Printer.Info("Attempting to hook into spacechase0.JsonAssets.");
+                ApiManager.HookIntoJsonAssets();
+            }*/
 
             //For when migrating to DGA
             // Check if spacechase0's DynamicGameAssets is in the current mod list

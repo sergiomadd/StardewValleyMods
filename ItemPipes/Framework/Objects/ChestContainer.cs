@@ -81,10 +81,10 @@ namespace ItemPipes.Framework.Objects
                 int index = itemList.Count - 1;
                 while (index >= 0 && item == null)
                 {
-                    Printer.Info(itemList[index].Name);
+                    if (Globals.Debug) { Printer.Info("Trying to send: "+itemList[index].Name); }
                     if (input.HasFilter())
                     {
-                        Printer.Info("It has filter" + input.Filter.Count.ToString());
+                        if (Globals.Debug) { Printer.Info("Input has filter" + input.Filter.Count.ToString()); }
                         if (input.Filter.Contains(itemList[index].Name))
                         {
                             item = TrySendItem(input, itemList, index);
@@ -105,42 +105,34 @@ namespace ItemPipes.Framework.Objects
             bool sent = false;
             if (!IsEmpty() && input != null && input.HasFilter())
             {
-                //Printer.Info("FILTERED");
                 if (input.Filter.Contains(item.Name))
                 {
-                    //Printer.Info($"SENDING FILTERED: {item.Name}");
                     if (input.CanStackItem(item))
                     {
-                        //Printer.Info("Stacking");
                         input.ReceiveStack(item);
                         sent = true;
                     }
                     else if (input.CanReceiveItems())
                     {
-                        //Printer.Info("New Stack");
                         input.ReceiveItem(item);
                         sent = true;
                     }
                 }
                 else
                 {
-                    //Printer.Info("RETURNING ITEM");
                     if (CanStackItem(item))
                     {
-                        //Printer.Info("Stacking");
                         ReceiveStack(item);
                         sent = false;
                     }
                     else if (CanReceiveItems())
                     {
-                        //Printer.Info("New Stack");
                         ReceiveItem(item);
                         sent = false;
                     }
                     else
                     {
                         //Drop item
-                        //Game1.currentLocation.dropObject(item);
                         sent = false;
                     }
                 }
@@ -148,16 +140,13 @@ namespace ItemPipes.Framework.Objects
             }
             else
             {
-                //Printer.Info($"SENDING: {item.Name}");
                 if (input.CanStackItem(item))
                 {
-                    //Printer.Info("Stacking");
                     input.ReceiveStack(item);
                     sent = true;
                 }
                 else if (input.CanReceiveItems())
                 {
-                    //Printer.Info("New Stack");
                     input.ReceiveItem(item);
                     sent = true;
                 }
@@ -165,13 +154,11 @@ namespace ItemPipes.Framework.Objects
                 {
                     if (CanStackItem(item))
                     {
-                        //Printer.Info("Stacking");
                         ReceiveStack(item);
                         sent = false;
                     }
                     else if (CanReceiveItems())
                     {
-                        //Printer.Info("New Stack");
                         ReceiveItem(item);
                         sent = false;
                     }
@@ -185,11 +172,10 @@ namespace ItemPipes.Framework.Objects
                 }
 
             }
-            Printer.Info("Item sent? " + sent.ToString());
+            if (Globals.Debug) { Printer.Info("Item sent? " + sent.ToString()); }
             return sent;
         }
 
-        //See if any stacks isnt full
         public bool CanStack()
         {
             bool canStack = false;
@@ -199,7 +185,6 @@ namespace ItemPipes.Framework.Objects
             {
                 if (itemList[index] != null)
                 {
-                    //Printer.Info(itemList[index].getRemainingStackSpace().ToString());
                     if (itemList[index].getRemainingStackSpace() > 0)
                     {
                         canStack = true;
@@ -210,7 +195,6 @@ namespace ItemPipes.Framework.Objects
 
             return canStack;
         }
-        //See if an especific item can stack with another
         public bool CanStackItem(Item item)
         {
             bool canStack = false;
@@ -226,7 +210,6 @@ namespace ItemPipes.Framework.Objects
             return canStack;
         }
 
-        //See if any slot if free
         public bool CanReceiveItems()
         {
             bool canReceive = false;
@@ -255,7 +238,6 @@ namespace ItemPipes.Framework.Objects
                 NetObjectList<Item> itemList = GetItemList();
                 foreach (Item item in itemList.ToList())
                 {
-                    //Printer.Info("NAME:" + item.Name);
                     Filter.Add(item.Name);
                 }
             }
@@ -263,7 +245,6 @@ namespace ItemPipes.Framework.Objects
             {
                 foreach (Item item in filteredItems.ToList())
                 {
-                    //Printer.Info("NAME:" + item.Name);
                     Filter.Add(item.Name);
                 }
             }

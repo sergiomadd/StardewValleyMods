@@ -8,7 +8,7 @@ using StardewModdingAPI;
 
 namespace ItemPipes.Framework.API
 {
-    public interface DynamicGameAssetsApi
+    public interface IDynamicGameAssetsApi
     {
         /// <summary>
         /// Get the DGA item ID of this item, if it has one.

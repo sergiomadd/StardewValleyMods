@@ -25,24 +25,19 @@ namespace ItemPipes.Framework
         public void ProcessExchanges()
         {
             if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Procesing Exchanges..."); }
-            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Inputs: " + (ConnectedInputs.Count > 0).ToString()); }
+            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Are there connected input? " + (ConnectedInputs.Count > 0).ToString()); }
             if (ConnectedContainer != null && !ConnectedContainer.IsEmpty() && ConnectedInputs.Count > 0 && State.Equals("on"))
             {
-                if (Globals.Debug) { Printer.Info($"[{ ParentNetwork.ID}] Output empty? " + ConnectedContainer.IsEmpty().ToString()); }
-                //mirar de sacar el item en cuanto empieza al exchange
-                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] NEW THREAD"); }
+                if (Globals.Debug) { Printer.Info($"[{ ParentNetwork.ID}] Is output empty? " + ConnectedContainer.IsEmpty().ToString()); }
+                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] CREATED NEW THREAD"); }
                 Thread thread = new Thread(new ThreadStart(StartExchage));
                 thread.Start();
-            }
-            else
-            {
-                //Printer.Info("No items to process or no inputs connected");
             }
         }
 
         public void StartExchage()
         {
-            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Number of inpiuts: " + ConnectedInputs.Count.ToString()); }
+            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
             Item item = null;
             int index = 0;
             Dictionary<Input, List<Node>> priorityInputs = ConnectedInputs;
@@ -67,8 +62,7 @@ namespace ItemPipes.Framework
                         FilterPipe filter = input as FilterPipe;
                         filter.UpdateFilter();
                     }
-
-                    if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] INPUT"); input.Print(); }
+                    if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] INPUT: "); input.Print(); }
                     if (ConnectedContainer != null && input.ConnectedContainer != null)
                     {
                         if (ConnectedContainer.Type.Equals("Chest") && input.ConnectedContainer.Type.Equals("ShippingBin"))
@@ -88,20 +82,11 @@ namespace ItemPipes.Framework
                             ChestContainer inChest = (ChestContainer)input.ConnectedContainer;
                             ChestContainer outChest = (ChestContainer)ConnectedContainer;
                             item = outChest.CanSendItem(inChest);
-                            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Can send: " + (item != null).ToString()); }
+                            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Can send? " + (item != null).ToString()); }
                             if (item != null)
                             {
-                                if (Globals.Debug)
-                                {
-                                    Printer.Info($"[{ParentNetwork.ID}] PINRTING PATH");
-                                    foreach (Node node in path)
-                                    {
-                                        Printer.Info($"[{ParentNetwork.ID}] PATH");
-                                        node.Print();
-                                    }
-                                }
                                 AnimatePath(path);
-                                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] SENT----------------"); }
+                                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] ITEM CORRECTLY SENT"); }
                                 if (outChest != null && inChest != null && !outChest.SendItem(inChest, item))
                                 {
                                     if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] CANT ENTER, REVERSE"); }
@@ -132,8 +117,8 @@ namespace ItemPipes.Framework
             bool added = false;
             if (!ConnectedInputs.Keys.Contains(input))
             {
-                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] output container null? " + (ConnectedContainer == null).ToString()); }
-                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] input container null? " + (input.ConnectedContainer == null).ToString()); }
+                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Output container null? " + (ConnectedContainer == null).ToString()); }
+                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Input container null? " + (input.ConnectedContainer == null).ToString()); }
                 if (ConnectedContainer != null && input.ConnectedContainer != null)
                 {
                     added = true;
@@ -152,7 +137,6 @@ namespace ItemPipes.Framework
             {
                 removed = true;
                 ConnectedInputs.Remove(input);
-                //Printer.Info("HAS STILL INPUT: "+ ConnectedInputs.Keys.Contains(input).ToString());
             }
             return removed;
         }

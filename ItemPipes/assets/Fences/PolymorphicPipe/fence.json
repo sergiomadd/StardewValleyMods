@@ -1,6 +1,6 @@
 {
   "Name": "PolymorphicPipe",
-  "Description": "Type: IO Pipe\nInserts items to an adjacent container, it filters only the items already on the adjacent container.",
+  "Description": "Type: Input Pipe\nInserts items to an adjacent container, it filters only the items already on the adjacent container.",
   "Category": "Crafting",
   "MaxHealth": 100,
   "BreakTool": "Pickaxe",

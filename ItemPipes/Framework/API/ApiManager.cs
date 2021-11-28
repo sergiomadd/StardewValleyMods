@@ -7,14 +7,16 @@ using StardewModdingAPI;
 
 namespace ItemPipes.Framework.API
 {
+
     public static class ApiManager
     {
-        private static DynamicGameAssetsApi dynamicGameAssets;
+        private static IDynamicGameAssetsApi dynamicGameAssets;
+        private static IJsonAssetsApi3 jsonAssets;
 
         public static void HookIntoDynamicGameAssets()
         {
             // Attempt to hook into the IMobileApi interface
-            dynamicGameAssets = Helper.GetHelper().ModRegistry.GetApi<DynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
+            dynamicGameAssets = Helper.GetHelper().ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
 
             if (dynamicGameAssets is null)
             {
@@ -24,9 +26,25 @@ namespace ItemPipes.Framework.API
             Printer.Info("Successfully hooked into spacechase0.DynamicGameAssets.");
         }
 
-        public static DynamicGameAssetsApi GetDynamicGameAssetsInterface()
+        public static void HookIntoJsonAssets()
+        {
+            // Attempt to hook into the IMobileApi interface
+            jsonAssets = Helper.GetHelper().ModRegistry.GetApi<IJsonAssetsApi3>("spacechase0.JsonAssets");
+            if (jsonAssets is null)
+            {
+                Printer.Info("Failed to hook into spacechase0.JsonAssets.");
+                return;
+            }
+            Printer.Info("Successfully hooked into spacechase0.JsonAssets.");
+        }
+
+        public static IDynamicGameAssetsApi GetDynamicGameAssetsInterface()
         {
             return dynamicGameAssets;
+        }
+        public static IJsonAssetsApi3 GetJsonAssetsInterface()
+        {
+            return jsonAssets;
         }
     }
 }

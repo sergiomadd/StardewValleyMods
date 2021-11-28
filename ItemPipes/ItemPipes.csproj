@@ -52,7 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\API\ApiManager.cs" />
-    <Compile Include="Framework\API\DynamicGameAssetsApi.cs" />
+    <Compile Include="Framework\API\IDynamicGameAssetsApi.cs" />
+    <Compile Include="Framework\API\IJsonAssetsApi3.cs" />
     <Compile Include="Framework\Connector.cs" />
     <Compile Include="Framework\Container.cs" />
     <Compile Include="Framework\ContentPackUtil\CPManifestExtra.cs" />
@@ -79,7 +80,6 @@
     <Compile Include="Framework\Output.cs" />
     <Compile Include="Framework\Patches\ChestPatcher.cs" />
     <Compile Include="Framework\Patches\FencePatcher.cs" />
-    <Compile Include="Framework\Patches\ObjectPatcher.cs" />
     <Compile Include="Framework\Objects\ConnectorPipe.cs" />
     <Compile Include="Framework\Objects\PolymorphicPipe.cs" />
     <Compile Include="Framework\Objects\ShippingBinContainer.cs" />
@@ -89,7 +89,6 @@
   <ItemGroup>
     <Folder Include="assets\BigCraftables\" />
     <Folder Include="docs\" />
-    <Folder Include="Framework\Util\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\content-pack.json" />

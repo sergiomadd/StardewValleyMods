@@ -1,6 +1,6 @@
 {
   "Name": "ExtractorPipe",
-  "Description": "Type: IO Pipe\nExtracts items from an adjacent container, and sends them through the network.",
+  "Description": "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.",
   "Category": "Crafting",
   "MaxHealth": 100,
   "BreakTool": "Pickaxe",

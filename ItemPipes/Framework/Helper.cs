@@ -7,7 +7,7 @@ using StardewModdingAPI;
 
 namespace ItemPipes.Framework
 {
-    class Helper
+    public static class Helper
     {
         private static IModHelper _helper;
 

@@ -45,7 +45,6 @@ namespace ItemPipes.Framework.Objects
             {
                 foreach (Item item in filteredItems.ToList())
                 {
-                    //Printer.Info("NAME:" + item.Name);
                     Filter.Add(item.Name);
                 }
             }

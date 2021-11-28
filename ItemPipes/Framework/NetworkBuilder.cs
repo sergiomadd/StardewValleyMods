@@ -20,7 +20,7 @@ namespace ItemPipes.Framework
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if(location.Name.Equals(Game1.getFarm().Name))
             {
-                Printer.Info("LOADING FARM BUILDINGS");
+                if (Globals.Debug) { Printer.Info("LOADING FARM BUILDINGS"); }
                 foreach (Building building in Game1.getFarm().buildings)
                 {
                     if (building != null)
@@ -40,13 +40,14 @@ namespace ItemPipes.Framework
                     }
                 }
             }
-
+            if (Globals.Debug) { Printer.Info("LOADING FARM OBJECTS"); }
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in location.Objects.Pairs)
             {
                 if (obj.Value != null)
                 {
                     if (DataAccess.NetworkItems.Contains(obj.Value.Name))
                     {
+
                         BuildNetworkRecursive(location, null, (int)obj.Key.X, (int)obj.Key.Y);
                     }
                 }
@@ -133,20 +134,14 @@ namespace ItemPipes.Framework
                             }
                             else if (Game1.getFarm().getBuildingAt(new Vector2(x, y - 1)) != null && y - 1 >= 0)
                             {
-                                /*Printer.Info("EXISTING BUILDING AJD");
-                                Node adj = matrix[x, y - 1];
-                                node.AddAdjacent(SideStruct.GetSides().North, adj);
-                                */
                                 if (matrix[x, y - 1] == null)
                                 {
-                                    Printer.Info("CREATING BUILDING AJD");
                                     Node adj = NodeFactory.CreateElement(new Vector2(x, y - 1), location, Game1.getFarm().getBuildingAt(new Vector2(x, y - 1)));
                                     matrix[x, y - 1] = adj;
                                     node.AddAdjacent(SideStruct.GetSides().North, adj);
                                 }
                                 else
                                 {
-                                    Printer.Info("EXISTING BUILDING AJD");
                                     Node adj = matrix[x, y - 1];
                                     node.AddAdjacent(SideStruct.GetSides().North, adj);
                                 }
@@ -173,21 +168,14 @@ namespace ItemPipes.Framework
                             }
                             else if (Game1.getFarm().getBuildingAt(new Vector2(x, y + 1)) != null && y + 1 < location.map.DisplayHeight)
                             {
-                                /*
-                                Printer.Info("EXISTING BUILDING AJD");
-                                Node adj = matrix[x, y + 1];
-                                node.AddAdjacent(SideStruct.GetSides().South, adj);
-                                */
                                 if (matrix[x, y + 1] == null)
                                 {
-                                    Printer.Info("CREATING BUILDING AJD");
                                     Node adj = NodeFactory.CreateElement(new Vector2(x, y + 1), location, Game1.getFarm().getBuildingAt(new Vector2(x, y + 1)));
                                     matrix[x, y + 1] = adj;
                                     node.AddAdjacent(SideStruct.GetSides().South, adj);
                                 }
                                 else
                                 {
-                                    Printer.Info("EXISTING BUILDING AJD");
                                     Node adj = matrix[x, y + 1];
                                     node.AddAdjacent(SideStruct.GetSides().South, adj);
                                 }
@@ -213,21 +201,14 @@ namespace ItemPipes.Framework
                             }
                             else if (Game1.getFarm().getBuildingAt(new Vector2(x + 1, y)) != null && x + 1 < location.map.DisplayWidth)
                             {
-                                /*
-                                Printer.Info("EXISTING BUILDING AJD");
-                                Node adj = matrix[x + 1, y];
-                                node.AddAdjacent(SideStruct.GetSides().West, adj);
-                                */
                                 if (matrix[x + 1, y] == null)
                                 {
-                                    Printer.Info("CREATING BUILDING AJD");
                                     Node adj = NodeFactory.CreateElement(new Vector2(x + 1, y), location, Game1.getFarm().getBuildingAt(new Vector2(x + 1, y)));
                                     matrix[x + 1, y] = adj;
                                     node.AddAdjacent(SideStruct.GetSides().West, adj);
                                 }
                                 else
                                 {
-                                    Printer.Info("EXISTING BUILDING AJD");
                                     Node adj = matrix[x + 1, y];
                                     node.AddAdjacent(SideStruct.GetSides().West, adj);
                                 }
@@ -255,21 +236,14 @@ namespace ItemPipes.Framework
                             {
                                 if (DataAccess.Buildings.Contains(Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)).buildingType.ToString()))
                                 {
-                                    /*
-                                    Printer.Info("EXISTING BUILDING AJD");
-                                    Node adj = matrix[x - 1, y];
-                                    node.AddAdjacent(SideStruct.GetSides().East, adj);
-                                    */
                                     if (matrix[x - 1, y] == null)
                                     {
-                                        Printer.Info("CREATING BUILDING AJD");
                                         Node adj = NodeFactory.CreateElement(new Vector2(x - 1, y), location, Game1.getFarm().getBuildingAt(new Vector2(x - 1, y)));
                                         matrix[x - 1, y] = adj;
                                         node.AddAdjacent(SideStruct.GetSides().East, adj);
                                     }
                                     else
                                     {
-                                        Printer.Info("EXISTING BUILDING AJD");
                                         Node adj = matrix[x - 1, y];
                                         node.AddAdjacent(SideStruct.GetSides().East, adj);
                                     }
@@ -280,10 +254,6 @@ namespace ItemPipes.Framework
                     }
 
                 }
-            }
-            else
-            {
-                Printer.Info("NOT VALID ITEM");
             }
             return node;
         }

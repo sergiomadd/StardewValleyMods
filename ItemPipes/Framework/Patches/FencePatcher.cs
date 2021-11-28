@@ -39,10 +39,10 @@ namespace ItemPipes.Framework.Patches
 					original: AccessTools.Method(typeof(Fence), nameof(Fence.getDrawSum)),
 					prefix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Fence_getDrawSum_Prefix))
 				);
-				harmony.Patch(
+				/*harmony.Patch(
 					original: AccessTools.Method(typeof(Fence), nameof(Fence.drawInMenu), new Type[] { typeof(SpriteBatch), typeof(Vector2), typeof(float), typeof(float), typeof(float), typeof(StackDrawType), typeof(Color), typeof(bool) }),
 					prefix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Fence_drawInMenu_Prefix))
-				);
+				);*/
 				harmony.Patch(
 					original: AccessTools.Method(typeof(Fence), nameof(Fence.draw), new Type[] { typeof(SpriteBatch), typeof(int), typeof(int), typeof(float) }),
 					prefix: new HarmonyMethod(typeof(FencePatcher), nameof(FencePatcher.Fence_draw_Prefix))
@@ -59,7 +59,7 @@ namespace ItemPipes.Framework.Patches
 			}
 			catch (Exception ex)
 			{
-				Printer.Info($"Failed to add fence patch: {ex}");
+				if (Globals.Debug) { Printer.Info($"Failed to add fence patch: {ex}"); }
 			}
 		}
 		
@@ -82,7 +82,7 @@ namespace ItemPipes.Framework.Patches
 				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
 				{
 					IOPipe pipe = (IOPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
-					//Printer.Info("Pipe is: " + pipe.State);
+					//Add state display
 				}
 				return false;
 			}
@@ -141,7 +141,7 @@ namespace ItemPipes.Framework.Patches
 		{
 			__result = false;
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			//Add when JA obj IDs is done
+			//Add when JA obj IDs is done, make it not.
 			//if (DataAccess.ValidPipeNames.Contains(__instance.Name) && DataAccess.ValidPipeIDs.Contains(type))
 			if (DataAccess.PipeNames.Contains(__instance.Name) && IsDefaultFence(type))
 			{
@@ -177,10 +177,8 @@ namespace ItemPipes.Framework.Patches
                 {
 					if(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] != null)
                     {
-						//Printer.Info("NOT NULL");
 						if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentNetwork is Network)
 						{
-							//Printer.Info("HAS LG");
 							Network lg = (Network)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentNetwork;
 							if (lg.IsPassable)
 							{
@@ -263,8 +261,6 @@ namespace ItemPipes.Framework.Patches
 				}
 				if (DataAccess.IOPipeNames.Contains(__instance.Name))
 				{
-					//Que pasa si no hay ningun chest adjacent
-					//Que pasa si un connector tiene un chest adjacent
 					if (CN || CS || CW || CE)
 					{
 						drawSum = GetAdjChestsSum(drawSum, CN, CS, CW, CE);
@@ -275,15 +271,11 @@ namespace ItemPipes.Framework.Patches
 					Node[,] locationMatrix;
 					if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
 					{
-						//Printer.Info("Connector null?");
-						//Printer.Info((locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] == null).ToString());
 						if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] is Connector)
                         {
-							//Printer.Info("IS CONNECTOR");
 							Connector connector = (Connector) locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
 							if(connector.PassingItem)
                             {
-								//Printer.Info("PASSING ITEM");
 								drawSum += 5;
 							}
 

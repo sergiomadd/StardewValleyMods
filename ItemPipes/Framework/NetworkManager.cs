@@ -22,7 +22,6 @@ namespace ItemPipes.Framework
             {
                 foreach (Network network in networkList)
                 {
-                    //Printer.Info("UPDATING");
                     network.Update();
                 }
             }
@@ -102,10 +101,10 @@ namespace ItemPipes.Framework
                     {
                         newNode.AddAdjacent(SideStruct.GetSides().East, matrix[x - 1, y]);
                     }
-                    newNode.Print();
+                    if (Globals.Debug) { newNode.Print(); }
                     if (DataAccess.NetworkItems.Contains(Game1.currentLocation.getObjectAtTile(x, y).Name))
                     {
-                        //Printer.Info("ADDING GRAPH");
+                        if (Globals.Debug) { Printer.Info("ADDING GRAPH"); }
                         if (newNode is Input)
                         {
                             Input input = (Input)newNode;
@@ -119,7 +118,7 @@ namespace ItemPipes.Framework
                                 adjNetworks.Add(network);
                             }
                         }
-                        //Printer.Info("Adj graphs: " + adjNetworks.Count.ToString());
+                        if (Globals.Debug) { Printer.Info("Adj graphs: " + adjNetworks.Count.ToString()); }
                         if (adjNetworks.Count == 0)
                         {
                             Network network = CreateLocationNetwork(Game1.currentLocation);
@@ -132,8 +131,6 @@ namespace ItemPipes.Framework
                             AddNewElement(newNode, orderedAdjNetworks[0]);
                             MergeNetworks(orderedAdjNetworks);
                         }
-                        //newNode.Print();
-                        //Printer.Info(newNode.ParentNetwork.Print());
                     }
                 }
             }
@@ -221,7 +218,7 @@ namespace ItemPipes.Framework
 
             if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networkList))
             {
-                Printer.Info("NUMBER OF GRAPGHS: " + networkList.Count.ToString());
+                if (Globals.Debug) { Printer.Info("NUMBER OF GRAPGHS: " + networkList.Count.ToString()); }
                 foreach(Network network in networkList)
                 {
                     Printer.Info(network.Print());
@@ -250,7 +247,7 @@ namespace ItemPipes.Framework
             List<Network> networkList;
             if (DataAccess.LocationNetworks.TryGetValue(location, out networkList))
             {
-                Printer.Info($"NUMBER OF GROUPS: {networkList.Count}");
+                if (Globals.Debug) { Printer.Info($"NUMBER OF GROUPS: {networkList.Count}"); }
                 foreach (Network network in networkList)
                 {
                     Printer.Info(network.Print());

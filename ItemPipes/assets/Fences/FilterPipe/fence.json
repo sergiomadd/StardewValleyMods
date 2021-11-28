@@ -1,6 +1,6 @@
 {
   "Name": "FilterPipe",
-  "Description": "Type: IO Pipe\nInserts items to an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.",
+  "Description": "Type: Input Pipe\nInserts items to an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.",
   "Category": "Crafting",
   "MaxHealth": 100,
   "BreakTool": "Pickaxe",

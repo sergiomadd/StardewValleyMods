@@ -88,12 +88,12 @@ This is the shortest posibble network, from that, you can extend it as you like.
 	- **Green/On**:  
 	The pipe is enabled and will send/receive items if possible.  
 	![On](img/AllOn.PNG)
-	- **Orange/Disconnected**:  
+	- **Yellow/Disconnected**:  
 	The pipe isn't connected to an adjacent container. Since a container can only have 1 adjacent pipe of each pipe type, you will have to remove all adjacent pipes to the container, and then place the new one. (This will most likely change moving forward).  
 	![Unconnected](img/AllUnconnected.PNG)  
 
 Connection examples:  
-Here, the pipes aren't connected to any container, so they stay orange.  
+Here, the pipes aren't connected to any container, so they stay yellow.  
 ![No Container Attached](img/NoContainer.PNG)  
 Then, when a container is added, they turn green.  
 ![Has Container Attached](img/HaveContainer.PNG)  

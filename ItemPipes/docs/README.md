@@ -75,7 +75,7 @@ Be careful, as you may not be able to get the items back once the get piped in. 
 A valid network has to have **at least 1 Output Pipe and 1 Input Pipe**.  
 Also for the output to start pumping items, the input has to have a valid adjacent container.  
 That said, you can have as many outputs and inputs as you like.  
-This is the shortest posibble network, from that, you can extend it as you like.
+This is the shortest posibble network, from that, you can extend it as you like.  
 ![alt](img/ShortestNetwork.PNG)  
 
 ---
@@ -88,11 +88,11 @@ This is the shortest posibble network, from that, you can extend it as you like.
 	The pipe is enabled and will send/receive items if possible.  
 	- **Orange/Disconnected**:  
 	The pipe isn't connected to an adjacent container. Since a container can only have 1 adjacent pipe of each pipe type, you will have to remove all adjacent pipes to the container, and then place the new one. (This will most likely change moving forward).  
-Here, the pipes aren't connected to any container, so they stay orange.
+Here, the pipes aren't connected to any container, so they stay orange.  
 ![alt](img/NoContainer.PNG)  
-Then, when a container is added, they turn green.
+Then, when a container is added, they turn green.  
 ![alt](img/HaveContainer.PNG)  
-Finally, there are 2 options. If you place a pipe of the same type, it won't connect to the container. But you can actually place a different pipe type, and it will connect.
+Finally, there are 2 options. If you place a pipe of the same type, it won't connect to the container. But you can actually place a different pipe type, and it will connect.  
 ![alt](img/IOAlreadyAttached.PNG)  
 
 

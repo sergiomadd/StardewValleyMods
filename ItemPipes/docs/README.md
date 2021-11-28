@@ -31,34 +31,34 @@ This mod is in beta version. Backup your saves or create a new save before playi
 Connector Pipes act as the link between Output and Input pipes.  
 They moves items at 2 tiles/1 second  
 ![alt text](img/ConnectorPipe.png)  
-![alt text](img/recipes/ConnectorPipeRecipe.PNG)    
+![alt](img/recipes/ConnectorPipeRecipe.PNG)    
 Items moving
 
 ## IOPipes:
 - ### Outputs:
 	- **Extractor Pipe**  
 Extractor Pipes extract items from an adjacent container, at 1 stack/2 seconds.  
-!(img/recipes/ExtractorPipeRecipe.PNG)  
-!(gifs/ItemSendingGif.gif)  
+![alt](img/recipes/ExtractorPipeRecipe.PNG)  
+![alt](gifs/ItemSendingGif.gif)  
 - ### Inputs:
 	- **Inserter Pipe**  
 Inserter Pipes insert items into an adjacent container. They do not filter any item.  
-!(img/recipes/InserterPipeRecipe.PNG)  
+![alt](img/recipes/InserterPipeRecipe.PNG)  
 	- **Polymorphic Pipe**  
 Polymorphic Pipes insert items into an adjacent container. They filter items based on the container's current items. If the container is empty, They act like an Inserter Pipe, until 1 item enters the container.  
-!(img/recipes/PolymorphicPipeRecipe.PNG)  
+![alt](img/recipes/PolymorphicPipeRecipe.PNG)  
 	- **Filter Pipe**  
 Filter Pipes insert items into an adjacent container. They filter items based on the pipe's internal inventory. To open the inventory, simply left click the Filter Pipe like you would with a chest. Then add the items you want filtered. If the internal inventory is empty, they act like an Inserter Pipe, until alteast 1 item is added to the internal inventory.  
-!(img/recipes/FilterPipeRecipe.PNG)  
+![alt](img/recipes/FilterPipeRecipe.PNG)  
 
 - ### Supported containers:  
 	- **Chest**  
 Regular vanilla chests.  
-!(gifs/ChestSendingGif.gif)  
-!(ChestReceivingGif.gif)  
+![alt](gifs/ChestSendingGif.gif)  
+![alt](ChestReceivingGif.gif)  
 	- **Junimo Chest**  
 Junimo chests work as chests. But as their inventory is linked, you can move items wirelessly.  
-!(gifs/JunimoGif.gif)  
+![alt](gifs/JunimoGif.gif)  
 	- **Fridge**  
 	Not yet implemented.  
 	- **Mini-Shipping Bin**  
@@ -68,7 +68,7 @@ Mini-Shipping Bins work as chests.
 	- **Shipping Bin**  
 The Shipping Bin doesn't work like a regular chest, but you can insert items into it if an input is adjacent. These items will be shipped at the end of the day. 
 Be careful, as you may not be able to get the items back once the get piped in.  
-!(gifs/ShippingBinGif.gif)  
+![alt](gifs/ShippingBinGif.gif)  
 
 ---
 
@@ -76,7 +76,7 @@ Be careful, as you may not be able to get the items back once the get piped in.
 A valid network has to have **at least 1 Output Pipe and 1 Input Pipe**.  
 Also for the output to start pumping items, the input has to have a valid adjacent container.  
 That said, you can have as many outputs and inputs as you like.  
-!(img/ShortestNetwork.PNG)  
+![alt](img/ShortestNetwork.PNG)  
 
 ---
 
@@ -89,9 +89,9 @@ That said, you can have as many outputs and inputs as you like.
 	- **Orange/Disconnected**:  
 	The pipe isn't connected to an adjacent container. Since a container can only have 1 adjacent pipe of each pipe type, you will have to remove all adjacent pipes to the container, and then place the new one. (This will most likely change moving forward).  
 
-!(img/NoContainer.PNG)  
-!(HaveContainer.PNG)  
-!(IOAlreadyAttached.PNG)  
+![alt](img/NoContainer.PNG)  
+![alt](HaveContainer.PNG)  
+![alt](IOAlreadyAttached.PNG)  
 
 
 ---
@@ -105,7 +105,7 @@ Items get send to Input pipes based on their priority. The Output pipe will try 
 | 2  | Polymorphic Pipe  |
 | 1  | Inserter Pipe  |
 
-!(gifs/SortingGif.gif)  
+![alt](gifs/SortingGif.gif)  
 
 
 ---

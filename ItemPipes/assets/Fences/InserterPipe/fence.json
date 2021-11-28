@@ -1,6 +1,6 @@
 {
   "Name": "InserterPipe",
-  "Description": "Type: Input Pipe\nInserts items to an adjacent container, it does not filter items.",
+  "Description": "Type: Input Pipe\nInserts items into an adjacent container, it doesn't filter items.",
   "Category": "Crafting",
   "MaxHealth": 100,
   "BreakTool": "Pickaxe",

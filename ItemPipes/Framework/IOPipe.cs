@@ -29,17 +29,18 @@ namespace ItemPipes.Framework
                 if (ConnectedContainer == null && entity is Container)
                 {
                     Container container = (Container)entity;
-                    if (container.Output == null)
+                    if ((this is Output && container.Output == null) ||
+                        (this is Input && container.Input == null))
                     {
                         ConnectedContainer = (Container)entity;
                         State = "on";
-                        if (Globals.Debug) { Printer.Info("CONNECTED CONTAINER ADDED"); }
+                        if (Globals.Debug) { Printer.Info($"[?] CONNECTED CONTAINER ADDED"); }
                     }
 
                 }
                 else
                 {
-                    if (Globals.Debug) { Printer.Info("Didnt add adj container"); }
+                    if (Globals.Debug) { Printer.Info($"[?] Didnt add adj container"); }
                 }
                 added = true;
                 Adjacents[side] = entity;
@@ -58,7 +59,7 @@ namespace ItemPipes.Framework
                 {
                     ConnectedContainer = null;
                     State = "unconnected";
-                    if (Globals.Debug) { Printer.Info("CONNECTED CONTAINER REMOVED"); }
+                    if (Globals.Debug) { Printer.Info($"[?] CONNECTED CONTAINER REMOVED"); }
                 }
                 Adjacents[side] = null;
                 entity.RemoveAdjacent(Sides.GetInverse(side), this);

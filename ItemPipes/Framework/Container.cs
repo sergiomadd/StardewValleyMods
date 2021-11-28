@@ -37,12 +37,12 @@ namespace ItemPipes.Framework
                 if (Output == null && entity is Output)
                 {
                     Output = (Output)entity;
-                    if (Globals.Debug) { Printer.Info("OUTPUT ADDED"); }
+                    if (Globals.Debug) { Printer.Info($"[?] OUTPUT ADDED"); }
                 }
                 else if (Input == null && entity is Input)
                 {
                     Input = (Input)entity;
-                    if (Globals.Debug) { Printer.Info("INPUT ADDED"); }
+                    if (Globals.Debug) { Printer.Info($"[?] INPUT ADDED"); }
                 }
             }
             return added;
@@ -57,12 +57,12 @@ namespace ItemPipes.Framework
                 if (Output != null && entity is Output)
                 {
                     Output = null;
-                    if (Globals.Debug) { Printer.Info("OUTPUT REMOVED"); }
+                    if (Globals.Debug) { Printer.Info($"[?] OUTPUT REMOVED"); }
                 }
                 else if (Input != null && entity is Input)
                 {
                     Input = null;
-                    if (Globals.Debug) { Printer.Info("INPUT REMOVED"); }
+                    if (Globals.Debug) { Printer.Info($"[?] INPUT REMOVED"); }
                 }
                 Adjacents[side] = null;
                 entity.RemoveAdjacent(Sides.GetInverse(side), this);

@@ -149,6 +149,7 @@ namespace ItemPipes
 
         private void OnOneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
         {
+            //config if item sending enabled
             if (Context.IsWorldReady)
             {
                 if (e.IsMultipleOf(120))

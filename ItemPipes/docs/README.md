@@ -18,6 +18,7 @@ This mod is in beta version. Backup your saves or create a new save before playi
 	-  [Network Building](#network-building)
 	-  [Pipe Signaling](#pipe-signaling)
 	-  [Pipe Priorities](#pipe-priorities)
+-  [Known Issues](#known-issues)
 -  [Planned Features](#planned-features)
 -  [See also](#see-also)
 

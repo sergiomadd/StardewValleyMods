@@ -13,7 +13,7 @@ This mod is in beta version. Backup your saves or create a new save before playi
 - [JsonAssets](https://www.nexusmods.com/stardewvalley/mods/1720)  
 
 ## Contents:
-- [Current Features for 0.1.1](#current-features-for-beta)
+- [Current Features for Beta](#current-features-for-beta)
 	- [Pipes](#pipes)
 		- [Connectors](#connectors)
 		- [Outputs](#outputs)
@@ -29,7 +29,7 @@ This mod is in beta version. Backup your saves or create a new save before playi
 
 ---
 
-## Current Features (for beta):
+## Current Features (for Beta):
 
 ## Pipes:
 - ### Connectors:

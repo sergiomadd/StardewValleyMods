@@ -64,7 +64,7 @@ Regular vanilla chests. As you can see below, the items get out of one chest, an
 Junimo chests work as chests. But as their inventory is linked, you can move items wirelessly.  
 ![Junimo](gifs/JunimoGif.gif)  
 	- **Mini-Fridge**  
-Mini-Fridges work the exact same as chests. But the kitchen default fridge isn't compatible.
+Not yet implmented  
 	- **Mini-Shipping Bin**  
 Mini-Shipping Bins work the exact same as chests.  
 

@@ -8,6 +8,7 @@ This is a repository for all my Stardew Valley Mods
 ## Planned Mods:
 - More Junimo Chests
 - Shed IO
+- Logic Wires
 
 ## Released Mods:
 - [Connected Fences](https://github.com/sergiomadd/StardewValleyMods/edit/main/ConnectedFences)

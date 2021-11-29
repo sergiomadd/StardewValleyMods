@@ -38,6 +38,10 @@ namespace ItemPipes.Framework.Model
             {
                 return new ChestContainer(position, location, obj);
             }
+            else if (obj.name.Equals("Mini-Fridge"))
+            {
+                return new ChestContainer(position, location, obj);
+            }
             else
             {
                 return null;

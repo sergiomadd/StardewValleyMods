@@ -84,6 +84,7 @@
     <Compile Include="Framework\Objects\ConnectorPipe.cs" />
     <Compile Include="Framework\Objects\PolymorphicPipe.cs" />
     <Compile Include="Framework\Objects\ShippingBinContainer.cs" />
+    <Compile Include="Framework\Util\Animator.cs" />
     <Compile Include="ModEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

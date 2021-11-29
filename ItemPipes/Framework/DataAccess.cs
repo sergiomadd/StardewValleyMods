@@ -17,7 +17,7 @@ namespace ItemPipes.Framework
     {
         private static DataAccess myDataAccess;
         public Dictionary<GameLocation, List<Network>> LocationNetworks { get; set; }
-        public Dictionary<GameLocation, Node[,]> LocationMatrix  { get; set; }
+        public Dictionary<GameLocation, List<Node>> LocationNodes { get; set; }
         public List<string> ModItems { get; set; }
         public List<string> NetworkItems { get; set; }
         public List<string> PipeNames { get; set; }
@@ -32,7 +32,7 @@ namespace ItemPipes.Framework
         public DataAccess()
         {
             LocationNetworks = new Dictionary<GameLocation, List<Network>>();
-            LocationMatrix  = new Dictionary<GameLocation, Node[,]>();
+            LocationNodes = new Dictionary<GameLocation, List<Node>>();
             ModItems = new List<string>();
             NetworkItems = new List<string>();
             PipeNames = new List<string>();
@@ -86,19 +86,6 @@ namespace ItemPipes.Framework
                 }
             }
             return graphList;
-        }
-
-        public Node[,] GetMatrix(GameLocation location)
-        {
-            Node[,] matrix = null;
-            foreach (KeyValuePair<GameLocation, Node[,]> pair in LocationMatrix)
-            {
-                if (pair.Key.Equals(location))
-                {
-                    matrix = pair.Value;
-                }
-            }
-            return matrix;
         }
     }
 }

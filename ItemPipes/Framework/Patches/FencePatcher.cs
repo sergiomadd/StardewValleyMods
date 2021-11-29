@@ -68,20 +68,20 @@ namespace ItemPipes.Framework.Patches
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true) && __instance.Name.Equals("FilterPipe"))
 			{
-				Node[,] locationMatrix;
-				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
+				List<Node> nodes;
+				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 				{
-					FilterPipe pipe = (FilterPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
+					FilterPipe pipe = (FilterPipe)nodes.Find(n => n.Position.Equals(__instance.tileLocation));
 					pipe.Chest.ShowMenu();
 				}
 				return false;
 			}
 			else if (DataAccess.IOPipeNames.Contains(__instance.Name))
 			{
-				Node[,] locationMatrix;
-				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
+				List<Node> nodes;
+				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 				{
-					IOPipe pipe = (IOPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
+					IOPipe pipe = (IOPipe)nodes.Find(n => n.Position.Equals(__instance.tileLocation));
 					//Add state display
 				}
 				return false;
@@ -99,10 +99,10 @@ namespace ItemPipes.Framework.Patches
 				DataAccess DataAccess = DataAccess.GetDataAccess();
 				if (DataAccess.IOPipeNames.Contains(__instance.Name))
 				{
-					Node[,] locationMatrix;
-					if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
+					List<Node> nodes;
+					if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 					{
-						IOPipe pipe = (IOPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
+						IOPipe pipe = (IOPipe)nodes.Find(n => n.Position.Equals(__instance.tileLocation));
 						switch (pipe.State)
 						{
 							case "off":
@@ -172,14 +172,15 @@ namespace ItemPipes.Framework.Patches
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (DataAccess.PipeNames.Contains(__instance.Name))
 			{
-				Node[,] locationMatrix;
-				if(DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
-                {
-					if(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] != null)
+				List<Node> nodes;
+				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+				{
+					Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+					if (node != null)
                     {
-						if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentNetwork is Network)
+						if (node.ParentNetwork is Network)
 						{
-							Network lg = (Network)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].ParentNetwork;
+							Network lg = node.ParentNetwork;
 							if (lg.IsPassable)
 							{
 								__result = true;
@@ -268,12 +269,13 @@ namespace ItemPipes.Framework.Patches
 				}
 				if (__instance.Name.Equals("ConnectorPipe"))
 				{
-					Node[,] locationMatrix;
-					if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
+					List<Node> nodes;
+					if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 					{
-						if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] is Connector)
+						Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+						if (node is Connector)
                         {
-							Connector connector = (Connector) locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
+							Connector connector = (Connector)node;
 							if(connector.PassingItem)
                             {
 								drawSum += 5;
@@ -377,13 +379,13 @@ namespace ItemPipes.Framework.Patches
 				int sourceRectPosition = 1;
 				int drawSum = __instance.getDrawSum(Game1.currentLocation);
 				sourceRectPosition = GetNewDrawGuide(__instance)[drawSum];
-				Node[,] locationMatrix;
-				if (DataAccess.LocationMatrix.TryGetValue(Game1.currentLocation, out locationMatrix))
+				List<Node> nodes;
+				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 				{
-					if (locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y] != null && 
-						DataAccess.IOPipeNames.Contains(locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y].Name))
+					Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+					if (node != null && DataAccess.IOPipeNames.Contains(node.Name))
 					{
-						IOPipe IO = (IOPipe)locationMatrix[(int)__instance.tileLocation.X, (int)__instance.tileLocation.Y];
+						IOPipe IO = (IOPipe)node;
 						Texture2D signalTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IO.Name}/{IO.State.ToString()}.png");
 						b.Draw(signalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % __instance.fenceTexture.Value.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / __instance.fenceTexture.Value.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 32) / 10000f);
 					}

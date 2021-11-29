@@ -10,6 +10,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using SVObject = StardewValley.Objects;
 using ItemPipes.Framework;
+using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Patches;
 using ItemPipes.Framework.API;
@@ -85,6 +86,8 @@ namespace ItemPipes
             {
                 Globals.DisableItemSending = false;
             }
+            //REMOVE
+            Globals.Debug = true;
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
             FencePatcher.Apply(harmony);
@@ -144,6 +147,17 @@ namespace ItemPipes
             
             foreach (GameLocation location in Game1.locations)
             {
+                //Monitor.Log("LOADING " + location.Name, LogLevel.Info);
+                DataAccess.LocationNetworks.Add(location, new List<Network>());
+                DataAccess.LocationNodes.Add(location, new List<Node>());
+                NetworkBuilder.BuildLocationNetworks(location);
+                NetworkManager.UpdateLocationNetworks(location);
+                //Monitor.Log(location.Name + " LOADED!", LogLevel.Info);
+                if (Globals.Debug)
+                {
+                    NetworkManager.PrintLocationNetworks(location);
+                }
+                /*
                 if (DataAccess.Locations.Contains(location.Name))
                 {
                     Monitor.Log("LOADING " + location.Name, LogLevel.Info);
@@ -156,13 +170,13 @@ namespace ItemPipes
                     {
                         NetworkManager.PrintLocationNetworks(location);
                     }
-                }
+                }*/
             }
         }
 
         private void Reload()
         {
-            DataAccess.LocationMatrix.Clear();
+            DataAccess.LocationNodes.Clear();
             DataAccess.LocationNetworks.Clear();
             DataAccess.UsedNetworkIDs.Clear();
         }
@@ -173,16 +187,27 @@ namespace ItemPipes
             {
                 if (Context.IsWorldReady)
                 {
+                    /*if (e.IsMultipleOf(30))
+                    {
+                        if (Globals.Debug) { Printer.Info($"[X] UPDATETICKET"); }
+                        Animator.updated = true;
+                    }*/
                     if (e.IsMultipleOf(120))
                     {
                         DataAccess DataAccess = DataAccess.GetDataAccess();
                         List<Network> networks;
-                        if (DataAccess.LocationNetworks.TryGetValue(Game1.currentLocation, out networks))
+                        foreach (GameLocation location in Game1.locations)
                         {
-                            if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
-                            foreach (Network network in networks)
+                            if (DataAccess.LocationNetworks.TryGetValue(location, out networks))
                             {
-                                network.ProcessExchanges();
+                                if(networks.Count > 0)
+                                {
+                                    //if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
+                                    foreach (Network network in networks)
+                                    {
+                                        network.ProcessExchanges();
+                                    }
+                                }
                             }
                         }
                     }

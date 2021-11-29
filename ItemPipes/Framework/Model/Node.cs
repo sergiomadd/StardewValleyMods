@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
+using StardewModdingAPI.Events;
 
 namespace ItemPipes.Framework.Model
 {
@@ -111,25 +112,6 @@ namespace ItemPipes.Framework.Model
                 }
                 return returns;
             }
-        }
-         
-        public void AnimatePath(List<Node> path)
-        {
-            foreach(Node node in path.ToList())
-            {
-                if(node != null && node is Connector)
-                {
-                    Connector conn = (Connector)node;
-                    Animate(conn);
-                }
-            }
-        }
-        
-        public void Animate(Connector conn)
-        {
-            conn.PassingItem = true;
-            System.Threading.Thread.Sleep(500);
-            conn.PassingItem = false;
         }
 
         public List<Network> Scan()

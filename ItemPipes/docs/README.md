@@ -1,7 +1,7 @@
 # Item Pipes
 Item Pipes is a mod that provides item transportation and item sorting.
 
-**Current Version = 0.1.1 (Beta)**  
+**Current Version = 0.1.3 (Beta)** [Download](https://github.com/sergiomadd/StardewValleyMods/releases/tag/0.1.3)  
 For testing purposes, the mod only works on the farm for now. 
 
 ## WARNING:
@@ -13,7 +13,7 @@ This mod is in beta version. Backup your saves or create a new save before playi
 - [JsonAssets](https://www.nexusmods.com/stardewvalley/mods/1720)  
 
 ## Contents:
-- [Current Features for 0.1.1](#current-features-for-011)
+- [Current Features for Beta](#current-features-for-beta)
 	- [Pipes](#pipes)
 		- [Connectors](#connectors)
 		- [Outputs](#outputs)
@@ -29,7 +29,7 @@ This mod is in beta version. Backup your saves or create a new save before playi
 
 ---
 
-## Current Features (for 0.1.1):
+## Current Features (for Beta):
 
 ## Pipes:
 - ### Connectors:

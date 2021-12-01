@@ -71,7 +71,7 @@ namespace ItemPipes.Framework.Patches
 				List<Node> nodes;
 				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 				{
-					FilterPipe pipe = (FilterPipe)nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+					FilterPipe pipe = (FilterPipe)nodes.Find(n => n.Position.Equals(__instance.TileLocation));
 					pipe.Chest.ShowMenu();
 				}
 				return false;
@@ -81,7 +81,7 @@ namespace ItemPipes.Framework.Patches
 				List<Node> nodes;
 				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 				{
-					IOPipe pipe = (IOPipe)nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+					IOPipe pipe = (IOPipe)nodes.Find(n => n.Position.Equals(__instance.TileLocation));
 					//Add state display
 				}
 				return false;
@@ -102,7 +102,7 @@ namespace ItemPipes.Framework.Patches
 					List<Node> nodes;
 					if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 					{
-						IOPipe pipe = (IOPipe)nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+						IOPipe pipe = (IOPipe)nodes.Find(n => n.Position.Equals(__instance.TileLocation));
 						switch (pipe.State)
 						{
 							case "off":
@@ -175,16 +175,12 @@ namespace ItemPipes.Framework.Patches
 				List<Node> nodes;
 				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 				{
-					Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+					Node node = nodes.Find(n => n.Position.Equals(__instance.TileLocation));
 					if (node != null)
                     {
-						if (node.ParentNetwork is Network)
+						if (node.ParentNetwork.IsPassable)
 						{
-							Network lg = node.ParentNetwork;
-							if (lg.IsPassable)
-							{
-								__result = true;
-							}
+							__result = true;
 						}
 					}
 				}
@@ -206,11 +202,11 @@ namespace ItemPipes.Framework.Patches
 				bool CW = false;
 				bool CE = false;
 				int drawSum = 0;
-				Vector2 surroundingLocations = __instance.tileLocation;
+				Vector2 surroundingLocations = __instance.TileLocation;
 				surroundingLocations.X += 1f;
 				//0 = 6
 				//West = 100 = 11
-				if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is Fence && ((Fence)location.objects[surroundingLocations]).countsForDrawing(__instance.whichType))
+				if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is Fence && ((Fence)location.objects[surroundingLocations]).countsForDrawing(__instance.whichType.Value))
 				{
 					drawSum += 100;
 				}
@@ -221,7 +217,7 @@ namespace ItemPipes.Framework.Patches
 				//East = 10 = 10
 				//W + E = 110 = 8
 				surroundingLocations.X -= 2f;
-				if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is Fence && ((Fence)location.objects[surroundingLocations]).countsForDrawing(__instance.whichType))
+				if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is Fence && ((Fence)location.objects[surroundingLocations]).countsForDrawing(__instance.whichType.Value))
 				{
 					drawSum += 10;
 				}
@@ -235,7 +231,7 @@ namespace ItemPipes.Framework.Patches
 				//S + E + W = 610
 				surroundingLocations.X += 1f;
 				surroundingLocations.Y += 1f;
-				if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is Fence && ((Fence)location.objects[surroundingLocations]).countsForDrawing(__instance.whichType))
+				if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is Fence && ((Fence)location.objects[surroundingLocations]).countsForDrawing(__instance.whichType.Value))
 				{
 					drawSum += 500;
 				}
@@ -252,7 +248,7 @@ namespace ItemPipes.Framework.Patches
 				//N + E + S = 1600 = 1
 				//N + S + W = 1510 = 3
 				//N + E + W  + S = 1610 = 5
-				if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is Fence && ((Fence)location.objects[surroundingLocations]).countsForDrawing(__instance.whichType))
+				if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is Fence && ((Fence)location.objects[surroundingLocations]).countsForDrawing(__instance.whichType.Value))
 				{
 					drawSum += 1000;
 				}
@@ -272,7 +268,7 @@ namespace ItemPipes.Framework.Patches
 					List<Node> nodes;
 					if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 					{
-						Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+						Node node = nodes.Find(n => n.Position.Equals(__instance.TileLocation));
 						if (node is Connector)
                         {
 							Connector connector = (Connector)node;
@@ -382,11 +378,10 @@ namespace ItemPipes.Framework.Patches
 				List<Node> nodes;
 				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 				{
-					Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
-					if (node != null && DataAccess.IOPipeNames.Contains(node.Name))
+					Node node = nodes.Find(n => n.Position.Equals(__instance.TileLocation));
+					if (node != null)
 					{
-						IOPipe IO = (IOPipe)node;
-						Texture2D signalTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IO.Name}/{IO.State.ToString()}.png");
+						Texture2D signalTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{node.GetName()}/{node.GetState()}.png");
 						b.Draw(signalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % __instance.fenceTexture.Value.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / __instance.fenceTexture.Value.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, (float)(y * 64 + 32) / 10000f);
 					}
 					else

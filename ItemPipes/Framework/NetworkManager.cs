@@ -35,26 +35,6 @@ namespace ItemPipes.Framework
             {
                 Node node = nodes.Find(n => n.Position.Equals(postition));
                 network.AddNode(node);
-                if (node is ExtractorPipe)
-                {
-                    network.AddOutput((ExtractorPipe)node);
-                }
-                else if (node is InserterPipe)
-                {
-                    network.AddInput((InserterPipe)node);
-                }
-                else if (node is PolymorphicPipe)
-                {
-                    network.AddInput((PolymorphicPipe)node);
-                }
-                else if (node is FilterPipe)
-                {
-                    network.AddInput((FilterPipe)node);
-                }
-                else if (node is ConnectorPipe)
-                {
-                    network.AddConnector((ConnectorPipe)node);
-                }
             }
         }
 

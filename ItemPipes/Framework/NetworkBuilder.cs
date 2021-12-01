@@ -27,12 +27,12 @@ namespace ItemPipes.Framework
                     {
                         if (DataAccess.Buildings.Contains(building.buildingType.ToString()))
                         {
-                            for (int i = 0; i < building.tilesWide; i++)
+                            for (int i = 0; i < building.tilesWide.Value; i++)
                             {
-                                for (int j = 0; j < building.tilesHigh; j++)
+                                for (int j = 0; j < building.tilesHigh.Value; j++)
                                 {
-                                    int x = building.tileX + i;
-                                    int y = building.tileY + j;
+                                    int x = building.tileX.Value + i;
+                                    int y = building.tileY.Value + j;
                                     BuildBuildings(new Vector2(x, y), location, null);
                                 }
                             }
@@ -56,27 +56,27 @@ namespace ItemPipes.Framework
             }
         }
 
-        public static void BuildBuildings(Vector2 postition, GameLocation location, Network inNetwork)
+        public static void BuildBuildings(Vector2 position, GameLocation location, Network inNetwork)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
             List<Node> nodes;
             if (DataAccess.LocationNodes.TryGetValue(location, out nodes))
             {
-                if ((Game1.getFarm().getBuildingAt(postition) != null) && DataAccess.Buildings.Contains(Game1.getFarm().getBuildingAt(postition).buildingType.ToString()))
+                if ((Game1.getFarm().getBuildingAt(position) != null) && DataAccess.Buildings.Contains(Game1.getFarm().getBuildingAt(position).buildingType.ToString()))
                 {
-                    nodes.Add(NodeFactory.CreateElement(postition, location, Game1.getFarm().getBuildingAt(postition)));
+                    nodes.Add(NodeFactory.CreateElement(position, location, Game1.getFarm().getBuildingAt(position)));
                 }
             }
         }
 
-        public static Node BuildNetworkRecursive(Vector2 postition, GameLocation location, Network inNetwork)
+        public static Node BuildNetworkRecursive(Vector2 position, GameLocation location, Network inNetwork)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
             Node node = null;
             List<Node> nodes;
             string inType = "";
-            int x = (int)postition.X;
-            int y = (int)postition.Y;
+            int x = (int)position.X;
+            int y = (int)position.Y;
             if ((location.getObjectAtTile(x, y) != null) && (DataAccess.ModItems.Contains(location.getObjectAtTile(x, y).name)))
             {
                 inType = "object";
@@ -89,7 +89,7 @@ namespace ItemPipes.Framework
             {
                 if (DataAccess.LocationNodes.TryGetValue(location, out nodes))
                 {
-                    if (nodes.Find(n => n.Position.Equals(postition)) == null)
+                    if (nodes.Find(n => n.Position.Equals(position)) == null)
                     {
                         if (inType.Equals("object"))
                         {
@@ -103,7 +103,7 @@ namespace ItemPipes.Framework
                     }
                     if (inType.Equals("object"))
                     {
-                        node = nodes.Find(n => n.Position.Equals(postition));
+                        node = nodes.Find(n => n.Position.Equals(position));
                         if (node.ParentNetwork == null)
                         {
                             if (inNetwork == null)

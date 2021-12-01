@@ -42,6 +42,10 @@ namespace ItemPipes.Framework.Model
             {
                 return new ChestContainer(position, location, obj);
             }
+            else if (obj.name.Equals("Invisibilizer"))
+            {
+                return new Invisibilizer(position, location, obj);
+            }
             else
             {
                 return null;

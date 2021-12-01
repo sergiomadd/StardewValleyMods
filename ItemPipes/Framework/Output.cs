@@ -74,7 +74,7 @@ namespace ItemPipes.Framework
                             item = outChest.GetItemToShip(input);
                             if (item != null)
                             {
-                                Animator.AnimatePath(path);
+                                Animator.AnimateItemSending(path);
                                 shipBin.ShipItem(item);
                                 if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] END animation"); }
                             }
@@ -87,7 +87,7 @@ namespace ItemPipes.Framework
                             if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Can send? " + (item != null).ToString()); }
                             if (item != null)
                             {
-                                Animator.AnimatePath(path);
+                                Animator.AnimateItemSending(path);
                                 if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] ITEM CORRECTLY SENT"); }
                                 if (outChest != null && inChest != null)
                                 {
@@ -97,7 +97,7 @@ namespace ItemPipes.Framework
                                         if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] CANT ENTER, REVERSE"); }
                                         List<Node> reversePath = path;
                                         reversePath.Reverse();
-                                        Animator.AnimatePath(reversePath);
+                                        Animator.AnimateItemSending(reversePath);
                                     }
                                 }
                             }
@@ -130,6 +130,7 @@ namespace ItemPipes.Framework
                     added = true;
                     List<Node> path;
                     path = ConnectedContainer.GetPath(input.ConnectedContainer);
+                    Animator.AnimateInputConnection(path);
                     ConnectedInputs.Add(input, path);
                 }
             }

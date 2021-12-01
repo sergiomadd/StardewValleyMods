@@ -16,14 +16,14 @@ namespace ItemPipes.Framework.Util
     {
         public static Connector current;
         public static bool updated;
-        public static void AnimatePath(List<Node> path)
+        public static void AnimateItemSending(List<Node> path)
         {
             foreach (Node node in path.ToList())
             {
                 if (node != null && node is Connector)
                 {
                     Connector conn = (Connector)node;
-                    Animate(conn);
+                    AnimateItemMovement(conn);
                 }
             }
             /*Node[] nodes = path.ToArray();
@@ -59,18 +59,59 @@ namespace ItemPipes.Framework.Util
                 
         }
 
-        private static void Animate(Connector conn)
+        private static void AnimateItemMovement(Connector conn)
         {
             conn.PassingItem = true;
             System.Threading.Thread.Sleep(500);
             conn.PassingItem = false;
         }
 
+        public static void AnimateInputConnection(List<Node> path)
+        {
+            foreach (Node node in path.ToList())
+            {
+                if (node != null && node is Connector)
+                {
+                    Connector conn = (Connector)node;
+                    AnimateInput(conn);
+                }
+            }
+        }
+
+        private static void AnimateInput(Connector conn)
+        {
+            conn.Connecting = true;
+            System.Threading.Thread.Sleep(100);
+            conn.Connecting = false;
+        }
+
+
+        public static void AnimateChangingPassable(List<Node> path)
+        {
+            foreach (Node node in path.ToList())
+            {
+                if (node != null)
+                {
+                    if(node.Passable)
+                    {
+                        node.Passable = false;
+                    }
+                    else
+                    {
+                        node.Passable = true;
+                    }
+                    System.Threading.Thread.Sleep(100);
+                }
+            }
+        }
+
+        /*
         private static void Animate2(Connector conn)
         {
             conn.PassingItem = true;
             current = conn;
-            //Helper.GetHelper().Events.GameLoop.OneSecondUpdateTicked += OnOneSecondUpdateTicked;
+            Helper.GetHelper().Events.GameLoop.OneSecondUpdateTicked += OnOneSecondUpdateTicked;
         }
+        */
     }
 }

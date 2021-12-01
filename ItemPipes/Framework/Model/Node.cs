@@ -19,6 +19,8 @@ namespace ItemPipes.Framework.Model
         public Network ParentNetwork { get; set; }
         public SideStruct Sides { get; set; }
         public bool Reached { get; set; }
+        public string State { get; set; }
+        public bool Passable { get; set; }
 
         public Node(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
@@ -26,6 +28,8 @@ namespace ItemPipes.Framework.Model
             Position = position;
             Location = location;
             Obj = obj;
+            State = "default";
+            Passable = false;
 
             Sides = SideStruct.GetSides();
 
@@ -36,6 +40,64 @@ namespace ItemPipes.Framework.Model
             Adjacents.Add(Sides.East, null);
 
             ParentNetwork = null;
+        }
+
+        public virtual string GetState()
+        {
+            return State;
+        }
+
+        public List<Node> TraverseAll()
+        {
+            List<Node> looked = new List<Node>();
+            Reached = false;
+            if (Globals.Debug) { Printer.Info("TRAVERSING"); }
+            System.Object[] returns = TraverseAllRecursive(looked, false);
+            List<Node> path = (List<Node>)returns[1];
+            return path;
+        }
+
+        public System.Object[] TraverseAllRecursive(List<Node> looked, bool reached)
+        {
+            if (Globals.Debug) { Print(); }
+            System.Object[] returns = new System.Object[3];
+            returns[2] = reached;
+            Node adj;
+            looked.Add(this);
+            if (Adjacents.TryGetValue(Sides.North, out adj) && !(bool)returns[2])
+            {
+                if (adj != null && !looked.Contains(adj))
+                {
+                    returns = adj.TraverseAllRecursive(looked, reached);
+                }
+            }
+            if (Adjacents.TryGetValue(Sides.South, out adj) && !(bool)returns[2])
+            {
+                if (adj != null && !looked.Contains(adj))
+                {
+                    returns = adj.TraverseAllRecursive(looked, reached);
+                }
+            }
+            if (Adjacents.TryGetValue(Sides.West, out adj) && !(bool)returns[2])
+            {
+                if (adj != null && !looked.Contains(adj))
+                {
+                    returns = adj.TraverseAllRecursive(looked, reached);
+                }
+            }
+
+            if (Adjacents.TryGetValue(Sides.East, out adj) && !(bool)returns[2])
+            {
+                if (adj != null && !looked.Contains(adj))
+                {
+                    returns = adj.TraverseAllRecursive(looked, reached);
+                }
+            }
+            if (!(bool)returns[2])
+            {
+                looked.Remove(this);
+            }
+            return returns;
         }
 
         public bool CanConnectedWith(Node target)
@@ -181,6 +243,18 @@ namespace ItemPipes.Framework.Model
             else
             {
                 return false;
+            }
+        }
+
+        public string GetName()
+        {
+            if(Passable)
+            {
+                return Name+"_passable";
+            }
+            else
+            {
+                return Name;
             }
         }
 

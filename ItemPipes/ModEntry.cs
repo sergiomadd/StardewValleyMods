@@ -91,7 +91,7 @@ namespace ItemPipes
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
             FencePatcher.Apply(harmony);
-            //ChestPatcher.Apply(harmony);
+            ChestPatcher.Apply(harmony);
 
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
@@ -205,7 +205,7 @@ namespace ItemPipes
                                     //if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
                                     foreach (Network network in networks)
                                     {
-                                        network.ProcessExchanges();
+                                        //network.ProcessExchanges();
                                     }
                                 }
                             }

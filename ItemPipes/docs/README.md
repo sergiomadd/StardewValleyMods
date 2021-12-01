@@ -63,8 +63,8 @@ Regular vanilla chests. As you can see below, the items get out of one chest, an
 	- **Junimo Chest**  
 Junimo chests work as chests. But as their inventory is linked, you can move items wirelessly.  
 ![Junimo](gifs/JunimoGif.gif)  
-	- **Fridge**  
-	Not yet implemented.  
+	- **Mini-Fridge**  
+Not yet implmented  
 	- **Mini-Shipping Bin**  
 Mini-Shipping Bins work the exact same as chests.  
 

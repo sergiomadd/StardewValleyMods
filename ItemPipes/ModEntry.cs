@@ -13,31 +13,29 @@ using ItemPipes.Framework;
 using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Patches;
-using ItemPipes.Framework.API;
-using ItemPipes.Framework.ContentPackUtil;
+using ItemPipes.Framework.Nodes;
+using ItemPipes.Framework.Items;
 using HarmonyLib;
 
 namespace ItemPipes
 {
-    public interface IJsonAssetsApi
+    public interface ISpaceCoreApi
     {
-        int GetObjectId(string name);
-        void LoadAssets(string path);
+        void RegisterSerializerType(Type type);
     }
-
     class ModEntry : Mod
     {
+        public static IModHelper helper;
         public Dictionary<string, int> LogisticItemIds;
         public DataAccess DataAccess { get; set; }
 
         internal static readonly string ContentPackPath = Path.Combine("assets", "DGAItemLogistics");
 
-        private IJsonAssetsApi JsonAssets;
-
         public override void Entry(IModHelper helper)
         {
+            ModEntry.helper = helper;
             Printer.SetMonitor(this.Monitor);
-            Framework.Helper.SetHelper(helper);
+            Framework.Util.Helper.SetHelper(helper);
             LogisticItemIds = new Dictionary<string, int>();
             DataAccess = DataAccess.GetDataAccess();
 
@@ -90,8 +88,8 @@ namespace ItemPipes
             Globals.Debug = true;
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
-            FencePatcher.Apply(harmony);
-            ChestPatcher.Apply(harmony);
+            //FencePatcher.Apply(harmony);
+            //ChestPatcher.Apply(harmony);
 
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
@@ -104,42 +102,15 @@ namespace ItemPipes
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
-            if (JsonAssets == null)
-            {
-                Monitor.Log("Can't load Json Assets API, which is needed for Home Sewing Kit to function", LogLevel.Error);
-            }
-            else
-            {
-                JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets"));
-            }
-
-            /*if (Helper.ModRegistry.IsLoaded("spacechase0.JsonAssets"))
-            {
-                Printer.Info("Attempting to hook into spacechase0.JsonAssets.");
-                ApiManager.HookIntoJsonAssets();
-            }*/
-
-            //For when migrating to DGA
-            // Check if spacechase0's DynamicGameAssets is in the current mod list
-            /*if (Helper.ModRegistry.IsLoaded("spacechase0.DynamicGameAssets"))
-            {
-                Printer.Info("Attempting to hook into spacechase0.DynamicGameAssets.");
-                ApiManager.HookIntoDynamicGameAssets();
-
-                Manifest manifest = new Manifest();
-                manifest = Helper.Data.ReadJsonFile<Manifest>("manifest.json");
-                //It doesn't read the extra fields, don't know why
-                manifest.ExtraFields = new Dictionary<string, object>();
-                manifest.ExtraFields.Add("DGA.FormatVersion", 2);
-                manifest.ExtraFields.Add("DGA.ConditionsFormatVersion", "1.24.2");
-                var contentPackManifest = new CPManifest(manifest);
-                ApiManager.GetDynamicGameAssetsInterface().AddEmbeddedPack(contentPackManifest, Path.Combine(Helper.DirectoryPath, ContentPackPath));
-            }
-            */
+            //Helper.Content.AssetEditors.Add(this);
+            var spaceCore = this.Helper.ModRegistry.GetApi<ISpaceCoreApi>("spacechase0.SpaceCore");
+            spaceCore.RegisterSerializerType(typeof(IronPipeItem));
+            spaceCore.RegisterSerializerType(typeof(ExtractorPipeItem));
+            spaceCore.RegisterSerializerType(typeof(InserterPipeItem));
+            spaceCore.RegisterSerializerType(typeof(PolymorphicPipeItem));
+            spaceCore.RegisterSerializerType(typeof(FilterPipeItem));
+            spaceCore.RegisterSerializerType(typeof(WrenchItem));
         }
-
-
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
@@ -153,10 +124,12 @@ namespace ItemPipes
                 NetworkBuilder.BuildLocationNetworks(location);
                 NetworkManager.UpdateLocationNetworks(location);
                 //Monitor.Log(location.Name + " LOADED!", LogLevel.Info);
+                /*
                 if (Globals.Debug)
                 {
                     NetworkManager.PrintLocationNetworks(location);
                 }
+                */
                 /*
                 if (DataAccess.Locations.Contains(location.Name))
                 {
@@ -202,10 +175,10 @@ namespace ItemPipes
                             {
                                 if(networks.Count > 0)
                                 {
-                                    //if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
+                                    if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
                                     foreach (Network network in networks)
                                     {
-                                        //network.ProcessExchanges();
+                                        network.ProcessExchanges();
                                     }
                                 }
                             }
@@ -234,6 +207,17 @@ namespace ItemPipes
 
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
+            for(int i=0;i<15;i++)
+            {
+                //Game1.player.addItemToInventory(new Test());
+                Game1.player.addItemToInventory(new IronPipeItem());
+                Game1.player.addItemToInventory(new ExtractorPipeItem());
+                Game1.player.addItemToInventory(new InserterPipeItem());
+                Game1.player.addItemToInventory(new PolymorphicPipeItem());
+                Game1.player.addItemToInventory(new FilterPipeItem());
+                //Game1.player.addItemToInventory(new Pipe());
+            }
+            Game1.player.addItemToInventory(new WrenchItem());
             RepairPipes();
         }
 

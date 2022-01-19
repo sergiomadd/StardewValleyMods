@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewModdingAPI.Events;
+using SObject = StardewValley.Object;
+using StardewValley.Tools;
+using System.Xml.Serialization;
+using ItemPipes.Framework.Util;
 
 namespace ItemPipes.Framework.Model
 {
@@ -22,14 +26,23 @@ namespace ItemPipes.Framework.Model
         public string State { get; set; }
         public bool Passable { get; set; }
 
+        public Node()
+        {
+            Sides = SideStruct.GetSides();
+
+            Adjacents = new Dictionary<Side, Node>();
+            Adjacents.Add(Sides.North, null);
+            Adjacents.Add(Sides.South, null);
+            Adjacents.Add(Sides.West, null);
+            Adjacents.Add(Sides.East, null);
+        }
+
         public Node(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
             if (obj != null) { Name = obj.name; }
             Position = position;
             Location = location;
             Obj = obj;
-            State = "default";
-            Passable = false;
 
             Sides = SideStruct.GetSides();
 
@@ -41,7 +54,6 @@ namespace ItemPipes.Framework.Model
 
             ParentNetwork = null;
         }
-
         public virtual string GetState()
         {
             return State;
@@ -62,8 +74,8 @@ namespace ItemPipes.Framework.Model
             if (Globals.Debug) { Print(); }
             System.Object[] returns = new System.Object[3];
             returns[2] = reached;
-            Node adj;
             looked.Add(this);
+            Node adj;
             if (Adjacents.TryGetValue(Sides.North, out adj) && !(bool)returns[2])
             {
                 if (adj != null && !looked.Contains(adj))
@@ -85,7 +97,6 @@ namespace ItemPipes.Framework.Model
                     returns = adj.TraverseAllRecursive(looked, reached);
                 }
             }
-
             if (Adjacents.TryGetValue(Sides.East, out adj) && !(bool)returns[2])
             {
                 if (adj != null && !looked.Contains(adj))
@@ -160,7 +171,6 @@ namespace ItemPipes.Framework.Model
                         returns = adj.GetPathRecursive(target, looked, reached);
                     }
                 }
-
                 if (Adjacents.TryGetValue(Sides.East, out adj) && !(bool)returns[2])
                 {
                     if (adj != null && !looked.Contains(adj))
@@ -179,19 +189,14 @@ namespace ItemPipes.Framework.Model
         public List<Network> Scan()
         {
             List<Network> retList = new List<Network>();
-            foreach(KeyValuePair<Side, Node> adj in Adjacents)
+            foreach (KeyValuePair<Side, Node> adj in Adjacents)
             {
-                if(adj.Value != null)
+                if (adj.Value != null)
                 {
                     retList.Add(adj.Value.ParentNetwork);
                 }
             }
             return retList;
-        }
-
-        public Node GetAdjacent(Side side)
-        {
-            return Adjacents[side];
         }
 
         public virtual bool AddAdjacent(Side side, Node entity)
@@ -222,9 +227,9 @@ namespace ItemPipes.Framework.Model
         public virtual bool RemoveAllAdjacents()
         {
             bool removed = false;
-            foreach(KeyValuePair<Side, Node> adj in Adjacents.ToList())
+            foreach (KeyValuePair<Side, Node> adj in Adjacents.ToList())
             {
-                if(adj.Value != null)
+                if (adj.Value != null)
                 {
                     removed = true;
                     RemoveAdjacent(adj.Key, adj.Value);

@@ -6,45 +6,47 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Buildings;
-using ItemPipes.Framework.Objects;
+using ItemPipes.Framework.Nodes;
 
 namespace ItemPipes.Framework.Model
 {
     public static class NodeFactory
     {
+
         public static Node CreateElement(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
-            if (obj.name.Equals("ExtractorPipe"))
+            
+            if (obj.name.Equals("Extractor Pipe"))
             {
-                return new ExtractorPipe(position, location, obj);
+                return new ExtractorPipeNode(position, location, obj);
             }
-            else if (obj.name.Equals("InserterPipe"))
+            if (obj.name.Equals("Inserter Pipe"))
             {
-                return new InserterPipe(position, location, obj);
+                return new InserterPipeNode(position, location, obj);
             }
-            else if (obj.name.Equals("PolymorphicPipe"))
+            else if (obj.name.Equals("Polymorphic Pipe"))
             {
-                return new PolymorphicPipe(position, location, obj);
+                return new PolymorphicPipeNode(position, location, obj);
             }
-            else if (obj.name.Equals("FilterPipe"))
+            else if (obj.name.Equals("Filter Pipe"))
             {
-                return new FilterPipe(position, location, obj);
+                return new FilterPipeNode(position, location, obj);
             }
-            else if (obj.name.Equals("ConnectorPipe"))
+            else if (obj.name.Equals("Iron Pipe"))
             {
-                return new ConnectorPipe(position, location, obj);
-            }
+                return new IronPipeNode(position, location, obj);
+            }        
             else if (obj.name.Equals("Chest"))
             {
-                return new ChestContainer(position, location, obj);
+                return new ChestContainerNode(position, location, obj);
             }
             else if (obj.name.Equals("Mini-Fridge"))
             {
-                return new ChestContainer(position, location, obj);
+                return new ChestContainerNode(position, location, obj);
             }
             else if (obj.name.Equals("Invisibilizer"))
             {
-                return new Invisibilizer(position, location, obj);
+                return new InvisibilizerNode(position, location, obj);
             }
             else
             {
@@ -55,7 +57,7 @@ namespace ItemPipes.Framework.Model
         {
             if (building.GetType().Equals(typeof(ShippingBin)))
             {
-                return new ShippingBinContainer(position, location, null, building);
+                return new ShippingBinContainerNode(position, location, null, building);
             }
             else
             {

@@ -1,33 +1,33 @@
 {
   "ModItems": [
-    "ConnectorPipe",
-    "ExtractorPipe",
-    "InserterPipe",
-    "PolymorphicPipe",
-    "FilterPipe",
+    "Iron Pipe",
+    "Extractor Pipe",
+    "Inserter Pipe",
+    "Polymorphic Pipe",
+    "Filter Pipe",
     "Chest",
     "Shipping Bin",
     "Mini-Fridge"
   ],
   "NetworkItems": [
-    "ConnectorPipe",
-    "ExtractorPipe",
-    "InserterPipe",
-    "PolymorphicPipe",
-    "FilterPipe"
+    "Iron Pipe",
+    "Extractor Pipe",
+    "Inserter Pipe",
+    "Polymorphic Pipe",
+    "Filter Pipe"
   ],
   "PipeNames": [
-    "ConnectorPipe",
-    "ExtractorPipe",
-    "InserterPipe",
-    "PolymorphicPipe",
-    "FilterPipe"
+    "Iron Pipe",
+    "Extractor Pipe",
+    "Inserter Pipe",
+    "Polymorphic Pipe",
+    "Filter Pipe"
   ],
   "IOPipeNames": [
-    "ExtractorPipe",
-    "InserterPipe",
-    "PolymorphicPipe",
-    "FilterPipe"
+    "Extractor Pipe",
+    "Inserter Pipe",
+    "Polymorphic Pipe",
+    "Filter Pipe"
   ],
   "ExtraNames": [
     "Chest",

@@ -10,11 +10,12 @@ using StardewValley.Objects;
 using StardewValley.Tools;
 using StardewModdingAPI;
 using ItemPipes.Framework.Model;
-using ItemPipes.Framework.Objects;
+using ItemPipes.Framework.Nodes;
 using Netcode;
 using Microsoft.Xna.Framework;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework.Graphics;
+using ItemPipes.Framework.Util;
 
 namespace ItemPipes.Framework.Patches
 {
@@ -71,7 +72,7 @@ namespace ItemPipes.Framework.Patches
 				List<Node> nodes;
 				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 				{
-					FilterPipe pipe = (FilterPipe)nodes.Find(n => n.Position.Equals(__instance.TileLocation));
+					FilterPipeNode pipe = (FilterPipeNode)nodes.Find(n => n.Position.Equals(__instance.TileLocation));
 					pipe.Chest.ShowMenu();
 				}
 				return false;
@@ -81,7 +82,7 @@ namespace ItemPipes.Framework.Patches
 				List<Node> nodes;
 				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 				{
-					IOPipe pipe = (IOPipe)nodes.Find(n => n.Position.Equals(__instance.TileLocation));
+					IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(__instance.TileLocation));
 					//Add state display
 				}
 				return false;
@@ -102,7 +103,7 @@ namespace ItemPipes.Framework.Patches
 					List<Node> nodes;
 					if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 					{
-						IOPipe pipe = (IOPipe)nodes.Find(n => n.Position.Equals(__instance.TileLocation));
+						IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(__instance.TileLocation));
 						switch (pipe.State)
 						{
 							case "off":
@@ -269,9 +270,9 @@ namespace ItemPipes.Framework.Patches
 					if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
 					{
 						Node node = nodes.Find(n => n.Position.Equals(__instance.TileLocation));
-						if (node is Connector)
+						if (node is ConnectorNode)
                         {
-							Connector connector = (Connector)node;
+							ConnectorNode connector = (ConnectorNode)node;
 							if(connector.PassingItem)
                             {
 								drawSum += 5;

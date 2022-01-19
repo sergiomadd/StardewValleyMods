@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ItemPipes.Framework.Model;
-using ItemPipes.Framework.Objects;
+using ItemPipes.Framework.Nodes;
 using ItemPipes.Framework.Util;
 using Microsoft.Xna.Framework;
 using System.Threading;
@@ -17,39 +17,41 @@ namespace ItemPipes.Framework
     {
         public int ID { get; set; }
         public List<Node> Nodes { get; set; }
-        public List<Output> Outputs { get; set; }
-        public List<Input> Inputs { get; set; }
-        public List<Connector> Connectors { get; set; }
+        public List<OutputNode> Outputs { get; set; }
+        public List<InputNode> Inputs { get; set; }
+        public List<ConnectorNode> Connectors { get; set; }
         public bool IsPassable { get; set; }
-        public Invisibilizer Invis { get; set; }
+        public InvisibilizerNode Invis { get; set; }
 
+        public Network() { }
         public Network(int id)
         {
             ID = id;
             Nodes = new List<Node>();
-            Outputs = new List<Output>();
-            Inputs = new List<Input>();
-            Connectors = new List<Connector>();
+            Outputs = new List<OutputNode>();
+            Inputs = new List<InputNode>();
+            Connectors = new List<ConnectorNode>();
             IsPassable = false;
         }
 
         public void Update()
         {
-            foreach(Output output in Outputs)
+            
+            foreach(OutputNode output in Outputs)
             {
-                foreach (Input input in output.ConnectedInputs.Keys.ToList())
+                foreach (InputNode input in output.ConnectedInputs.Keys.ToList())
                 {
                     TryDisconnectInput(input);
                 }
                 TryConnectOutput(output);
             }
-
+            
         }
 
         public void ProcessExchanges()
         {
             Update();
-            foreach (Output output in Outputs)
+            foreach (OutputNode output in Outputs)
             {
                 output.ProcessExchanges();
             }
@@ -62,21 +64,21 @@ namespace ItemPipes.Framework
             {
                 added = true;
                 Nodes.Add(node);
-                if (node is Output && !Outputs.Contains(node))
+                if (node is OutputNode && !Outputs.Contains(node))
                 {
-                    Outputs.Add((Output)node);
+                    Outputs.Add((OutputNode)node);
                 }
-                else if (node is Input && !Inputs.Contains(node))
+                else if (node is InputNode && !Inputs.Contains(node))
                 {
-                    Inputs.Add((Input)node);
+                    Inputs.Add((InputNode)node);
                 }
-                else if (node is Connector && !Connectors.Contains(node))
+                else if (node is ConnectorNode && !Connectors.Contains(node))
                 {
-                    Connectors.Add((Connector)node);
+                    Connectors.Add((ConnectorNode)node);
                 }
-                else if (node is Invisibilizer && Invis == null)
+                else if (node is InvisibilizerNode && Invis == null)
                 {
-                    Invis = (Invisibilizer)node;
+                    Invis = (InvisibilizerNode)node;
                     Thread thread = new Thread(new ThreadStart(ChangePassable));
                     thread.Start();
                 }
@@ -93,17 +95,17 @@ namespace ItemPipes.Framework
                 Nodes.Remove(node);
                 if (Outputs.Contains(node))
                 {
-                    Outputs.Remove((Output)node);
+                    Outputs.Remove((OutputNode)node);
                 }
                 else if (Inputs.Contains(node))
                 {
-                    Inputs.Remove((Input)node);
+                    Inputs.Remove((InputNode)node);
                 }
                 else if (Connectors.Contains(node))
                 {
-                    Connectors.Remove((Connector)node);
+                    Connectors.Remove((ConnectorNode)node);
                 }
-                else if (node is Invisibilizer && Invis != null)
+                else if (node is InvisibilizerNode && Invis != null)
                 {
                     Thread thread = new Thread(new ThreadStart(ChangePassable));
                     thread.Start();
@@ -113,7 +115,7 @@ namespace ItemPipes.Framework
             return removed;
         }
 
-        public bool TryConnectNodes(Output output, Input input)
+        public bool TryConnectNodes(OutputNode output, InputNode input)
         {
             bool connected = false;
             if (output != null && input != null)
@@ -131,13 +133,13 @@ namespace ItemPipes.Framework
             return connected;
         }
 
-        public bool TryConnectOutput(Output output)
+        public bool TryConnectOutput(OutputNode output)
         {
             if (Globals.Debug) { Printer.Info($"[{ID}] Trying output connection..."); }
             bool canConnect = false;
             if (output != null)
             {
-                foreach (Input input in Inputs)
+                foreach (InputNode input in Inputs)
                 {
                     if (!output.IsInputConnected(input))
                     {
@@ -155,14 +157,14 @@ namespace ItemPipes.Framework
             return canConnect;
         }
 
-        public bool TryDisconnectInput(Input input)
+        public bool TryDisconnectInput(InputNode input)
         {
             if (Globals.Debug) { Printer.Info($"[{ID}] Trying input disconnection"); Print(); }
             bool canDisconnect = false;
             if (input != null)
             {
                 if (Globals.Debug) { Printer.Info($"[{ID}] Input not null"); }
-                foreach (Output output in Outputs)
+                foreach (OutputNode output in Outputs)
                 {
                     if (Globals.Debug) { Printer.Info($"[{ID}] Output has input? " + output.IsInputConnected(input).ToString()); }
                     if (output.IsInputConnected(input))
@@ -205,6 +207,7 @@ namespace ItemPipes.Framework
 
         public string Print()
         {
+            /*
             StringBuilder graph = new StringBuilder();
             graph.Append("\nPriting Networks: \n");
             graph.Append("Networks: \n");
@@ -232,6 +235,8 @@ namespace ItemPipes.Framework
             }
             graph.Append("\n");
             return graph.ToString();
+            */
+            return "";
         }
     }
 }

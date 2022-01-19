@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ItemPipes.Framework.Model;
-using ItemPipes.Framework.Objects;
+using ItemPipes.Framework.Nodes;
 using StardewValley;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using Microsoft.Xna.Framework;
+using ItemPipes.Framework.Util;
 
 namespace ItemPipes.Framework
 {
@@ -61,7 +62,9 @@ namespace ItemPipes.Framework
                 List<Node> nodes;
                 if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
                 {
+                    Printer.Info("COORDS"+obj.Key.ToString());
                     Node newNode = NodeFactory.CreateElement(obj.Key, Game1.currentLocation, obj.Value);
+                    Printer.Info((newNode == null).ToString());
                     int x = (int)newNode.Position.X;
                     int y = (int)newNode.Position.Y;
                     nodes.Add(newNode);
@@ -90,12 +93,15 @@ namespace ItemPipes.Framework
                         newNode.AddAdjacent(SideStruct.GetSides().East, eastNode);
                     }
                     if (Globals.Debug) { newNode.Print(); }
+                    Printer.Info("Manager loc: " + Game1.currentLocation.Name);
+                    Printer.Info("Tile: " + newNode.Position.ToString());
+                    Printer.Info((Game1.currentLocation.getObjectAtTile(x, y)==null).ToString());
                     if (DataAccess.NetworkItems.Contains(Game1.currentLocation.getObjectAtTile(x, y).Name))
                     {
                         if (Globals.Debug) { Printer.Info("ADDING GRAPH"); }
-                        if (newNode is Input)
+                        if (newNode is InputNode)
                         {
-                            Input input = (Input)newNode;
+                            InputNode input = (InputNode)newNode;
                         }
                         List<Network> uncheckedAdjNetworks= newNode.Scan();
                         List<Network> adjNetworks = new List<Network>();

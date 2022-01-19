@@ -8,7 +8,8 @@ using StardewValley;
 using StardewValley.Objects;
 using StardewModdingAPI;
 using ItemPipes.Framework.Model;
-using ItemPipes.Framework.Objects;
+using ItemPipes.Framework.Nodes;
+using ItemPipes.Framework.Util;
 using Netcode;
 using StardewValley.Menus;
 
@@ -38,7 +39,7 @@ namespace ItemPipes.Framework.Patches
             }
             catch (Exception ex)
             {
-                Framework.Printer.Info($"Failed to add chest postfix: {ex}");
+                Printer.Info($"Failed to add chest postfix: {ex}");
             }
         }
 
@@ -50,7 +51,7 @@ namespace ItemPipes.Framework.Patches
             if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
             {
                 Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
-                if (node is FilterPipe)
+                if (node is FilterPipeNode)
                 {
                     Printer.Info("COLLECTING");
                     int item_count = 0;
@@ -109,7 +110,7 @@ namespace ItemPipes.Framework.Patches
             if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
             {
                 Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
-                if (node is FilterPipe)
+                if (node is FilterPipeNode)
                 {
                     Printer.Info("GRAB FROM CHEST");
 
@@ -140,7 +141,7 @@ namespace ItemPipes.Framework.Patches
             if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
             {
                 Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
-                if (node is FilterPipe)
+                if (node is FilterPipeNode)
                 {
                     Printer.Info("GRAB FROM INV");
 
@@ -182,7 +183,7 @@ namespace ItemPipes.Framework.Patches
             if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
             {
                 Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
-                if(node is FilterPipe)
+                if(node is FilterPipeNode)
                 {
                     item.resetState();
                     __instance.clearNulls();

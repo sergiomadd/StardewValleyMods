@@ -9,8 +9,8 @@
   "UpdateKeys": [],
   "Dependencies": [
     {
-      "UniqueID": "spacechase0.JsonAssets",
-      "IsRequired": true
+      "UniqueID": "spacechase0.SpaceCore",
+      "IsRequired": "true"
     }
   ],
 }

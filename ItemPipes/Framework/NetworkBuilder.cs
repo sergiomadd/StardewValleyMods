@@ -10,6 +10,7 @@ using StardewValley.Buildings;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using Microsoft.Xna.Framework;
+using ItemPipes.Framework.Util;
 
 namespace ItemPipes.Framework
 {
@@ -40,7 +41,7 @@ namespace ItemPipes.Framework
                     }
                 }
             }
-            if (Globals.Debug) { Printer.Info("LOADING OBJECTS"); }
+            //if (Globals.Debug) { Printer.Info("LOADING OBJECTS"); }
             if(location.Objects.Count() > 0)
             {
                 foreach (KeyValuePair<Vector2, StardewValley.Object> obj in location.Objects.Pairs)

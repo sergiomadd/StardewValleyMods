@@ -15,6 +15,7 @@ namespace ItemPipes.Framework
 {
     public abstract class OutputNode : IOPipeNode
     {
+        public int Tier { get; set; }
         public Dictionary<InputNode, List<Node>> ConnectedInputs { get; set; }
         public OutputNode() : base()
         {
@@ -23,14 +24,15 @@ namespace ItemPipes.Framework
         public OutputNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedInputs = new Dictionary<InputNode, List<Node>>();
-
+            Tier = 1;
         }
 
         public void ProcessExchanges()
         {
             if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Procesing Exchanges..."); }
             if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Are there connected input? " + (ConnectedInputs.Count > 0).ToString()); }
-            if (ConnectedContainer != null && !ConnectedContainer.IsEmpty() && ConnectedInputs.Count > 0 && State.Equals("on"))
+            if (ConnectedContainer != null && !ConnectedContainer.IsEmpty()
+                && ConnectedInputs.Count > 0 && State.Equals("on"))
             {
                 if (Globals.Debug) { Printer.Info($"[{ ParentNetwork.ID}] Is output empty? " + ConnectedContainer.IsEmpty().ToString()); }
                 if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] CREATED NEW THREAD"); }
@@ -38,10 +40,9 @@ namespace ItemPipes.Framework
                 thread.Start();
             }
         }
-        
+
         public void StartExchage()
         {
-            
             if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
             Item item = null;
             int index = 0;
@@ -54,54 +55,29 @@ namespace ItemPipes.Framework
             while (index < priorityInputs.Count && item == null)
             {
                 InputNode input = priorityInputs.Keys.ToList()[index];
-                if(input.State.Equals("on"))
+                if (input.State.Equals("on"))
                 {
                     List<Node> path = priorityInputs.Values.ToList()[index];
-                    if (input is PolymorphicPipeNode)
+                    input.UpdateFilter();
+                    if (ConnectedContainer is ChestContainerNode && input.ConnectedContainer is ChestContainerNode)
                     {
-                        PolymorphicPipeNode poly = (PolymorphicPipeNode)input;
-                        poly.UpdateFilter();
-                    }
-                    else if (input is FilterPipeNode)
-                    {
-                        FilterPipeNode filter = input as FilterPipeNode;
-                        filter.UpdateFilter();
-                    }
-                    if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] INPUT: "); input.Print(); }
-                    if (ConnectedContainer != null && input.ConnectedContainer != null)
-                    {
-                        if (ConnectedContainer.Type.Equals("Chest") && input.ConnectedContainer.Type.Equals("ShippingBin"))
+                        ChestContainerNode outChest = (ChestContainerNode)ConnectedContainer;
+                        ChestContainerNode inChest = (ChestContainerNode)input.ConnectedContainer;
+                        item = outChest.CanSendItem(inChest);
+                        if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Can send? " + (item != null).ToString()); }
+                        if (item != null)
                         {
-                            ShippingBinContainerNode shipBin = (ShippingBinContainerNode)input.ConnectedContainer;
-                            ChestContainerNode outChest = (ChestContainerNode)ConnectedContainer;
-                            item = outChest.GetItemToShip(input);
-                            if (item != null)
+                            SendItem(item, input, 0, path);
+                            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] ITEM CORRECTLY SENT"); }
+                            if (outChest != null && inChest != null)
                             {
-                                Animator.AnimateItemSending(path);
-                                shipBin.ShipItem(item);
-                                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] END animation"); }
-                            }
-                        }
-                        else if (ConnectedContainer.Type.Equals("Chest") && input.ConnectedContainer.Type.Equals("Chest"))
-                        {
-                            ChestContainerNode inChest = (ChestContainerNode)input.ConnectedContainer;
-                            ChestContainerNode outChest = (ChestContainerNode)ConnectedContainer;
-                            item = outChest.CanSendItem(inChest);
-                            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Can send? " + (item != null).ToString()); }
-                            if (item != null)
-                            {
-                                Animator.AnimateItemSending(path);
-                                if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] ITEM CORRECTLY SENT"); }
-                                if (outChest != null && inChest != null)
+                                bool sent = outChest.SendItem(inChest, item);
+                                if (!sent)
                                 {
-                                    bool sent = outChest.SendItem(inChest, item);
-                                    if (!sent)
-                                    {
-                                        if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] CANT ENTER, REVERSE"); }
-                                        List<Node> reversePath = path;
-                                        reversePath.Reverse();
-                                        Animator.AnimateItemSending(reversePath);
-                                    }
+                                    if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] CANT ENTER, REVERSE"); }
+                                    List<Node> reversePath = path;
+                                    reversePath.Reverse();
+                                    input.SendItem(item, this, 0, reversePath);
                                 }
                             }
                         }

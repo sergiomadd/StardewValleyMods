@@ -13,7 +13,7 @@ using Netcode;
 
 namespace ItemPipes.Framework
 {
-    public class ContainerNode : Node
+    public class ContainerNode : PipeNode
     {
         public string Type { get; set; }
         public OutputNode Output { get; set; }

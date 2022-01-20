@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using ItemPipes.Framework.Model;
 using Microsoft.Xna.Framework;
 using StardewValley;
+using ItemPipes.Framework.Nodes;
 
 namespace ItemPipes.Framework
 {
-    public abstract class ConnectorNode : Node
+    public abstract class ConnectorNode : PipeNode
     {
-        public bool PassingItem { get; set; }
         public bool Connecting { get; set; }
 
         public ConnectorNode() : base()
@@ -20,7 +20,6 @@ namespace ItemPipes.Framework
         }
         public ConnectorNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
-            PassingItem = false;
             Connecting = false;
         }
 

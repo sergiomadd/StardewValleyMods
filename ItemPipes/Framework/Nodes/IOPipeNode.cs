@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
+using ItemPipes.Framework.Nodes;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
 
 namespace ItemPipes.Framework
 {
-    public abstract class IOPipeNode : Node
+    public abstract class IOPipeNode : PipeNode
     {
         public ContainerNode ConnectedContainer { get; set; }
         public bool Connecting { get; set; }

@@ -48,12 +48,22 @@ namespace ItemPipes.Framework
             
         }
 
-        public void ProcessExchanges()
+        public void ProcessExchanges(int tier)
         {
             Update();
-            foreach (OutputNode output in Outputs)
+            switch (tier)
             {
-                output.ProcessExchanges();
+                case 1:
+                    foreach (OutputNode output in Outputs)
+                    {
+                        if(output.Tier == 1)
+                        {
+                            output.ProcessExchanges();
+                        }
+                    }
+                    break;
+                case 2:
+                    break;
             }
         }
 

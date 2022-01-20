@@ -23,8 +23,8 @@ namespace ItemPipes.Framework.Model
         public Network ParentNetwork { get; set; }
         public SideStruct Sides { get; set; }
         public bool Reached { get; set; }
-        public string State { get; set; }
         public bool Passable { get; set; }
+        public string State { get; set; }
 
         public Node()
         {
@@ -54,6 +54,7 @@ namespace ItemPipes.Framework.Model
 
             ParentNetwork = null;
         }
+
         public virtual string GetState()
         {
             return State;

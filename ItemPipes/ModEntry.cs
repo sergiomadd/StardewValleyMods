@@ -85,12 +85,12 @@ namespace ItemPipes
                 Globals.DisableItemSending = false;
             }
             //REMOVE
-            Globals.Debug = true;
+            Globals.Debug = false;
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
             //FencePatcher.Apply(harmony);
             //ChestPatcher.Apply(harmony);
-
+            
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
@@ -165,6 +165,7 @@ namespace ItemPipes
                         if (Globals.Debug) { Printer.Info($"[X] UPDATETICKET"); }
                         Animator.updated = true;
                     }*/
+                    //Tier 1 Extractors
                     if (e.IsMultipleOf(120))
                     {
                         DataAccess DataAccess = DataAccess.GetDataAccess();
@@ -178,7 +179,7 @@ namespace ItemPipes
                                     if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
                                     foreach (Network network in networks)
                                     {
-                                        network.ProcessExchanges();
+                                        network.ProcessExchanges(1);
                                     }
                                 }
                             }
@@ -217,7 +218,10 @@ namespace ItemPipes
                 Game1.player.addItemToInventory(new FilterPipeItem());
                 //Game1.player.addItemToInventory(new Pipe());
             }
-            Game1.player.addItemToInventory(new WrenchItem());
+            if(!Game1.player.hasItemInInventoryNamed("Wrench"))
+            {
+                Game1.player.addItemToInventory(new WrenchItem());
+            }
             RepairPipes();
         }
 

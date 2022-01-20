@@ -8,7 +8,7 @@ This is a repository for all my Stardew Valley Mods
 ## Planned Mods:
 - More Junimo Chests
 - CLF (Custom Line Framework)
-- [CFF] Lines
+- [CLF] Color Lines
 - Shed IO
 - Logic Wires
 

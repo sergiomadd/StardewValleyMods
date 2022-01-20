@@ -6,9 +6,9 @@ This is a repository for all my Stardew Valley Mods
 
 
 ## Planned Mods:
-- CFF (Custom Fence Framework)
-- [CFF] Lines
 - More Junimo Chests
+- CLF (Custom Line Framework)
+- [CFF] Lines
 - Shed IO
 - Logic Wires
 

@@ -8,7 +8,7 @@ For testing purposes, the mod only works on the farm for now.
 This mod is in beta version. Backup your saves or create a new save before playing with it. You might lose items and get crashes.
 
 ## Requirements:
-- Stardew Valley 1.5.4
+- Stardew Valley 1.5.5
 - [SMAPI](https://smapi.io/)
 - [JsonAssets](https://www.nexusmods.com/stardewvalley/mods/1720)  
 

@@ -10,7 +10,7 @@ This is a repository for all my Stardew Valley Mods
 - CLF (Custom Line Framework)
 - [CLF] Color Lines
 - Shed IO
-- Logic Wires
+- Logic Lines
 
 ## Released Mods:
 - [Connected Fences](https://github.com/sergiomadd/StardewValleyMods/edit/main/ConnectedFences)

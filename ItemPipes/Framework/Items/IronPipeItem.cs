@@ -18,16 +18,20 @@ namespace ItemPipes.Framework.Items
         {
             Name = "Iron Pipe";
             IDName = "IronPipe";
-            Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 2 tiles-1 second.";
-            LoadTextures();
+            Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 2 tiles/1 second.";
+            //LoadTextures();
+            ItemTexture = ModEntry.helper.Content.Load<Texture2D>("assets/Pipes/IronPipe/IronPipe_Item.png");
+            SpriteTexture = ModEntry.helper.Content.Load<Texture2D>("assets/Pipes/IronPipe/IronPipe_default_Sprite.png");
         }
 
         public IronPipeItem(Vector2 position) : base(position)
         {
             Name = "Iron Pipe";
             IDName = "IronPipe";
-            Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 2 tiles-1 second.";
-            LoadTextures();
+            Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 2 tiles/1 second.";
+            //LoadTextures();
+            ItemTexture = ModEntry.helper.Content.Load<Texture2D>("assets/Pipes/IronPipe/IronPipe_Item.png");
+            SpriteTexture = ModEntry.helper.Content.Load<Texture2D>("assets/Pipes/IronPipe/IronPipe_default_Sprite.png");
         }
     }
 }

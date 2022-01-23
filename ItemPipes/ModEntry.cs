@@ -15,7 +15,9 @@ using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Patches;
 using ItemPipes.Framework.Nodes;
 using ItemPipes.Framework.Items;
+using ItemPipes.Framework.Items.Recipes;
 using HarmonyLib;
+using SpaceCore;
 
 namespace ItemPipes
 {
@@ -23,7 +25,7 @@ namespace ItemPipes
     {
         void RegisterSerializerType(Type type);
     }
-    class ModEntry : Mod
+    class ModEntry : Mod, IAssetEditor
     {
         public static IModHelper helper;
         public Dictionary<string, int> LogisticItemIds;
@@ -89,7 +91,7 @@ namespace ItemPipes
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
             //FencePatcher.Apply(harmony);
-            //ChestPatcher.Apply(harmony);
+            ChestPatcher.Apply(harmony);
             
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
@@ -102,20 +104,69 @@ namespace ItemPipes
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            //Helper.Content.AssetEditors.Add(this);
+            Helper.Content.AssetEditors.Add(this);
             var spaceCore = this.Helper.ModRegistry.GetApi<ISpaceCoreApi>("spacechase0.SpaceCore");
             spaceCore.RegisterSerializerType(typeof(IronPipeItem));
+            spaceCore.RegisterSerializerType(typeof(GoldPipeItem));
+
             spaceCore.RegisterSerializerType(typeof(ExtractorPipeItem));
             spaceCore.RegisterSerializerType(typeof(InserterPipeItem));
             spaceCore.RegisterSerializerType(typeof(PolymorphicPipeItem));
             spaceCore.RegisterSerializerType(typeof(FilterPipeItem));
+
             spaceCore.RegisterSerializerType(typeof(WrenchItem));
+            //spaceCore.RegisterSerializerType(typeof(IronPipeRecipe));
+            CustomCraftingRecipe.CraftingRecipes.Add("Iron Pipe", new IronPipeRecipe());
+        }
+        public bool CanLoad<T>(IAssetInfo asset)
+        {
+            if (asset.AssetNameEquals("Data/ObjectInformation"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanEdit<T>(IAssetInfo asset)
+        {
+            if (asset.AssetNameEquals("Data/CraftingRecipes"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void Edit<T>(IAssetData asset)
+        {
+            if (asset.AssetNameEquals("Data/CraftingRecipes"))
+            {
+                IDictionary<string, string> data = asset.AsDictionary<string, string>().Data;
+                string hardwoodFenceTest = "709 1/Field/298/false/Mining 3";
+                string ironPipe = "388 20 709 1/Home/0 1/false/Mining 3";
+                string fakeRecipe = "0 1//0 1/false//Test Recipe";
+                if (!data.ContainsKey("Iron Pipe"))
+                {
+                    data.Add("Iron Pipe", fakeRecipe);
+                }
+                else
+                {
+                    Printer.Info(data["Iron Pipe"]);
+                    data["Iron Pipe"] = fakeRecipe;
+                }
+            }
         }
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
             Reload();
-            
+            /*
+            if (!Game1.player.craftingRecipes.ContainsKey("Iron Pipe"))
+            {
+                Game1.player.craftingRecipes.Add("Iron Pipe", 0);
+            }
+            */
             foreach (GameLocation location in Game1.locations)
             {
                 //Monitor.Log("LOADING " + location.Name, LogLevel.Info);
@@ -179,6 +230,7 @@ namespace ItemPipes
                                     if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
                                     foreach (Network network in networks)
                                     {
+                                        Printer.Info(network.Print());
                                         network.ProcessExchanges(1);
                                     }
                                 }
@@ -212,6 +264,7 @@ namespace ItemPipes
             {
                 //Game1.player.addItemToInventory(new Test());
                 Game1.player.addItemToInventory(new IronPipeItem());
+                Game1.player.addItemToInventory(new GoldPipeItem());
                 Game1.player.addItemToInventory(new ExtractorPipeItem());
                 Game1.player.addItemToInventory(new InserterPipeItem());
                 Game1.player.addItemToInventory(new PolymorphicPipeItem());

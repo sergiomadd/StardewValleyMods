@@ -52,7 +52,7 @@ namespace ItemPipes.Framework
 			canBeSetDown.Value = true;
 		}
 
-		public void LoadTextures()
+		public virtual void LoadTextures()
 		{
 			ItemTexturePath = $"assets/Pipes/{IDName}/{IDName}_Item.png";
 			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);

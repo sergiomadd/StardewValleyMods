@@ -35,7 +35,11 @@ namespace ItemPipes.Framework.Model
             else if (obj.name.Equals("Iron Pipe"))
             {
                 return new IronPipeNode(position, location, obj);
-            }        
+            }
+            else if (obj.name.Equals("Gold Pipe"))
+            {
+                return new GoldPipeNode(position, location, obj);
+            }
             else if (obj.name.Equals("Chest"))
             {
                 return new ChestContainerNode(position, location, obj);

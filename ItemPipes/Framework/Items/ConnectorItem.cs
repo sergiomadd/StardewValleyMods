@@ -12,6 +12,8 @@ using StardewValley;
 using StardewValley.Tools;
 using StardewValley.Objects;
 using SObject = StardewValley.Object;
+using System.Threading;
+
 
 namespace ItemPipes.Framework.Items
 {
@@ -25,6 +27,47 @@ namespace ItemPipes.Framework.Items
         {
 
         }
+        public override void LoadTextures()
+        {
+            ItemTexturePath = $"assets/Pipes/{IDName}/{IDName}_Item.png";
+            ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
+            SpriteTexturePath = $"assets/Pipes/{IDName}/{IDName}_{State}_Sprite.png";
+            SpriteTexture = ModEntry.helper.Content.Load<Texture2D>(SpriteTexturePath);
+        }
+
+        public override bool performToolAction(Tool t, GameLocation location)
+        {
+            if (t is Pickaxe)
+            {
+                var who = t.getLastFarmerToUse();
+                this.performRemoveAction(this.TileLocation, location);
+                Debris deb = new Debris(getOne(), who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
+                Game1.currentLocation.debris.Add(deb);
+                DataAccess DataAccess = DataAccess.GetDataAccess();
+                List<Node> nodes;
+                if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+                {
+                    Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+                    if (node != null && node is ConnectorNode)
+                    {
+                        ConnectorNode pipe = (ConnectorNode)node;
+                        if (pipe.StoredItem != null)
+                        {
+                            
+                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] GET OUT");
+                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] "+pipe.StoredItem.Stack.ToString());
+                            pipe.Print();
+                            Debris itemDebr = new Debris(pipe.StoredItem, who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
+                            Game1.currentLocation.debris.Add(itemDebr);
+                            pipe.Broken = true;
+                        }
+                    }
+                }
+                Game1.currentLocation.objects.Remove(this.TileLocation);
+                return false;
+            }
+            return false;
+        }
 
         public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
         {
@@ -35,7 +78,7 @@ namespace ItemPipes.Framework.Items
                 Node node = nodes.Find(n => n.Position.Equals(TileLocation));
                 if (node != null && node is ConnectorNode)
                 {
-                    ConnectorNode pipe = (ConnectorNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
+                    ConnectorNode pipe = (ConnectorNode)node;
                     int sourceRectPosition = 1;
                     int drawSum = getDrawSum(Game1.currentLocation);
                     sourceRectPosition = GetNewDrawGuide()[drawSum];

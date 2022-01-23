@@ -10,6 +10,8 @@ using SObject = StardewValley.Object;
 using StardewValley.Tools;
 using System.Xml.Serialization;
 using ItemPipes.Framework.Util;
+using System.Threading;
+
 
 namespace ItemPipes.Framework.Model
 {
@@ -268,11 +270,11 @@ namespace ItemPipes.Framework.Model
         {
             if (ParentNetwork != null)
             {
-                Printer.Info($"[{ParentNetwork.ID}] " + Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());
+                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] " + Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());
             }
             else
             {
-                Printer.Info($"[?] " + Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());
+                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][?] " + Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());
             }
         }
     }

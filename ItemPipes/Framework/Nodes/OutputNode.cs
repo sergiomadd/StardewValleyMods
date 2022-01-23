@@ -43,7 +43,7 @@ namespace ItemPipes.Framework
 
         public void StartExchage()
         {
-            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
+            if (Globals.Debug) { Printer.Info($"[{Thread.CurrentThread.ManagedThreadId}],[{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
             Item item = null;
             int index = 0;
             Dictionary<InputNode, List<Node>> priorityInputs = ConnectedInputs;
@@ -64,20 +64,40 @@ namespace ItemPipes.Framework
                         ChestContainerNode outChest = (ChestContainerNode)ConnectedContainer;
                         ChestContainerNode inChest = (ChestContainerNode)input.ConnectedContainer;
                         item = outChest.CanSendItem(inChest);
-                        if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] Can send? " + (item != null).ToString()); }
+                        if (Globals.Debug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] [{ParentNetwork.ID}] Can send? " + (item != null).ToString()); }
                         if (item != null)
                         {
-                            SendItem(item, input, 0, path);
-                            if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] ITEM CORRECTLY SENT"); }
+                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
+                            foreach(Node node in path)
+                            {
+                                node.Print();
+                            }
+                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
+                            Node broken = SendItem(item, input, 0, path);
+                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] IS IT BROKEN " +broken);
+                            if (Globals.Debug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] ITEM CORRECTLY SENT"); }
+                            //Check with try connect/discoonnect also
                             if (outChest != null && inChest != null)
                             {
-                                bool sent = outChest.SendItem(inChest, item);
-                                if (!sent)
+                                if(broken == null)
                                 {
-                                    if (Globals.Debug) { Printer.Info($"[{ParentNetwork.ID}] CANT ENTER, REVERSE"); }
+                                    bool sent = outChest.SendItem(inChest, item);
+                                    if (!sent)
+                                    {
+                                        if (Globals.Debug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] CANT ENTER, REVERSE"); }
+                                        List<Node> reversePath = path;
+                                        reversePath.Reverse();
+                                        input.SendItem(item, this, 0, reversePath);
+                                    }
+                                }
+                                else
+                                {
+                                    Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] PATH BROKEN, REVERSE");
                                     List<Node> reversePath = path;
                                     reversePath.Reverse();
-                                    input.SendItem(item, this, 0, reversePath);
+                                    int brokenIndex = reversePath.IndexOf(broken);
+                                    input.SendItem(item, this, brokenIndex+1, reversePath);
+                                    inChest.SendItem(outChest, item);
                                 }
                             }
                         }
@@ -109,7 +129,7 @@ namespace ItemPipes.Framework
                 {
                     added = true;
                     List<Node> path;
-                    path = ConnectedContainer.GetPath(input.ConnectedContainer);
+                    path = GetPath(input.ConnectedContainer);
                     Animator.AnimateInputConnection(path);
                     ConnectedInputs.Add(input, path);
                 }

@@ -36,9 +36,13 @@ namespace ItemPipes.Framework
             {
                 return new IronPipeItem();
             }
+            else if (obj.name.Equals("Gold Pipe"))
+            {
+                return new GoldPipeItem();
+            }
             else
             {
-                Printer.Info("ITEM FACTORY = NULL");
+                Printer.Info($"Item creation for {obj.Name} failed.");
                 return null;
             }
         }
@@ -65,9 +69,13 @@ namespace ItemPipes.Framework
             {
                 return new IronPipeItem(position);
             }
+            else if (obj.name.Equals("Gold Pipe"))
+            {
+                return new GoldPipeItem(position);
+            }
             else
             {
-                Printer.Info("ITEM FACTORY = NULL");
+                Printer.Info($"Object creation for {obj.Name} failed.");
                 return null;
             }
         }

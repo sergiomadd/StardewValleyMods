@@ -217,21 +217,20 @@ namespace ItemPipes.Framework
 
         public string Print()
         {
-            /*
             StringBuilder graph = new StringBuilder();
             graph.Append("\nPriting Networks: \n");
             graph.Append("Networks: \n");
             graph.Append("Inputs: \n");
-            foreach (Input input in Inputs)
+            foreach (InputNode input in Inputs)
             {
                 graph.Append(input.Obj.Name + input.Position.ToString() + input.GetHashCode().ToString() + ", ");
             }
             graph.Append("\n");
             graph.Append("Outputs: \n");
-            foreach (Output output in Outputs)
+            foreach (OutputNode output in Outputs)
             {
                 graph.Append(output.Obj.Name + output.Position.ToString() + output.GetHashCode().ToString() + ", \n");
-                foreach (Input input in output.ConnectedInputs.Keys)
+                foreach (InputNode input in output.ConnectedInputs.Keys)
                 {
                     graph.Append("Output Connected Inputs: \n");
                     graph.Append(input.Obj.Name + input.Position.ToString() + input.GetHashCode().ToString() + " | ");
@@ -239,14 +238,12 @@ namespace ItemPipes.Framework
                 graph.Append("\n");
             }
             graph.Append("Connectors: \n");
-            foreach (Connector conn in Connectors)
+            foreach (ConnectorNode conn in Connectors)
             {
                 graph.Append(conn.Obj.Name + conn.Position.ToString() + conn.GetHashCode().ToString() + ", ");
             }
             graph.Append("\n");
             return graph.ToString();
-            */
-            return "";
         }
     }
 }

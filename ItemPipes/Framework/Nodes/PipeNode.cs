@@ -11,6 +11,7 @@ using StardewValley.Tools;
 using System.Xml.Serialization;
 using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Model;
+using System.Threading;
 
 namespace ItemPipes.Framework.Nodes
 {
@@ -19,6 +20,7 @@ namespace ItemPipes.Framework.Nodes
         public Item StoredItem { get; set; }
         public int ItemTimer { get; set; }
         public bool PassingItem { get; set; }
+        public bool Broken { get; set; }
 
         public PipeNode() : base()
         {
@@ -26,26 +28,50 @@ namespace ItemPipes.Framework.Nodes
         }
         public PipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
-            ItemTimer = 500;
             PassingItem = false;
+            Broken = false;
         }
 
-        public void SendItem(Item item, Node target, int index, List<Node> path)
+        public Node SendItem(Item item, Node target, int index, List<Node> path)
         {
+            Node broken = null;
             DisplayItem(item);
             if (!this.Equals(target))
             {
-                if (index < path.Count)
+                Printer.Info($"[T{ Thread.CurrentThread.ManagedThreadId}] Path lenght: "+path.Count);
+                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Index: " + index);
+                if (index < path.Count-1)
                 {
-                    Node nextNode = path[index];
                     index++;
-                    if(nextNode is PipeNode)
+                    Node nextNode = path[index];
+                    if (Location.getObjectAtTile((int)nextNode.Position.X, (int)nextNode.Position.Y) != null)
                     {
-                        PipeNode pipe = (PipeNode)nextNode;
-                        pipe.SendItem(item, target, index, path);
+                        if (nextNode is PipeNode)
+                        {
+                            PipeNode pipe = (PipeNode)nextNode;
+                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Index: " + index);
+                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? " + Broken);
+                            if (!Broken)
+                            {
+                                broken = pipe.SendItem(item, target, index, path);
+                            }
+                            else
+                            {
+                                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? when true " + Broken);
+                                broken = nextNode;
+                                return broken;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        broken = nextNode;
+                        return broken;
                     }
                 }
             }
+
+            return broken;
         }
 
         public bool DisplayItem(Item item)
@@ -55,7 +81,7 @@ namespace ItemPipes.Framework.Nodes
             {
                 StoredItem = item;
                 PassingItem = true;
-                Printer.Info("Passing: ");
+                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Passing: ");
                 Print();
                 System.Threading.Thread.Sleep(ItemTimer);
                 StoredItem = null;

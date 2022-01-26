@@ -7,15 +7,17 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Buildings;
 using ItemPipes.Framework.Nodes;
+using ItemPipes.Framework.Model;
+using ItemPipes.Framework.Util;
 
-namespace ItemPipes.Framework.Model
+namespace ItemPipes.Framework.Factories
 {
     public static class NodeFactory
     {
 
         public static Node CreateElement(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
-            
+            Printer.Info("ADding");
             if (obj.name.Equals("Extractor Pipe"))
             {
                 return new ExtractorPipeNode(position, location, obj);

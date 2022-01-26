@@ -14,6 +14,8 @@ using StardewValley.Tools;
 using System.Xml.Serialization;
 using StardewValley.Network;
 using SObject = StardewValley.Object;
+using ItemPipes.Framework.Factories;
+
 
 namespace ItemPipes.Framework
 {
@@ -134,7 +136,6 @@ namespace ItemPipes.Framework
 
 		public override bool placementAction(GameLocation location, int x, int y, Farmer who = null)
 		{
-			Printer.Info("PLACEMENT");
 			Vector2 placementTile = new Vector2(x / 64, y / 64);
 			if (location.objects.ContainsKey(placementTile))
 			{
@@ -318,19 +319,16 @@ namespace ItemPipes.Framework
 			}
 			if (this.Name.Equals("ConnectorPipe"))
 			{
-				List<Node> nodes;
-				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+				Node node = nodes.Find(n => n.Position.Equals(this.TileLocation));
+				if (node is ConnectorNode)
 				{
-					Node node = nodes.Find(n => n.Position.Equals(this.TileLocation));
-					if (node is ConnectorNode)
+					ConnectorNode connector = (ConnectorNode)node;
+					if (connector.PassingItem)
 					{
-						ConnectorNode connector = (ConnectorNode)node;
-						if (connector.PassingItem)
-						{
-							drawSum += 5;
-						}
-
+						drawSum += 5;
 					}
+
 				}
 			}
 			return drawSum;

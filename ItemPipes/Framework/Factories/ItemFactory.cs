@@ -10,7 +10,7 @@ using ItemPipes.Framework.Items;
 using ItemPipes.Framework.Util;
 using SObject = StardewValley.Object;
 
-namespace ItemPipes.Framework
+namespace ItemPipes.Framework.Factories
 {
     public static class ItemFactory
     {

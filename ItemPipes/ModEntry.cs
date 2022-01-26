@@ -70,24 +70,38 @@ namespace ItemPipes
             DataAccess.Buildings = data.Buildings;
             DataAccess.Locations = data.Locations;
 
+            //Normal debug = only errors
             if(config.DebugMode)
             {
                 Globals.Debug = true;
+                if (Globals.Debug) { Printer.Info("Debug mode ENABLED"); }
             }
             else
             {
                 Globals.Debug = false;
+                if (Globals.Debug) { Printer.Info("Debug mode DISABLED"); }
+            }
+            //Ultra debug = all the prints like step by step
+            if (config.UltraDebugMode)
+            {
+                Globals.UltraDebug = true;
+                if (Globals.Debug) { Printer.Info("UltraDebug mode ENABLED"); }
+            }
+            else
+            {
+                Globals.UltraDebug = false;
+                if (Globals.Debug) { Printer.Info("UltraDebug mode DISABLED"); }
             }
             if (!config.DisableItemSending)
             {
                 Globals.DisableItemSending = true;
+                if (Globals.Debug) { Printer.Info("Item sending ENABLED"); }
             }
             else
             {
                 Globals.DisableItemSending = false;
+                if (Globals.Debug) { Printer.Info("Item sending DISABLED"); }
             }
-            //REMOVE
-            Globals.Debug = false;
 
             var harmony = new Harmony(this.ModManifest.UniqueID);
             //FencePatcher.Apply(harmony);
@@ -152,7 +166,6 @@ namespace ItemPipes
                 }
                 else
                 {
-                    Printer.Info(data["Iron Pipe"]);
                     data["Iron Pipe"] = fakeRecipe;
                 }
             }
@@ -160,45 +173,18 @@ namespace ItemPipes
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            Reload();
-            /*
-            if (!Game1.player.craftingRecipes.ContainsKey("Iron Pipe"))
-            {
-                Game1.player.craftingRecipes.Add("Iron Pipe", 0);
-            }
-            */
+            Reset();
             foreach (GameLocation location in Game1.locations)
             {
-                //Monitor.Log("LOADING " + location.Name, LogLevel.Info);
                 DataAccess.LocationNetworks.Add(location, new List<Network>());
                 DataAccess.LocationNodes.Add(location, new List<Node>());
                 NetworkBuilder.BuildLocationNetworks(location);
                 NetworkManager.UpdateLocationNetworks(location);
-                //Monitor.Log(location.Name + " LOADED!", LogLevel.Info);
-                /*
-                if (Globals.Debug)
-                {
-                    NetworkManager.PrintLocationNetworks(location);
-                }
-                */
-                /*
-                if (DataAccess.Locations.Contains(location.Name))
-                {
-                    Monitor.Log("LOADING " + location.Name, LogLevel.Info);
-                    DataAccess.LocationNetworks.Add(location, new List<Network>());
-                    DataAccess.LocationMatrix.Add(location, new Node[location.map.DisplayWidth, location.map.DisplayHeight]);
-                    NetworkBuilder.BuildLocationNetworks(location);
-                    NetworkManager.UpdateLocationNetworks(location);
-                    Monitor.Log(location.Name + " LOADED!", LogLevel.Info);
-                    if(Globals.Debug)
-                    {
-                        NetworkManager.PrintLocationNetworks(location);
-                    }
-                }*/
             }
+            if (Globals.UltraDebug) { Printer.Info("Location networks loaded!"); }
         }
 
-        private void Reload()
+        private void Reset()
         {
             DataAccess.LocationNodes.Clear();
             DataAccess.LocationNetworks.Clear();
@@ -220,19 +206,17 @@ namespace ItemPipes
                     if (e.IsMultipleOf(120))
                     {
                         DataAccess DataAccess = DataAccess.GetDataAccess();
-                        List<Network> networks;
+                        List<Network> networks = DataAccess.LocationNetworks[Game1.currentLocation];
                         foreach (GameLocation location in Game1.locations)
                         {
-                            if (DataAccess.LocationNetworks.TryGetValue(location, out networks))
+                            if (networks.Count > 0)
                             {
-                                if(networks.Count > 0)
+                                //if (Globals.UltraDebug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
+                                Printer.Info("----------------------");
+                                foreach (Network network in networks)
                                 {
-                                    if (Globals.Debug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
-                                    foreach (Network network in networks)
-                                    {
-                                        Printer.Info(network.Print());
-                                        network.ProcessExchanges(1);
-                                    }
+                                    //Printer.Info(network.Print());
+                                    network.ProcessExchanges(1);
                                 }
                             }
                         }
@@ -274,22 +258,6 @@ namespace ItemPipes
             if(!Game1.player.hasItemInInventoryNamed("Wrench"))
             {
                 Game1.player.addItemToInventory(new WrenchItem());
-            }
-            RepairPipes();
-        }
-
-        private void RepairPipes()
-        {
-            foreach (GameLocation location in Game1.locations)
-            {
-                foreach (Fence fence in location.Objects.Values.OfType<Fence>())
-                {
-                    if (DataAccess.PipeNames.Contains(fence.name))
-                    {
-                        fence.health.Value = 100f;
-                        fence.maxHealth.Value = fence.health.Value;
-                    }
-                }
             }
         }
     }

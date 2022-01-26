@@ -38,8 +38,8 @@ namespace ItemPipes.Framework.Nodes
             DisplayItem(item);
             if (!this.Equals(target))
             {
-                Printer.Info($"[T{ Thread.CurrentThread.ManagedThreadId}] Path lenght: "+path.Count);
-                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Index: " + index);
+                //Printer.Info($"[T{ Thread.CurrentThread.ManagedThreadId}] Path lenght: "+path.Count);
+                //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Index: " + index);
                 if (index < path.Count-1)
                 {
                     index++;
@@ -49,15 +49,15 @@ namespace ItemPipes.Framework.Nodes
                         if (nextNode is PipeNode)
                         {
                             PipeNode pipe = (PipeNode)nextNode;
-                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Index: " + index);
-                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? " + Broken);
+                            //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Index: " + index);
+                            //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? " + Broken);
                             if (!Broken)
                             {
                                 broken = pipe.SendItem(item, target, index, path);
                             }
                             else
                             {
-                                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? when true " + Broken);
+                                //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? when true " + Broken);
                                 broken = nextNode;
                                 return broken;
                             }
@@ -81,8 +81,7 @@ namespace ItemPipes.Framework.Nodes
             {
                 StoredItem = item;
                 PassingItem = true;
-                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Passing: ");
-                Print();
+                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Passing {item.Name} ");
                 System.Threading.Thread.Sleep(ItemTimer);
                 StoredItem = null;
                 PassingItem = false;

@@ -45,63 +45,49 @@ namespace ItemPipes.Framework
             }
         }
 
-        public override bool AddAdjacent(Side side, Node entity)
+        public bool AddConnectedContainer(Node entity)
         {
             bool added = false;
-            if (Adjacents[side] == null)
+            if (Globals.UltraDebug) { Printer.Info($"[?] Adding {entity.Name} container to {Print()} "); }
+            if (Globals.UltraDebug) { Printer.Info($"[?] Alreadyhas a container? {ConnectedContainer != null}"); }
+            if (ConnectedContainer == null && entity is ContainerNode)
             {
-                if (ConnectedContainer == null && entity is ContainerNode)
+                if (Globals.UltraDebug) { Printer.Info($"[?] Connecting adjacent container.."); }
+                ContainerNode container = (ContainerNode)entity;
+                if ((this is OutputNode && container.Output == null) ||
+                    (this is InputNode && container.Input == null))
                 {
-                    ContainerNode container = (ContainerNode)entity;
-                    if ((this is OutputNode && container.Output == null) ||
-                        (this is InputNode && container.Input == null))
-                    {
-                        ConnectedContainer = (ContainerNode)entity;
-                        State = "on";
-                        if (Globals.Debug) { Printer.Info($"[?] CONNECTED CONTAINER ADDED"); }
-                    }
-
+                    ConnectedContainer = (ContainerNode)entity;
+                    ConnectedContainer.AddIOPipe(this);
+                    State = "on";
+                    if (Globals.UltraDebug) { Printer.Info($"[?] CONNECTED CONTAINER ADDED"); }
                 }
                 else
                 {
-                    if (Globals.Debug) { Printer.Info($"[?] Didnt add adj container"); }
+                    State = "unconnected";
+                    if (Globals.UltraDebug) { Printer.Info($"[?] Didnt add adj container"); }
                 }
-                added = true;
-                Adjacents[side] = entity;
-                entity.AddAdjacent(Sides.GetInverse(side), this);
             }
+            else
+            {
+                State = "unconnected";
+                if (Globals.UltraDebug) { Printer.Info($"[?] Didnt add adj container"); }
+            }
+            added = true;
             return added;
         }
 
-        public override bool RemoveAdjacent(Side side, Node entity)
+        public bool RemoveConnectedContainer(Node entity)
         {
             bool removed = false;
-            if (Adjacents[side] != null)
+            if (Globals.UltraDebug) { Printer.Info($"[?] Removing {entity.Name} container "); }
+            if (ConnectedContainer != null && entity is ContainerNode)
             {
+                ConnectedContainer.RemoveIOPipe(this);
+                ConnectedContainer = null;
+                State = "unconnected";
+                if (Globals.UltraDebug) { Printer.Info($"[?] CONNECTED CONTAINER REMOVED"); }
                 removed = true;
-                if (ConnectedContainer != null && entity is ContainerNode)
-                {
-                    ConnectedContainer = null;
-                    State = "unconnected";
-                    if (Globals.Debug) { Printer.Info($"[?] CONNECTED CONTAINER REMOVED"); }
-                }
-                Adjacents[side] = null;
-                entity.RemoveAdjacent(Sides.GetInverse(side), this);
-            }
-            return removed;
-        }
-
-        public override bool RemoveAllAdjacents()
-        {
-            bool removed = false;
-            foreach (KeyValuePair<Side, Node> adj in Adjacents.ToList())
-            {
-                if (adj.Value != null)
-                {
-                    removed = true;
-                    RemoveAdjacent(adj.Key, adj.Value);
-                    Adjacents[adj.Key] = null;
-                }
             }
             return removed;
         }

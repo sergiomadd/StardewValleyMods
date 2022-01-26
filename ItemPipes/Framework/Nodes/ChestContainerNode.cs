@@ -8,6 +8,7 @@ using StardewValley;
 using StardewValley.Objects;
 using ItemPipes.Framework.Util;
 using Netcode;
+using System.Threading;
 
 
 namespace ItemPipes.Framework.Nodes
@@ -84,10 +85,10 @@ namespace ItemPipes.Framework.Nodes
                 int index = itemList.Count - 1;
                 while (index >= 0 && item == null)
                 {
-                    if (Globals.Debug) { Printer.Info("Trying to send: "+itemList[index].Name); }
+                    if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?] Trying to send: " +itemList[index].Name); }
                     if (input.HasFilter())
                     {
-                        if (Globals.Debug) { Printer.Info("Input has filter" + input.Filter.Count.ToString()); }
+                        if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?] Input has filter" + input.Filter.Count.ToString()); }
                         if (input.Filter.Contains(itemList[index].Name))
                         {
                             item = TrySendItem(input, itemList, index);
@@ -175,7 +176,7 @@ namespace ItemPipes.Framework.Nodes
                 }
 
             }
-            if (Globals.Debug) { Printer.Info("Item sent? " + sent.ToString()); }
+            if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?] Item sent? " + sent.ToString()); }
             return sent;
         }
 

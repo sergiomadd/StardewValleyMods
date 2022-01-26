@@ -59,36 +59,33 @@ namespace ItemPipes.Framework.Items
             int tileY = y / 64;
             Vector2 position = new Vector2(tileX, tileY);
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes;
-            if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            Node node = nodes.Find(n => n.Position.Equals(position));
+            if (node != null)
             {
-                Node node = nodes.Find(n => n.Position.Equals(position));
-                if (node != null)
+                if (DataAccess.IOPipeNames.Contains(node.Name))
                 {
-                    if (DataAccess.IOPipeNames.Contains(node.Name))
+                    IOPipeNode pipe = (IOPipeNode)node;
+                    switch (pipe.State)
                     {
-                        IOPipeNode pipe = (IOPipeNode)node;
-                        switch (pipe.State)
-                        {
-                            case "off":
-                                if (pipe.ConnectedContainer != null)
-                                {
-                                    pipe.State = "on";
-                                }
-                                else
-                                {
-                                    pipe.State = "unconnected";
-                                }
-                                break;
-                            case "on":
-                                pipe.State = "off";
-                                break;
-                            case "unconnected":
-                                pipe.State = "off";
-                                break;
-                        }
-                        location.playSound("smallSelect");
+                        case "off":
+                            if (pipe.ConnectedContainer != null)
+                            {
+                                pipe.State = "on";
+                            }
+                            else
+                            {
+                                pipe.State = "unconnected";
+                            }
+                            break;
+                        case "on":
+                            pipe.State = "off";
+                            break;
+                        case "unconnected":
+                            pipe.State = "off";
+                            break;
                     }
+                    location.playSound("smallSelect");
                 }
             }
         }

@@ -48,55 +48,48 @@ namespace ItemPipes.Framework.Patches
         {
             Printer.Info("Utility_CollectSingleItemOrShowChestMenu_Prefix");
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes;
-            if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+            if (node is FilterPipeNode)
             {
-                Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
-                if (node is FilterPipeNode)
+                Printer.Info("COLLECTING");
+                int item_count = 0;
+                Item item_to_grab = null;
+                for (int i = 0; i < __instance.items.Count; i++)
                 {
-                    Printer.Info("COLLECTING");
-                    int item_count = 0;
-                    Item item_to_grab = null;
-                    for (int i = 0; i < __instance.items.Count; i++)
+                    if (__instance.items[i] != null)
                     {
-                        if (__instance.items[i] != null)
+                        item_count++;
+                        if (item_count == 1)
                         {
-                            item_count++;
-                            if (item_count == 1)
-                            {
-                                item_to_grab = __instance.items[i];
-                            }
-                            if (item_count == 2)
-                            {
-                                item_to_grab = null;
-                                break;
-                            }
+                            item_to_grab = __instance.items[i];
+                        }
+                        if (item_count == 2)
+                        {
+                            item_to_grab = null;
+                            break;
                         }
                     }
-                    bool exit = false;
-                    if (item_count == 0)
-                    {
-                        exit = true;
-                    }
-                    if (item_to_grab != null && !exit)
-                    {
-                        Printer.Info("IN");
-
-                        Game1.playSound("coin");
-                        __instance.items.Remove(item_to_grab);
-                        __instance.clearNulls();
-                        exit = true;
-                    }
-                    if(!exit)
-                    {
-                        Game1.activeClickableMenu = new ItemGrabMenu(__instance.items, reverseGrab: false, showReceivingMenu: true, InventoryMenu.highlightAllItems, __instance.grabItemFromInventory, null, __instance.grabItemFromChest, snapToBottom: false, canBeExitedWithKey: true, playRightClickSound: true, allowRightClick: true, showOrganizeButton: true, 1, null, -1, context);
-                    }
-                    return false;
                 }
-                else
+                bool exit = false;
+                if (item_count == 0)
                 {
-                    return true;
+                    exit = true;
                 }
+                if (item_to_grab != null && !exit)
+                {
+                    Printer.Info("IN");
+
+                    Game1.playSound("coin");
+                    __instance.items.Remove(item_to_grab);
+                    __instance.clearNulls();
+                    exit = true;
+                }
+                if(!exit)
+                {
+                    Game1.activeClickableMenu = new ItemGrabMenu(__instance.items, reverseGrab: false, showReceivingMenu: true, InventoryMenu.highlightAllItems, __instance.grabItemFromInventory, null, __instance.grabItemFromChest, snapToBottom: false, canBeExitedWithKey: true, playRightClickSound: true, allowRightClick: true, showOrganizeButton: true, 1, null, -1, context);
+                }
+                return false;
             }
             else
             {
@@ -108,22 +101,15 @@ namespace ItemPipes.Framework.Patches
         {
             Printer.Info("Chest_grabItemFromChest_Prefix");
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes;
-            if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+            if (node is FilterPipeNode)
             {
-                Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
-                if (node is FilterPipeNode)
-                {
-                    Printer.Info("GRAB FROM CHEST");
-                    __instance.GetItemsForPlayer(Game1.player.UniqueMultiplayerID).Remove(item);
-                    __instance.clearNulls();
-                    __instance.ShowMenu();
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                Printer.Info("GRAB FROM CHEST");
+                __instance.GetItemsForPlayer(Game1.player.UniqueMultiplayerID).Remove(item);
+                __instance.clearNulls();
+                __instance.ShowMenu();
+                return false;
             }
             else
             {
@@ -136,41 +122,33 @@ namespace ItemPipes.Framework.Patches
         {
             Printer.Info("Chest_grabItemFromInventory_Prefix");
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes;
-            if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+            if (node is FilterPipeNode)
             {
-                Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
-                if (node is FilterPipeNode)
-                {
-                    Printer.Info("GRAB FROM INV");
+                Printer.Info("GRAB FROM INV");
 
-                    if (item.Stack == 0)
-                    {
-                        item.Stack = 1;
-                    }
-                    __instance.addItem(item);
-                    Item tmp = who.addItemToInventory(item);
-                    __instance.clearNulls();
-                    int oldID = ((Game1.activeClickableMenu.currentlySnappedComponent != null) ? Game1.activeClickableMenu.currentlySnappedComponent.myID : (-1));
-                    __instance.ShowMenu();
-                    (Game1.activeClickableMenu as ItemGrabMenu).heldItem = tmp;
-                    if (oldID != -1)
-                    {
-                        Game1.activeClickableMenu.currentlySnappedComponent = Game1.activeClickableMenu.getComponentWithID(oldID);
-                        Game1.activeClickableMenu.snapCursorToCurrentSnappedComponent();
-                    }
-                    return false;
-                }
-                else
+                if (item.Stack == 0)
                 {
-                    return true;
+                    item.Stack = 1;
                 }
+                __instance.addItem(item);
+                Item tmp = who.addItemToInventory(item);
+                __instance.clearNulls();
+                int oldID = ((Game1.activeClickableMenu.currentlySnappedComponent != null) ? Game1.activeClickableMenu.currentlySnappedComponent.myID : (-1));
+                __instance.ShowMenu();
+                (Game1.activeClickableMenu as ItemGrabMenu).heldItem = tmp;
+                if (oldID != -1)
+                {
+                    Game1.activeClickableMenu.currentlySnappedComponent = Game1.activeClickableMenu.getComponentWithID(oldID);
+                    Game1.activeClickableMenu.snapCursorToCurrentSnappedComponent();
+                }
+                return false;
             }
             else
             {
                 return true;
             }
-
         }
 
 
@@ -179,40 +157,32 @@ namespace ItemPipes.Framework.Patches
         {
             Printer.Info("Chest_addItem_Prefix");
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes;
-            if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
+            if(node is FilterPipeNode)
             {
-                Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
-                if(node is FilterPipeNode)
+                item.resetState();
+                __instance.clearNulls();
+                NetObjectList<Item> item_list = __instance.items;
+                if (__instance.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || __instance.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
                 {
-                    item.resetState();
-                    __instance.clearNulls();
-                    NetObjectList<Item> item_list = __instance.items;
-                    if (__instance.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || __instance.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
-                    {
-                        item_list = __instance.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
-                    }
-                    if(!item_list.Any(x => x.Name.Equals(item.Name)))
-                    {
-                        if (item_list.Count < __instance.GetActualCapacity())
-                        {
-                            item_list.Add(item.getOne());
-                            __result = null;
-                        }
-                        else
-                        {
-                            __result = item;
-                        }
-                    }
-                    return false;
+                    item_list = __instance.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
                 }
-                return true;
+                if(!item_list.Any(x => x.Name.Equals(item.Name)))
+                {
+                    if (item_list.Count < __instance.GetActualCapacity())
+                    {
+                        item_list.Add(item.getOne());
+                        __result = null;
+                    }
+                    else
+                    {
+                        __result = item;
+                    }
+                }
+                return false;
             }
-            else
-            {
-                return true;
-            }
-
+            return true;
         }
     }
 }

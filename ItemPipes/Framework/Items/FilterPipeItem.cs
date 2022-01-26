@@ -39,12 +39,9 @@ namespace ItemPipes.Framework.Items
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true))
 			{
-				List<Node> nodes;
-				if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
-				{
-					FilterPipeNode pipe = (FilterPipeNode)nodes.Find(n => n.Position.Equals(TileLocation));
-					pipe.Chest.ShowMenu();
-				}
+				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+				FilterPipeNode pipe = (FilterPipeNode)nodes.Find(n => n.Position.Equals(TileLocation));
+				pipe.Chest.ShowMenu();
 				return false;
 			}
 			if (!justCheckingForActivity && who != null && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())

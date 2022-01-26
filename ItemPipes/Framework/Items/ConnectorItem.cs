@@ -44,23 +44,20 @@ namespace ItemPipes.Framework.Items
                 Debris deb = new Debris(getOne(), who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
                 Game1.currentLocation.debris.Add(deb);
                 DataAccess DataAccess = DataAccess.GetDataAccess();
-                List<Node> nodes;
-                if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+                List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+                Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+                if (node != null && node is ConnectorNode)
                 {
-                    Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-                    if (node != null && node is ConnectorNode)
+                    ConnectorNode pipe = (ConnectorNode)node;
+                    if (pipe.StoredItem != null)
                     {
-                        ConnectorNode pipe = (ConnectorNode)node;
-                        if (pipe.StoredItem != null)
-                        {
                             
-                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] GET OUT");
-                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] "+pipe.StoredItem.Stack.ToString());
-                            pipe.Print();
-                            Debris itemDebr = new Debris(pipe.StoredItem, who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
-                            Game1.currentLocation.debris.Add(itemDebr);
-                            pipe.Broken = true;
-                        }
+                        Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] GET OUT");
+                        Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] "+pipe.StoredItem.Stack.ToString());
+                        pipe.Print();
+                        Debris itemDebr = new Debris(pipe.StoredItem, who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
+                        Game1.currentLocation.debris.Add(itemDebr);
+                        pipe.Broken = true;
                     }
                 }
                 Game1.currentLocation.objects.Remove(this.TileLocation);
@@ -72,22 +69,19 @@ namespace ItemPipes.Framework.Items
         public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes;
-            if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+            if (node != null && node is ConnectorNode)
             {
-                Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-                if (node != null && node is ConnectorNode)
+                ConnectorNode pipe = (ConnectorNode)node;
+                int sourceRectPosition = 1;
+                int drawSum = getDrawSum(Game1.currentLocation);
+                sourceRectPosition = GetNewDrawGuide()[drawSum];
+                SpriteTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_{pipe.GetState()}_Sprite.png");
+                spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+                if(pipe.StoredItem != null)
                 {
-                    ConnectorNode pipe = (ConnectorNode)node;
-                    int sourceRectPosition = 1;
-                    int drawSum = getDrawSum(Game1.currentLocation);
-                    sourceRectPosition = GetNewDrawGuide()[drawSum];
-                    SpriteTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_{pipe.GetState()}_Sprite.png");
-                    spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
-                    if(pipe.StoredItem != null)
-                    {
-                        drawItem(pipe, spriteBatch, x, y, alpha);
-                    }
+                    drawItem(pipe, spriteBatch, x, y, alpha);
                 }
             }
         }

@@ -28,63 +28,82 @@ namespace ItemPipes.Framework
             Input = null;
             Filter = new List<string>();
         }
-        public override bool AddAdjacent(Side side, Node entity)
+
+        public bool AddIOPipe(Node entity)
         {
             bool added = false;
-            if (Adjacents[side] == null)
+            if (Output == null && entity is OutputNode)
             {
+                Output = (OutputNode)entity;
                 added = true;
-                Adjacents[side] = entity;
-                entity.AddAdjacent(Sides.GetInverse(side), this);
-                if (Output == null && entity is OutputNode)
-                {
-                    Output = (OutputNode)entity;
-                    if (Globals.Debug) { Printer.Info($"[?] OUTPUT ADDED"); }
-                }
-                else if (Input == null && entity is InputNode)
-                {
-                    Input = (InputNode)entity;
-                    if (Globals.Debug) { Printer.Info($"[?] INPUT ADDED"); }
-                }
+                if (Globals.UltraDebug) { Printer.Info($"[?] OUTPUT ADDED"); }
+            }
+            else if (Input == null && entity is InputNode)
+            {
+                Input = (InputNode)entity;
+                added = true;
+                if (Globals.UltraDebug) { Printer.Info($"[?] INPUT ADDED"); }
             }
             return added;
         }
 
-        public override bool RemoveAdjacent(Side side, Node entity)
+        public bool RemoveIOPipe(Node entity)
         {
             bool removed = false;
-            if (Adjacents[side] != null)
+            if (Output != null && entity is OutputNode)
             {
+                Output = null;
                 removed = true;
-                if (Output != null && entity is OutputNode)
-                {
-                    Output = null;
-                    if (Globals.Debug) { Printer.Info($"[?] OUTPUT REMOVED"); }
-                }
-                else if (Input != null && entity is InputNode)
-                {
-                    Input = null;
-                    if (Globals.Debug) { Printer.Info($"[?] INPUT REMOVED"); }
-                }
-                Adjacents[side] = null;
-                entity.RemoveAdjacent(Sides.GetInverse(side), this);
+                if (Globals.UltraDebug) { Printer.Info($"[?] OUTPUT REMOVED"); }
+            }
+            else if (Input != null && entity is InputNode)
+            {
+                Input = null;
+                removed = true;
+                if (Globals.UltraDebug) { Printer.Info($"[?] INPUT REMOVED"); }
+            }
+            if(removed)
+            {
+                ScanMoreIOPipes();
             }
             return removed;
         }
 
-        public override bool RemoveAllAdjacents()
+        public void ScanMoreIOPipes()
         {
-            bool removed = false;
-            foreach (KeyValuePair<Side, Node> adj in Adjacents.ToList())
+            Printer.Info("SCANING");
+            DataAccess DataAccess = DataAccess.GetDataAccess();
+            int x = (int)Position.X;
+            int y = (int)Position.Y;
+            List<Node> nodes = DataAccess.LocationNodes[Location];
+            Vector2 north = new Vector2(x, y - 1);
+            Node northNode = nodes.Find(n => n.Position.Equals(north));
+            if (northNode != null && northNode is IOPipeNode)
             {
-                if (adj.Value != null)
-                {
-                    removed = true;
-                    RemoveAdjacent(adj.Key, adj.Value);
-                    Adjacents[adj.Key] = null;
-                }
+                IOPipeNode northIOPipeNode = (IOPipeNode)northNode;
+                northIOPipeNode.AddConnectedContainer(this);
             }
-            return removed;
+            Vector2 south = new Vector2(x, y + 1);
+            Node southNode = nodes.Find(n => n.Position.Equals(south));
+            if (southNode != null)
+            {
+                IOPipeNode southIOPipeNode = (IOPipeNode)southNode;
+                southIOPipeNode.AddConnectedContainer(this);
+            }
+            Vector2 west = new Vector2(x + 1, y);
+            Node westNode = nodes.Find(n => n.Position.Equals(west));
+            if (westNode != null)
+            {
+                IOPipeNode westIOPipeNode = (IOPipeNode)westNode;
+                westIOPipeNode.AddConnectedContainer(this);
+            }
+            Vector2 east = new Vector2(x - 1, y);
+            Node eastNode = nodes.Find(n => n.Position.Equals(east));
+            if (eastNode != null)
+            {
+                IOPipeNode eastIOPipeNode = (IOPipeNode)eastNode;
+                eastIOPipeNode.AddConnectedContainer(this);
+            }
         }
 
         public virtual bool IsEmpty()

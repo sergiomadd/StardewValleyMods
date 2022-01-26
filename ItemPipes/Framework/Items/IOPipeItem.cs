@@ -9,6 +9,8 @@ using StardewValley;
 using StardewValley.Tools;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
+using ItemPipes.Framework.Factories;
+
 
 namespace ItemPipes.Framework.Items
 {
@@ -53,14 +55,11 @@ namespace ItemPipes.Framework.Items
                 DataAccess DataAccess = DataAccess.GetDataAccess();
                 if (DataAccess.IOPipeNames.Contains(this.Name))
                 {
-                    List<Node> nodes;
-                    if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+                    List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+                    IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
+                    if (pipe != null)
                     {
-                        IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
-                        if (pipe != null)
-                        {
-                            Printer.Info($"{Name} is {pipe.State}");
-                        }
+                        Printer.Info($"{Name} is {pipe.State}");
                     }
                 }
             }
@@ -70,29 +69,26 @@ namespace ItemPipes.Framework.Items
         private void changeState()
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes;
-            if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
+            switch (pipe.State)
             {
-                IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
-                switch (pipe.State)
-                {
-                    case "off":
-                        if (pipe.ConnectedContainer != null)
-                        {
-                            pipe.State = "on";
-                        }
-                        else
-                        {
-                            pipe.State = "unconnected";
-                        }
-                        break;
-                    case "on":
-                        pipe.State = "off";
-                        break;
-                    case "unconnected":
-                        pipe.State = "off";
-                        break;
-                }
+                case "off":
+                    if (pipe.ConnectedContainer != null)
+                    {
+                        pipe.State = "on";
+                    }
+                    else
+                    {
+                        pipe.State = "unconnected";
+                    }
+                    break;
+                case "on":
+                    pipe.State = "off";
+                    break;
+                case "unconnected":
+                    pipe.State = "off";
+                    break;
             }
         }
 
@@ -104,21 +100,17 @@ namespace ItemPipes.Framework.Items
             SpriteTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_Sprite.png");
             spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes;
-            if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+            if (node != null)
             {
-                Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-                if (node != null)
+                if (node.State != null)
                 {
-                    if (node.State != null)
-                    {
-                        Rectangle srcRect = new Rectangle(0, 0, 16, 16);
-                        Texture2D signalTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{node.State}.png");
-                        spriteBatch.Draw(signalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
-                    }
+                    Rectangle srcRect = new Rectangle(0, 0, 16, 16);
+                    Texture2D signalTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{node.State}.png");
+                    spriteBatch.Draw(signalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
                 }
             }
-        
         }
 
         public override Dictionary<int, int> GetNewDrawGuide()

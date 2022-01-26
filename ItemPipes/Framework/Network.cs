@@ -145,21 +145,30 @@ namespace ItemPipes.Framework
 
         public bool TryConnectOutput(OutputNode output)
         {
-            if (Globals.Debug) { Printer.Info($"[{ID}] Trying output connection..."); }
             bool canConnect = false;
             if (output != null)
             {
-                foreach (InputNode input in Inputs)
+                if (Globals.UltraDebug) { Printer.Info($"[N{ID}] Trying connecting {output.Print()}"); }
+                if(Inputs.Count == 0)
                 {
-                    if (!output.IsInputConnected(input))
+                    if (Globals.UltraDebug) { Printer.Info($"[N{ID}] No inputs to connect."); }
+                }
+                else
+                {
+                    foreach (InputNode input in Inputs)
                     {
-                        if (Globals.Debug) { Printer.Info($"[{ID}] Input not connected"); }
-                        if (Globals.Debug) { input.Print(); }
-                        if (output.CanConnectedWith(input))
+                        if (!output.IsInputConnected(input))
                         {
-                            if (Globals.Debug) { Printer.Info($"[{ID}] Can connect with input"); }
-                            canConnect = output.AddConnectedInput(input);
-                            if (Globals.Debug) { Printer.Info($"[{ID}] CONNECTED? " + canConnect.ToString()); }
+                            if (Globals.UltraDebug) { Printer.Info($"[N{ID}] {input.Print()} not already connected"); }
+                            if (output.CanConnectedWith(input))
+                            {
+                                canConnect = output.AddConnectedInput(input);
+                                if (Globals.UltraDebug) { Printer.Info($"[N{ID}] Can connect with {input.Print()}? -> {canConnect}"); }
+                            }
+                            else
+                            {
+                                if (Globals.UltraDebug) { Printer.Info($"[N{ID}] Cannot connect with {input.Print()}"); }
+                            }
                         }
                     }
                 }
@@ -169,21 +178,19 @@ namespace ItemPipes.Framework
 
         public bool TryDisconnectInput(InputNode input)
         {
-            if (Globals.Debug) { Printer.Info($"[{ID}] Trying input disconnection"); Print(); }
             bool canDisconnect = false;
             if (input != null)
             {
-                if (Globals.Debug) { Printer.Info($"[{ID}] Input not null"); }
+                if (Globals.UltraDebug) { Printer.Info($"[N{ID}] Trying disconnecting {input.Print()}"); }
                 foreach (OutputNode output in Outputs)
                 {
-                    if (Globals.Debug) { Printer.Info($"[{ID}] Output has input? " + output.IsInputConnected(input).ToString()); }
                     if (output.IsInputConnected(input))
                     {
+                        if (Globals.UltraDebug) { Printer.Info($"[N{ID}] {input.Print()} already connected"); }
                         if (!output.CanConnectedWith(input))
                         {
-                            if (Globals.Debug) { Printer.Info($"[{ID}] Can connect with input"); }
                             canDisconnect = output.RemoveConnectedInput(input);
-                            if (Globals.Debug) { Printer.Info($"[{ID}] Disconnected?  " + canDisconnect.ToString()); }
+                            if (Globals.UltraDebug) { Printer.Info($"[N{ID}] Can disconnect with {input.Print()}? -> {canDisconnect}"); }
                         }
 
                     }
@@ -218,7 +225,8 @@ namespace ItemPipes.Framework
         public string Print()
         {
             StringBuilder graph = new StringBuilder();
-            graph.Append("\nPriting Networks: \n");
+            graph.Append($"\n----------------------------");
+            graph.Append($"\nPriting Network [{ID}]: \n");
             graph.Append("Networks: \n");
             graph.Append("Inputs: \n");
             foreach (InputNode input in Inputs)

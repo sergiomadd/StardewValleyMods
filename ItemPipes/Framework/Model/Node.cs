@@ -66,7 +66,7 @@ namespace ItemPipes.Framework.Model
         {
             List<Node> looked = new List<Node>();
             Reached = false;
-            if (Globals.Debug) { Printer.Info("TRAVERSING"); }
+            if (Globals.UltraDebug) { Printer.Info("TRAVERSING"); }
             System.Object[] returns = TraverseAllRecursive(looked, false);
             List<Node> path = (List<Node>)returns[1];
             return path;
@@ -74,7 +74,7 @@ namespace ItemPipes.Framework.Model
 
         public System.Object[] TraverseAllRecursive(List<Node> looked, bool reached)
         {
-            if (Globals.Debug) { Print(); }
+            if (Globals.UltraDebug) { Print(); }
             System.Object[] returns = new System.Object[3];
             returns[2] = reached;
             looked.Add(this);
@@ -117,10 +117,8 @@ namespace ItemPipes.Framework.Model
         public bool CanConnectedWith(Node target)
         {
             bool connected = false;
-            List<Node> looked = new List<Node>();
-            if ((bool)GetPathRecursive(target, looked, false)[2])
+            if (GetPath(target).Last().Equals(target))
             {
-                if (Globals.Debug) { Printer.Info("CAN CONNECT"); }
                 connected = true;
             }
             return connected;
@@ -128,64 +126,52 @@ namespace ItemPipes.Framework.Model
 
         public List<Node> GetPath(Node target)
         {
-            List<Node> looked = new List<Node>();
-            Reached = false;
-            System.Object[] returns = GetPathRecursive(target, looked, false);
-            List<Node> path = (List<Node>)returns[1];
+            if (Globals.Debug) { Printer.Info($"Getting path for {target.Print()}"); }
+            List<Node> path = new List<Node>();
+            path = GetPathRecursive(target, path);
             return path;
         }
 
-        public System.Object[] GetPathRecursive(Node target, List<Node> looked, bool reached)
+        public List<Node> GetPathRecursive(Node target, List<Node> path)
         {
-            if (Globals.Debug) { Print(); }
-            System.Object[] returns = new System.Object[3];
-            returns[2] = reached;
+            if (Globals.UltraDebug) { Printer.Info(Print()); }
             Node adj;
-            if (this.Equals(target))
+            if (path.Contains(target))
             {
-                reached = true;
-                if (Globals.Debug) { Printer.Info("Reached"); Printer.Info(looked.Count.ToString()); }
-                returns[0] = this;
-                returns[1] = looked;
-                returns[2] = reached;
-                return returns;
+                return path;
             }
             else
             {
-                looked.Add(this);
-                if (Adjacents.TryGetValue(Sides.North, out adj) && !(bool)returns[2])
+                path.Add(this);
+                if (Adjacents.TryGetValue(Sides.North, out adj) && !path.Contains(target))
                 {
-                    if (adj != null && !looked.Contains(adj))
+                    if (adj != null && !path.Contains(adj))
                     {
-                        returns = adj.GetPathRecursive(target, looked, reached);
+                        path = adj.GetPathRecursive(target, path);
                     }
                 }
-                if (Adjacents.TryGetValue(Sides.South, out adj) && !(bool)returns[2])
+                if (Adjacents.TryGetValue(Sides.South, out adj) && !path.Contains(target))
                 {
-                    if (adj != null && !looked.Contains(adj))
+                    if (adj != null && !path.Contains(adj))
                     {
-                        returns = adj.GetPathRecursive(target, looked, reached);
+                        path = adj.GetPathRecursive(target, path);
                     }
                 }
-                if (Adjacents.TryGetValue(Sides.West, out adj) && !(bool)returns[2])
+                if (Adjacents.TryGetValue(Sides.West, out adj) && !path.Contains(target))
                 {
-                    if (adj != null && !looked.Contains(adj))
+                    if (adj != null && !path.Contains(adj))
                     {
-                        returns = adj.GetPathRecursive(target, looked, reached);
+                        path = adj.GetPathRecursive(target, path);
                     }
                 }
-                if (Adjacents.TryGetValue(Sides.East, out adj) && !(bool)returns[2])
+                if (Adjacents.TryGetValue(Sides.East, out adj) && !path.Contains(target))
                 {
-                    if (adj != null && !looked.Contains(adj))
+                    if (adj != null && !path.Contains(adj))
                     {
-                        returns = adj.GetPathRecursive(target, looked, reached);
+                        path = adj.GetPathRecursive(target, path);
                     }
-                }
-                if(!(bool)returns[2])
-                {
-                    looked.Remove(this);
-                }
-                return returns;
+                }   
+                return path;
             }
         }
 
@@ -266,15 +252,15 @@ namespace ItemPipes.Framework.Model
             }
         }
 
-        public void Print()
+        public string Print()
         {
             if (ParentNetwork != null)
             {
-                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] " + Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());
+                return $"'[T{Thread.CurrentThread.ManagedThreadId}][N{ParentNetwork.ID}]{Name}({Position.X},{Position.Y}){GetHashCode()}'";
             }
             else
             {
-                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][?] " + Name + Position.X.ToString() + Position.Y.ToString() + " " + GetHashCode().ToString());
+                return $"'[T{Thread.CurrentThread.ManagedThreadId}][N?]{Name}({Position.X},{Position.Y}){GetHashCode()}'";
             }
         }
     }

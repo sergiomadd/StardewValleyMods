@@ -17,7 +17,6 @@ namespace ItemPipes.Framework.Factories
 
         public static Node CreateElement(Vector2 position, GameLocation location, StardewValley.Object obj)
         {
-            Printer.Info("ADding");
             if (obj.name.Equals("Extractor Pipe"))
             {
                 return new ExtractorPipeNode(position, location, obj);

@@ -32,7 +32,7 @@ namespace ItemPipes.Framework.Nodes
             Broken = false;
         }
 
-        public Node SendItem(Item item, Node target, int index, List<Node> path)
+        public Node MoveItem(Item item, Node target, int index, List<Node> path)
         {
             Node broken = null;
             DisplayItem(item);
@@ -53,7 +53,7 @@ namespace ItemPipes.Framework.Nodes
                             //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? " + Broken);
                             if (!Broken)
                             {
-                                broken = pipe.SendItem(item, target, index, path);
+                                broken = pipe.MoveItem(item, target, index, path);
                             }
                             else
                             {

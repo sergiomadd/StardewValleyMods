@@ -117,7 +117,8 @@ namespace ItemPipes.Framework.Model
         public bool CanConnectedWith(Node target)
         {
             bool connected = false;
-            if (GetPath(target).Last().Equals(target))
+            List<Node> path = GetPath(target);
+            if (path.Count > 0 && path.Last().Equals(target))
             {
                 connected = true;
             }
@@ -129,6 +130,14 @@ namespace ItemPipes.Framework.Model
             if (Globals.Debug) { Printer.Info($"Getting path for {target.Print()}"); }
             List<Node> path = new List<Node>();
             path = GetPathRecursive(target, path);
+            /*
+            Printer.Info("-----------------");
+            foreach (Node node in path)
+            {
+                Printer.Info(node.Print());
+            }
+            Printer.Info("-----------------");
+            */
             return path;
         }
 
@@ -157,6 +166,13 @@ namespace ItemPipes.Framework.Model
                         path = adj.GetPathRecursive(target, path);
                     }
                 }
+                if (Adjacents.TryGetValue(Sides.East, out adj) && !path.Contains(target))
+                {
+                    if (adj != null && !path.Contains(adj))
+                    {
+                        path = adj.GetPathRecursive(target, path);
+                    }
+                }
                 if (Adjacents.TryGetValue(Sides.West, out adj) && !path.Contains(target))
                 {
                     if (adj != null && !path.Contains(adj))
@@ -164,13 +180,10 @@ namespace ItemPipes.Framework.Model
                         path = adj.GetPathRecursive(target, path);
                     }
                 }
-                if (Adjacents.TryGetValue(Sides.East, out adj) && !path.Contains(target))
+                if (!path.Contains(target))
                 {
-                    if (adj != null && !path.Contains(adj))
-                    {
-                        path = adj.GetPathRecursive(target, path);
-                    }
-                }   
+                    path.Remove(this);
+                }
                 return path;
             }
         }
@@ -180,7 +193,7 @@ namespace ItemPipes.Framework.Model
             List<Network> retList = new List<Network>();
             foreach (KeyValuePair<Side, Node> adj in Adjacents)
             {
-                if (adj.Value != null)
+                if (adj.Value != null && !retList.Contains(adj.Value.ParentNetwork))
                 {
                     retList.Add(adj.Value.ParentNetwork);
                 }

@@ -29,6 +29,7 @@ namespace ItemPipes.Framework
             Filter = new List<string>();
         }
 
+
         public bool AddIOPipe(Node entity)
         {
             bool added = false;
@@ -71,7 +72,6 @@ namespace ItemPipes.Framework
 
         public void ScanMoreIOPipes()
         {
-            Printer.Info("SCANING");
             DataAccess DataAccess = DataAccess.GetDataAccess();
             int x = (int)Position.X;
             int y = (int)Position.Y;
@@ -85,26 +85,27 @@ namespace ItemPipes.Framework
             }
             Vector2 south = new Vector2(x, y + 1);
             Node southNode = nodes.Find(n => n.Position.Equals(south));
-            if (southNode != null)
+            if (southNode != null && northNode is IOPipeNode)
             {
                 IOPipeNode southIOPipeNode = (IOPipeNode)southNode;
                 southIOPipeNode.AddConnectedContainer(this);
             }
             Vector2 west = new Vector2(x + 1, y);
             Node westNode = nodes.Find(n => n.Position.Equals(west));
-            if (westNode != null)
+            if (westNode != null && northNode is IOPipeNode)
             {
                 IOPipeNode westIOPipeNode = (IOPipeNode)westNode;
                 westIOPipeNode.AddConnectedContainer(this);
             }
             Vector2 east = new Vector2(x - 1, y);
             Node eastNode = nodes.Find(n => n.Position.Equals(east));
-            if (eastNode != null)
+            if (eastNode != null && northNode is IOPipeNode)
             {
                 IOPipeNode eastIOPipeNode = (IOPipeNode)eastNode;
                 eastIOPipeNode.AddConnectedContainer(this);
             }
         }
+
 
         public virtual bool IsEmpty()
         {

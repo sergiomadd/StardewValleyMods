@@ -28,11 +28,23 @@ namespace ItemPipes.Framework
         public IOPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            State = "unconnected";
+            State = "nochest";
             Connecting = false;
 
         }
-        
+
+        public virtual void UpdateState()
+        {
+            if (ConnectedContainer == null)
+            {
+                State = "nochest";
+            }
+            else if (ConnectedContainer != null)
+            {
+                State = "on";
+            }
+        }
+
         public override string GetState()
         {
             if (Connecting)
@@ -59,20 +71,18 @@ namespace ItemPipes.Framework
                 {
                     ConnectedContainer = (ContainerNode)entity;
                     ConnectedContainer.AddIOPipe(this);
-                    State = "on";
                     if (Globals.UltraDebug) { Printer.Info($"[?] CONNECTED CONTAINER ADDED"); }
                 }
                 else
                 {
-                    State = "unconnected";
                     if (Globals.UltraDebug) { Printer.Info($"[?] Didnt add adj container"); }
                 }
             }
             else
             {
-                State = "unconnected";
                 if (Globals.UltraDebug) { Printer.Info($"[?] Didnt add adj container"); }
             }
+            UpdateState();
             added = true;
             return added;
         }
@@ -85,10 +95,10 @@ namespace ItemPipes.Framework
             {
                 ConnectedContainer.RemoveIOPipe(this);
                 ConnectedContainer = null;
-                State = "unconnected";
                 if (Globals.UltraDebug) { Printer.Info($"[?] CONNECTED CONTAINER REMOVED"); }
                 removed = true;
             }
+            UpdateState();
             return removed;
         }
     }

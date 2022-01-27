@@ -206,13 +206,12 @@ namespace ItemPipes
                     if (e.IsMultipleOf(120))
                     {
                         DataAccess DataAccess = DataAccess.GetDataAccess();
-                        List<Network> networks = DataAccess.LocationNetworks[Game1.currentLocation];
                         foreach (GameLocation location in Game1.locations)
                         {
+                            List<Network> networks = DataAccess.LocationNetworks[location];
                             if (networks.Count > 0)
                             {
                                 //if (Globals.UltraDebug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
-                                Printer.Info("----------------------");
                                 foreach (Network network in networks)
                                 {
                                     //Printer.Info(network.Print());

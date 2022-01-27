@@ -25,6 +25,8 @@ namespace ItemPipes.Framework.Nodes
             Type = "ShippingBin";
         }
 
+
+
         public void ShipItem(Item item)
 		{
 			if (item != null && item is StardewValley.Object && Farm != null)
@@ -51,6 +53,11 @@ namespace ItemPipes.Framework.Nodes
             }
             return Filter;
 
+        }
+
+        public override bool IsEmpty()
+        {
+            return false;
         }
     }
 }

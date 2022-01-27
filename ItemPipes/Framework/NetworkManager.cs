@@ -111,8 +111,6 @@ namespace ItemPipes.Framework
                         IOPipeNode.AddConnectedContainer(westNode);
                     }
                 }
-                Printer.Info(nodes.FindAll(x => x.Name.Equals("Extractor Pipe")).Count.ToString());
-
                 if (Globals.UltraDebug) { newNode.Print(); }
                 if (DataAccess.NetworkItems.Contains(Game1.currentLocation.getObjectAtTile(x, y).Name))
                 {
@@ -141,7 +139,6 @@ namespace ItemPipes.Framework
                         MergeNetworks(orderedAdjNetworks);
                     }
                 }
-                Printer.Info(nodes.FindAll(x => x.Name.Equals("Extractor Pipe")).Count.ToString());
             }
             else if (obj.Value is Chest)
             {
@@ -159,21 +156,21 @@ namespace ItemPipes.Framework
                 }
                 Vector2 south = new Vector2(x, y + 1);
                 Node southNode = nodes.Find(n => n.Position.Equals(south));
-                if (southNode != null)
+                if (southNode != null && southNode is IOPipeNode)
                 {
                     IOPipeNode southIOPipeNode = (IOPipeNode)southNode;
                     southIOPipeNode.AddConnectedContainer(newNode);
                 }
                 Vector2 west = new Vector2(x + 1, y);
                 Node westNode = nodes.Find(n => n.Position.Equals(west));
-                if (westNode != null)
+                if (westNode != null && westNode is IOPipeNode)
                 {
                     IOPipeNode westIOPipeNode = (IOPipeNode)westNode;
                     westIOPipeNode.AddConnectedContainer(newNode);
                 }
                 Vector2 east = new Vector2(x - 1, y);
                 Node eastNode = nodes.Find(n => n.Position.Equals(east));
-                if (eastNode != null)
+                if (eastNode != null && eastNode is IOPipeNode)
                 {
                     IOPipeNode eastIOPipeNode = (IOPipeNode)eastNode;
                     eastIOPipeNode.AddConnectedContainer(newNode);

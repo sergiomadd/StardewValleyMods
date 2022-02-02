@@ -176,7 +176,43 @@ namespace ItemPipes.Framework
                     eastIOPipeNode.AddConnectedContainer(newNode);
                 }
             }
-
+            else if (obj.Value is InvisibilizerItem)
+            {
+                List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+                Node newNode = NodeFactory.CreateElement(obj.Key, Game1.currentLocation, obj.Value);
+                InvisibilizerNode newInvisibilizerNode = (InvisibilizerNode)newNode;
+                int x = (int)newNode.Position.X;
+                int y = (int)newNode.Position.Y;
+                nodes.Add(newNode);
+                Vector2 north = new Vector2(x, y - 1);
+                Node northNode = nodes.Find(n => n.Position.Equals(north));
+                if (northNode != null && northNode is PipeNode)
+                {
+                    PipeNode northPipeNode = (PipeNode)northNode;
+                    northPipeNode.AddInvisibilizer(newInvisibilizerNode);
+                }
+                Vector2 south = new Vector2(x, y + 1);
+                Node southNode = nodes.Find(n => n.Position.Equals(south));
+                if (southNode != null && southNode is PipeNode)
+                {
+                    PipeNode southIOPipeNode = (PipeNode)southNode;
+                    southIOPipeNode.AddInvisibilizer(newInvisibilizerNode);
+                }
+                Vector2 west = new Vector2(x + 1, y);
+                Node westNode = nodes.Find(n => n.Position.Equals(west));
+                if (westNode != null && westNode is PipeNode)
+                {
+                    PipeNode westIOPipeNode = (PipeNode)westNode;
+                    westIOPipeNode.AddInvisibilizer(newInvisibilizerNode);
+                }
+                Vector2 east = new Vector2(x - 1, y);
+                Node eastNode = nodes.Find(n => n.Position.Equals(east));
+                if (eastNode != null && eastNode is PipeNode)
+                {
+                    PipeNode eastIOPipeNode = (PipeNode)eastNode;
+                    eastIOPipeNode.AddInvisibilizer(newInvisibilizerNode);
+                }
+            }
         }
 
         private static void MergeNetworks(List<Network> network)
@@ -242,21 +278,21 @@ namespace ItemPipes.Framework
                 }
                 Vector2 south = new Vector2(x, y + 1);
                 Node southNode = nodes.Find(n => n.Position.Equals(south));
-                if (southNode != null)
+                if (southNode != null && southNode is IOPipeNode)
                 {
                     IOPipeNode southIOPipeNode = (IOPipeNode)southNode;
                     southIOPipeNode.RemoveConnectedContainer(node);
                 }
                 Vector2 west = new Vector2(x + 1, y);
                 Node westNode = nodes.Find(n => n.Position.Equals(west));
-                if (westNode != null)
+                if (westNode != null && westNode is IOPipeNode)
                 {
                     IOPipeNode westIOPipeNode = (IOPipeNode)westNode;
                     westIOPipeNode.RemoveConnectedContainer(node);
                 }
                 Vector2 east = new Vector2(x - 1, y);
                 Node eastNode = nodes.Find(n => n.Position.Equals(east));
-                if (eastNode != null)
+                if (eastNode != null && eastNode is IOPipeNode)
                 {
                     IOPipeNode eastIOPipeNode = (IOPipeNode)eastNode;
                     eastIOPipeNode.RemoveConnectedContainer(node);

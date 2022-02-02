@@ -40,6 +40,10 @@ namespace ItemPipes.Framework.Factories
             {
                 return new GoldPipeItem();
             }
+            else if (obj.name.Equals("Invisibilizer"))
+            {
+                return new InvisibilizerItem();
+            }
             else
             {
                 Printer.Info($"Item creation for {obj.Name} failed.");
@@ -72,6 +76,10 @@ namespace ItemPipes.Framework.Factories
             else if (obj.name.Equals("Gold Pipe"))
             {
                 return new GoldPipeItem(position);
+            }
+            else if (obj.name.Equals("Invisibilizer"))
+            {
+                return new InvisibilizerItem(position);
             }
             else
             {

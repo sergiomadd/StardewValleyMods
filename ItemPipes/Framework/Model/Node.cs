@@ -127,7 +127,7 @@ namespace ItemPipes.Framework.Model
 
         public List<Node> GetPath(Node target)
         {
-            if (Globals.Debug) { Printer.Info($"Getting path for {target.Print()}"); }
+            if (Globals.UltraDebug) { Printer.Info($"Getting path for {target.Print()}"); }
             List<Node> path = new List<Node>();
             path = GetPathRecursive(target, path);
             /*

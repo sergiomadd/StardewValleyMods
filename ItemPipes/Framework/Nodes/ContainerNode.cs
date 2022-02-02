@@ -109,6 +109,7 @@ namespace ItemPipes.Framework
 
         public virtual bool IsEmpty()
         {
+            Printer.Info("submethod");
             return false;
         }
 

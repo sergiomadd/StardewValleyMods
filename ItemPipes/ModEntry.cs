@@ -18,6 +18,9 @@ using ItemPipes.Framework.Items;
 using ItemPipes.Framework.Items.Recipes;
 using HarmonyLib;
 using SpaceCore;
+using System.Diagnostics;
+using System.Threading;
+
 
 namespace ItemPipes
 {
@@ -113,7 +116,26 @@ namespace ItemPipes
             helper.Events.GameLoop.DayStarted += this.OnDayStarted;
             helper.Events.World.ObjectListChanged += this.OnObjectListChanged;
             helper.Events.GameLoop.OneSecondUpdateTicked += this.OnOneSecondUpdateTicked;
+            helper.Events.GameLoop.Saving += this.OnSaving;
 
+        }
+
+        private void OnSaving(object sender, SavingEventArgs e)
+        {
+            if (Globals.Debug) { Printer.Info("Waiting for all items to arrive at input..."); }
+            //Quick end all threads
+            while (DataAccess.Threads.Count > 0)
+            {
+                foreach (Thread thread in DataAccess.Threads.ToList())
+                {
+                    if (thread != null && thread.IsAlive)
+                    {
+                        thread.Interrupt();
+                    }
+                }
+                
+            }
+            
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -127,6 +149,9 @@ namespace ItemPipes
             spaceCore.RegisterSerializerType(typeof(InserterPipeItem));
             spaceCore.RegisterSerializerType(typeof(PolymorphicPipeItem));
             spaceCore.RegisterSerializerType(typeof(FilterPipeItem));
+
+            spaceCore.RegisterSerializerType(typeof(InvisibilizerItem));
+
 
             spaceCore.RegisterSerializerType(typeof(WrenchItem));
             //spaceCore.RegisterSerializerType(typeof(IronPipeRecipe));
@@ -211,7 +236,7 @@ namespace ItemPipes
                             List<Network> networks = DataAccess.LocationNetworks[location];
                             if (networks.Count > 0)
                             {
-                                //if (Globals.UltraDebug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
+                                if (Globals.UltraDebug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
                                 foreach (Network network in networks)
                                 {
                                     //Printer.Info(network.Print());
@@ -239,6 +264,7 @@ namespace ItemPipes
                 NetworkManager.RemoveObject(obj);
                 NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
             }
+            Printer.Info("THREADS:" +DataAccess.GetDataAccess().Threads.Count.ToString());
         }
 
         private void OnDayStarted(object sender, DayStartedEventArgs e)
@@ -252,9 +278,10 @@ namespace ItemPipes
                 Game1.player.addItemToInventory(new InserterPipeItem());
                 Game1.player.addItemToInventory(new PolymorphicPipeItem());
                 Game1.player.addItemToInventory(new FilterPipeItem());
+                Game1.player.addItemToInventory(new InvisibilizerItem());
                 //Game1.player.addItemToInventory(new Pipe());
             }
-            if(!Game1.player.hasItemInInventoryNamed("Wrench"))
+            if (!Game1.player.hasItemInInventoryNamed("Wrench"))
             {
                 Game1.player.addItemToInventory(new WrenchItem());
             }

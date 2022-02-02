@@ -27,19 +27,19 @@ namespace ItemPipes.Framework
             Tier = 1;
         }
 
-        public override void UpdateState()
+        public override void UpdateSignal()
         {
             if(ConnectedContainer == null)
             {
-                State = "nochest";
+                Signal = "nochest";
             }
             else if (ConnectedInputs.Count < 1)
             {
-                State = "unconnected";
+                Signal = "unconnected";
             }
             else if (ConnectedContainer != null && ConnectedInputs.Count >= 1)
             {
-                State = "on";
+                Signal = "on";
             }
         }
 
@@ -48,12 +48,19 @@ namespace ItemPipes.Framework
             if (Globals.UltraDebug) { Printer.Info($"[{ParentNetwork.ID}] Procesing Exchanges..."); }
             if (Globals.UltraDebug) { Printer.Info($"[{ParentNetwork.ID}] Are there connected input? " + (ConnectedInputs.Count > 0).ToString()); }
             if (ConnectedContainer != null && !ConnectedContainer.IsEmpty()
-                && ConnectedInputs.Count > 0 && State.Equals("on"))
+                && ConnectedInputs.Count > 0 && Signal.Equals("on"))
             {
                 if (Globals.UltraDebug) { Printer.Info($"[{ ParentNetwork.ID}] Is output empty? " + ConnectedContainer.IsEmpty().ToString()); }
                 if (Globals.UltraDebug) { Printer.Info($"[{ParentNetwork.ID}] CREATED NEW THREAD"); }
-                Thread thread = new Thread(new ThreadStart(StartExchage));
-                thread.Start();
+                try
+                {
+                    Thread thread = new Thread(new ThreadStart(StartExchage));
+                    DataAccess.GetDataAccess().Threads.Add(thread);
+                    thread.Start();
+                }
+                catch (ThreadInterruptedException exception)
+                {
+                }
             }
         }
 
@@ -71,7 +78,7 @@ namespace ItemPipes.Framework
             while (index < priorityInputs.Count && item == null)
             {
                 InputNode input = priorityInputs.Keys.ToList()[index];
-                if (input.State.Equals("on"))
+                if (input.Signal.Equals("on"))
                 {
                     List<Node> path = priorityInputs.Values.ToList()[index];
                     input.UpdateFilter();
@@ -154,6 +161,7 @@ namespace ItemPipes.Framework
                 }
                 index++;
             }
+            DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
         }
 
         public bool IsInputConnected(InputNode input)
@@ -173,13 +181,24 @@ namespace ItemPipes.Framework
             if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Does {input.Print()} have a valid adjacent container? " + (input.ConnectedContainer != null).ToString()); }
             if (ConnectedContainer != null && input.ConnectedContainer != null)
             {
-                added = true;
                 List<Node> path;
                 path = GetPath(input);
-                Animator.AnimateInputConnection(path);
-                ConnectedInputs.Add(input, path);
+                if(path.Count > 0)
+                {
+                    added = true;
+                    ConnectedInputs.Add(input, path);
+                    var t = new Thread(() => AnimateConnection(path));
+                    t.Start();
+                    DataAccess.GetDataAccess().Threads.Add(t);
+                }
             }
             return added;
+        }
+
+        private void AnimateConnection(List<Node> path)
+        {
+            ConnectPipe(path.Last(), 0, path);
+            DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
         }
 
         public bool RemoveConnectedInput(InputNode input)

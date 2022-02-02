@@ -19,5 +19,18 @@ namespace ItemPipes.Framework.Nodes
         public InvisibilizerNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
         }
+
+        public void ChangeState()
+        {
+            if(State.Equals("on"))
+            {
+                State = "off";
+            }
+            else
+            {
+                State = "on";
+            }
+            Printer.Info("INVIS: "+State);
+        }
     }
 }

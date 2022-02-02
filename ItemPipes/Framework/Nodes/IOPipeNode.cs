@@ -15,45 +15,45 @@ namespace ItemPipes.Framework
     public abstract class IOPipeNode : PipeNode
     {
         public ContainerNode ConnectedContainer { get; set; }
-        public bool Connecting { get; set; }
-
+        public string Signal { get; set; }
 
         public IOPipeNode() : base()
         {
             ConnectedContainer = null;
-            State = "unconnected";
+            Signal = "unconnected";
             Connecting = false;
         }
         
         public IOPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            State = "nochest";
+            Signal = "nochest";
             Connecting = false;
 
         }
 
-        public virtual void UpdateState()
+        public virtual void UpdateSignal()
         {
             if (ConnectedContainer == null)
             {
-                State = "nochest";
+                Signal = "nochest";
             }
             else if (ConnectedContainer != null)
             {
-                State = "on";
+                Signal = "on";
             }
+
         }
 
-        public override string GetState()
+        public void ChangeSignal()
         {
-            if (Connecting)
+            if(Signal.Equals("off"))
             {
-                return "connecting_"+State;
+                Signal = "on";
             }
             else
             {
-                return State;
+                Signal = "off";
             }
         }
 
@@ -82,7 +82,7 @@ namespace ItemPipes.Framework
             {
                 if (Globals.UltraDebug) { Printer.Info($"[?] Didnt add adj container"); }
             }
-            UpdateState();
+            UpdateSignal();
             added = true;
             return added;
         }
@@ -98,7 +98,7 @@ namespace ItemPipes.Framework
                 if (Globals.UltraDebug) { Printer.Info($"[?] CONNECTED CONTAINER REMOVED"); }
                 removed = true;
             }
-            UpdateState();
+            UpdateSignal();
             return removed;
         }
     }

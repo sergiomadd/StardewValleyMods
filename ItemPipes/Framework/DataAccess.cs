@@ -10,6 +10,8 @@ using StardewModdingAPI.Events;
 using SVObject = StardewValley.Objects;
 using ItemPipes.Framework;
 using ItemPipes.Framework.Model;
+using System.Threading;
+
 
 namespace ItemPipes.Framework
 {
@@ -27,6 +29,7 @@ namespace ItemPipes.Framework
         public List<string> Locations { get; set; }
 
         public List<int> UsedNetworkIDs { get; set; }
+        public List<Thread> Threads { get; set; }
 
 
         public DataAccess()
@@ -40,6 +43,7 @@ namespace ItemPipes.Framework
             ExtraNames = new List<string>();
             Buildings = new List<string>();
             Locations = new List<string>();
+            Threads = new List<Thread>();
 
             /*ValidLocations = new List<string>
                 { 

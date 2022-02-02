@@ -12,30 +12,46 @@ namespace ItemPipes.Framework
 {
     public abstract class ConnectorNode : PipeNode
     {
-        public bool Connecting { get; set; }
-
         public ConnectorNode() : base()
         {
 
         }
         public ConnectorNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
-            Connecting = false;
+
         }
 
         public override string GetState()
         {
-            if(PassingItem)
+            if(!Passable)
             {
-                return "item";
-            }
-            else if (Connecting)
-            {
-                return "connecting";
+                if (PassingItem)
+                {
+                    return "item";
+                }
+                else if (Connecting)
+                {
+                    return "connecting";
+                }
+                else
+                {
+                    return "default";
+                }
             }
             else
             {
-                return "default";
+                if (PassingItem)
+                {
+                    return "item_passable";
+                }
+                else if (Connecting)
+                {
+                    return "connecting_passable";
+                }
+                else
+                {
+                    return "default_passable";
+                }
             }
 
         }

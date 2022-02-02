@@ -46,7 +46,6 @@ namespace ItemPipes.Framework.Patches
 
         private static bool Utility_CollectSingleItemOrShowChestMenu_Prefix(Chest __instance, object context = null)
         {
-            Printer.Info("Utility_CollectSingleItemOrShowChestMenu_Prefix");
             DataAccess DataAccess = DataAccess.GetDataAccess();
             List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
             Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
@@ -99,7 +98,6 @@ namespace ItemPipes.Framework.Patches
 
         private static bool Chest_grabItemFromChest_Prefix(Chest __instance, Item item, Farmer who)
         {
-            Printer.Info("Chest_grabItemFromChest_Prefix");
             DataAccess DataAccess = DataAccess.GetDataAccess();
             List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
             Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
@@ -120,7 +118,6 @@ namespace ItemPipes.Framework.Patches
 
         private static bool Chest_grabItemFromInventory_Prefix(Chest __instance, Item item, Farmer who)
         {
-            Printer.Info("Chest_grabItemFromInventory_Prefix");
             DataAccess DataAccess = DataAccess.GetDataAccess();
             List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
             Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));
@@ -155,7 +152,6 @@ namespace ItemPipes.Framework.Patches
 
         private static bool Chest_addItem_Prefix(Chest __instance, Item item, ref Item __result)
         {
-            Printer.Info("Chest_addItem_Prefix");
             DataAccess DataAccess = DataAccess.GetDataAccess();
             List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
             Node node = nodes.Find(n => n.Position.Equals(__instance.tileLocation));

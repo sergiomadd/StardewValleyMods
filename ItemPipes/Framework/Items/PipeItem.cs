@@ -15,43 +15,30 @@ using System.Xml.Serialization;
 using StardewValley.Network;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework.Factories;
+using ItemPipes.Framework.Items;
+
 
 
 namespace ItemPipes.Framework
 {
-	public class PipeItem : SObject
+	public abstract class PipeItem : CustomObjectItem
 	{
-        public string IDName { get; set; }
-		public string Description { get; set; }
 		[XmlIgnore]
 		public Texture2D SpriteTexture { get; set; }
 		public string SpriteTexturePath { get; set; }
 		[XmlIgnore]
-		public Texture2D ItemTexture { get; set; }
-		public string ItemTexturePath { get; set; }
-		[XmlIgnore]
 		public Dictionary<int, int> DrawGuide { get; set; }
-		public string State { get; set; }
 		public bool Passable { get; set; }
-		public PipeItem()
+		public PipeItem() : base()
 		{
-			Name = "DEFAULT NAME";
-			Description = "DEFAULT DESCRIPTION";
-			State = "default";
-			type.Value = "Crafting";
-			canBeSetDown.Value = true;
+
 		}
 
-		public PipeItem(Vector2 position) : this()
+		public PipeItem(Vector2 position) : base(position)
 		{
-			Name = "DEFAULT NAME";
-			Description = "DEFAULT DESCRIPTION";
-			State = "default";
-			type.Value = "Crafting";
 			TileLocation = position;
 			base.boundingBox.Value = new Rectangle((int)tileLocation.X * 64, (int)tileLocation.Y * 64, 64, 64);
 			Passable = false;
-			canBeSetDown.Value = true;
 		}
 
 		public virtual void LoadTextures()
@@ -62,35 +49,6 @@ namespace ItemPipes.Framework
 			SpriteTexture = ModEntry.helper.Content.Load<Texture2D>(SpriteTexturePath);
 		}
 
-		public override string getDescription()
-		{
-			return Description;
-		}
-
-		protected override int getDescriptionWidth()
-		{
-			int minimum_size = 272;
-			if (LocalizedContentManager.CurrentLanguageCode == LocalizedContentManager.LanguageCode.fr)
-			{
-				minimum_size = 384;
-			}
-			return Math.Max(minimum_size, (int)Game1.dialogueFont.MeasureString((Name == null) ? "" : Name).X);
-		}
-
-		public override string getCategoryName()
-		{
-			return "Item Pipes";
-		}
-
-		public override Color getCategoryColor()
-		{
-			return Color.Black;
-		}
-
-		protected override string loadDisplayName()
-		{
-			return Name;
-		}
 
 		public override bool isPassable()
 		{
@@ -132,50 +90,6 @@ namespace ItemPipes.Framework
 				this.performToolAction(null, who.currentLocation);
 			}
 			return true;
-		}
-
-		public override bool placementAction(GameLocation location, int x, int y, Farmer who = null)
-		{
-			Vector2 placementTile = new Vector2(x / 64, y / 64);
-			if (location.objects.ContainsKey(placementTile))
-			{
-				return false;
-			}
-			SObject obj = ItemFactory.CreateObject(placementTile, this);
-			if (obj != null)
-			{
-				location.objects.Add(placementTile, obj);
-				location.playSound("axe");
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public override bool performToolAction(Tool t, GameLocation location)
-		{
-			if (t is Pickaxe)
-			{
-				var who = t.getLastFarmerToUse();
-				this.performRemoveAction(this.TileLocation, location);
-				Debris deb = new Debris(getOne(), who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
-				Game1.currentLocation.debris.Add(deb);
-				Game1.currentLocation.objects.Remove(this.TileLocation);
-				return false;
-			}
-			return false;
-		}
-
-		public override bool performObjectDropInAction(Item dropIn, bool probe, Farmer who)
-		{
-			return base.performObjectDropInAction(dropIn, probe, who);
-		}
-
-		public override Item getOne()
-		{
-			return ItemFactory.CreateItem(this);
 		}
 
 		public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)

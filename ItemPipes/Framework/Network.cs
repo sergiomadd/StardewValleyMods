@@ -41,10 +41,10 @@ namespace ItemPipes.Framework
                 foreach (InputNode input in output.ConnectedInputs.Keys.ToList())
                 {
                     TryDisconnectInput(input);
-                    input.UpdateState();
+                    input.UpdateSignal();
                 }
                 TryConnectOutput(output);
-                output.UpdateState();
+                output.UpdateSignal();
             }
         }
 
@@ -175,9 +175,9 @@ namespace ItemPipes.Framework
                         {
                             if (Globals.UltraDebug) { Printer.Info($"[N{ID}] {input.Print()} already connected"); }
                         }
-                        input.UpdateState();
+                        input.UpdateSignal();
                     }
-                    output.UpdateState();
+                    output.UpdateSignal();
                 }
             }
             return canConnect;
@@ -204,9 +204,9 @@ namespace ItemPipes.Framework
                             if (Globals.UltraDebug) { Printer.Info($"[N{ID}] Cannot disconnect with {input.Print()}"); }
                         }
                     }
-                    output.UpdateState();
+                    output.UpdateSignal();
                 }
-                input.UpdateState();
+                input.UpdateSignal();
             }
             return canDisconnect;
         }
@@ -231,6 +231,15 @@ namespace ItemPipes.Framework
             foreach (Node node in Nodes)
             {
                 node.ParentNetwork = null;
+            }
+        }
+
+        public void Invisibilize(PipeNode source, InvisibilizerNode invis)
+        {
+            Invis = invis;
+            foreach(Node node in Nodes)
+            {
+                node.Passable = true;
             }
         }
 

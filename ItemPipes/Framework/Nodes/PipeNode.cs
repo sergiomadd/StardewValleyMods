@@ -20,18 +20,33 @@ namespace ItemPipes.Framework.Nodes
         public Item StoredItem { get; set; }
         public int ItemTimer { get; set; }
         public bool PassingItem { get; set; }
+        public bool Connecting { get; set; }
         public bool Broken { get; set; }
 
         public PipeNode() : base()
         {
-
+            State = "default";
         }
         public PipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
+            State = "default";
+
             PassingItem = false;
+            Connecting = false;
             Broken = false;
         }
 
+        public override string GetState()
+        {
+            if (!Passable)
+            {
+                return State;
+            }
+            else
+            {
+                return State + "_passable";
+            }
+        }
         public Node MoveItem(Item item, Node target, int index, List<Node> path)
         {
             Node broken = null;
@@ -81,13 +96,75 @@ namespace ItemPipes.Framework.Nodes
             {
                 StoredItem = item;
                 PassingItem = true;
-                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Passing {item.Name} ");
-                System.Threading.Thread.Sleep(ItemTimer);
+                try
+                {
+                    System.Threading.Thread.Sleep(ItemTimer);
+                }
+                catch (ThreadInterruptedException exception)
+                {
+                }
                 StoredItem = null;
                 PassingItem = false;
             }
             return canLoad;
         }
 
+        public Node ConnectPipe(Node target, int index, List<Node> path)
+        {
+            Node broken = null;
+            if (!this.Equals(target))
+            {
+                DisplayConnection();
+                if (index < path.Count - 1)
+                {
+                    index++;
+                    Node nextNode = path[index];
+                    if (Location.getObjectAtTile((int)nextNode.Position.X, (int)nextNode.Position.Y) != null)
+                    {
+                        if (nextNode is PipeNode)
+                        {
+                            PipeNode pipe = (PipeNode)nextNode;
+                            broken = pipe.ConnectPipe(target, index, path);
+                        }
+                    }
+                    else
+                    {
+                        broken = nextNode;
+                        return broken;
+                    }
+                }
+            }
+            else
+            {
+                foreach(Node node in path)
+                {
+                    if (node is PipeNode)
+                    {
+                        PipeNode pipe = (PipeNode)node;
+                        EndConnection(pipe);
+                    }
+                }
+            }
+
+            return broken;
+        }
+
+        public void DisplayConnection()
+        {
+            Connecting = true;
+            System.Threading.Thread.Sleep(60);
+        }
+
+        public void EndConnection(PipeNode pipe)
+        {
+            pipe.Connecting = false;
+            System.Threading.Thread.Sleep(10);
+        }
+
+        public void AddInvisibilizer(InvisibilizerNode invis)
+        {
+            ParentNetwork.Invisibilize(this, invis);
+
+        }
     }
 }

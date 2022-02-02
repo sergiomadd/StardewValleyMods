@@ -69,19 +69,22 @@ namespace ItemPipes.Framework.Items
         public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-            Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-            if (node != null && node is ConnectorNode)
+            if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
             {
-                ConnectorNode pipe = (ConnectorNode)node;
-                int sourceRectPosition = 1;
-                int drawSum = getDrawSum(Game1.currentLocation);
-                sourceRectPosition = GetNewDrawGuide()[drawSum];
-                SpriteTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_{pipe.GetState()}_Sprite.png");
-                spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
-                if(pipe.StoredItem != null)
+                List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+                Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+                if (node != null && node is ConnectorNode)
                 {
-                    drawItem(pipe, spriteBatch, x, y, alpha);
+                    ConnectorNode pipe = (ConnectorNode)node;
+                    int sourceRectPosition = 1;
+                    int drawSum = getDrawSum(Game1.currentLocation);
+                    sourceRectPosition = GetNewDrawGuide()[drawSum];
+                    SpriteTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_{pipe.GetState()}_Sprite.png");
+                    spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+                    if (pipe.StoredItem != null)
+                    {
+                        drawItem(pipe, spriteBatch, x, y, alpha);
+                    }
                 }
             }
         }

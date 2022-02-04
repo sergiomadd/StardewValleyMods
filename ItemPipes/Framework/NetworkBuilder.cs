@@ -12,6 +12,7 @@ using StardewModdingAPI.Events;
 using Microsoft.Xna.Framework;
 using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Factories;
+using ItemPipes.Framework.Items;
 
 namespace ItemPipes.Framework
 {

@@ -89,8 +89,6 @@ namespace ItemPipes.Framework
                 else if (node is InvisibilizerNode && Invis == null)
                 {
                     Invis = (InvisibilizerNode)node;
-                    Thread thread = new Thread(new ThreadStart(ChangePassable));
-                    thread.Start();
                 }
             }
             return added;
@@ -117,9 +115,11 @@ namespace ItemPipes.Framework
                 }
                 else if (node is InvisibilizerNode && Invis != null)
                 {
-                    Thread thread = new Thread(new ThreadStart(ChangePassable));
-                    thread.Start();
                     Invis = null;
+                    if(IsPassable)
+                    {
+                        Deinvisibilize((InvisibilizerNode)node);
+                    }
                 }
             }
             return removed;
@@ -211,12 +211,6 @@ namespace ItemPipes.Framework
             return canDisconnect;
         }
 
-        public void ChangePassable()
-        {
-            List<Node> path = Invis.TraverseAll();
-            Animator.AnimateChangingPassable(path);
-        }
-
         public bool ContainsVector2(Vector2 position)
         {
             bool contains = false;
@@ -234,12 +228,23 @@ namespace ItemPipes.Framework
             }
         }
 
-        public void Invisibilize(PipeNode source, InvisibilizerNode invis)
+        public void Invisibilize(InvisibilizerNode invis)
         {
             Invis = invis;
+            IsPassable = true;
             foreach(Node node in Nodes)
             {
                 node.Passable = true;
+            }
+        }
+
+        public void Deinvisibilize(InvisibilizerNode invis)
+        {
+            Invis = invis;
+            IsPassable = false;
+            foreach (Node node in Nodes)
+            {
+                node.Passable = false;
             }
         }
 

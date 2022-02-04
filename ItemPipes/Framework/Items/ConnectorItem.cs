@@ -76,6 +76,14 @@ namespace ItemPipes.Framework.Items
                 if (node != null && node is ConnectorNode)
                 {
                     ConnectorNode pipe = (ConnectorNode)node;
+                    if(pipe.Passable && !Passable)
+                    {
+                        Passable = true;
+                    }
+                    else if (!pipe.Passable && Passable)
+                    {
+                        Passable = false;
+                    }
                     int sourceRectPosition = 1;
                     int drawSum = getDrawSum(Game1.currentLocation);
                     sourceRectPosition = GetNewDrawGuide()[drawSum];

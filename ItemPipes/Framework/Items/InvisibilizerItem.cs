@@ -62,7 +62,7 @@ namespace ItemPipes.Framework.Items
 
 			}
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true) && Name.Equals("FilterPipe"))
+			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true))
 			{
 				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
 				Node node = nodes.Find(n => n.Position.Equals(TileLocation));
@@ -73,9 +73,10 @@ namespace ItemPipes.Framework.Items
 					return false;
 				}
 			}
-			if (!justCheckingForActivity && who != null && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())
+			else if (!justCheckingForActivity && who != null && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())
 			{
 				this.performToolAction(null, who.currentLocation);
+
 			}
 			return true;
 		}
@@ -131,6 +132,14 @@ namespace ItemPipes.Framework.Items
 		{
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			//int sourceRectPosition = new Rectangle(0, 0, 16, 32);
+			List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+			Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+			if (node != null && node is InvisibilizerNode)
+			{
+				InvisibilizerNode invis = (InvisibilizerNode)node;
+				State = invis.State;
+			}
+
 			Rectangle srcRect = new Rectangle(0, 0, 16, 32);
 			//srcRect =  new Rectangle(srcRect * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight)
 			ItemTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Objects/{IDName}/{IDName}_{State}.png");

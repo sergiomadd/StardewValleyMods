@@ -160,11 +160,16 @@ namespace ItemPipes.Framework.Nodes
             pipe.Connecting = false;
             System.Threading.Thread.Sleep(10);
         }
-
+        /*
         public void AddInvisibilizer(InvisibilizerNode invis)
         {
             ParentNetwork.Invisibilize(this, invis);
-
         }
+
+        public void RemoveInvisibilizer(InvisibilizerNode invis)
+        {
+            ParentNetwork.Deinvisibilize(this, invis);
+        }
+        */
     }
 }

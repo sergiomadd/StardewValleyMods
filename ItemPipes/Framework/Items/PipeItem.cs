@@ -174,7 +174,8 @@ namespace ItemPipes.Framework
 			surroundingLocations.X += 1f;
 			//0 = 6
 			//West = 100 = 11
-			if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this))
+			if (location.objects.ContainsKey(surroundingLocations) && (location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this)
+				|| location.objects[surroundingLocations] is InvisibilizerItem))
 			{
 				drawSum += 100;
 			}
@@ -185,7 +186,8 @@ namespace ItemPipes.Framework
 			//East = 10 = 10
 			//W + E = 110 = 8
 			surroundingLocations.X -= 2f;
-			if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this))
+			if (location.objects.ContainsKey(surroundingLocations) && (location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this)
+				|| location.objects[surroundingLocations] is InvisibilizerItem))
 			{
 				drawSum += 10;
 			}
@@ -199,7 +201,8 @@ namespace ItemPipes.Framework
 			//S + E + W = 610
 			surroundingLocations.X += 1f;
 			surroundingLocations.Y += 1f;
-			if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this))
+			if (location.objects.ContainsKey(surroundingLocations) && (location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this)
+				|| location.objects[surroundingLocations] is InvisibilizerItem))
 			{
 				drawSum += 500;
 			}
@@ -216,7 +219,8 @@ namespace ItemPipes.Framework
 			//N + E + S = 1600 = 1
 			//N + S + W = 1510 = 3
 			//N + E + W  + S = 1610 = 5
-			if (location.objects.ContainsKey(surroundingLocations) && location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this))
+			if (location.objects.ContainsKey(surroundingLocations) && (location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this)
+				|| location.objects[surroundingLocations] is InvisibilizerItem))
 			{
 				drawSum += 1000;
 			}

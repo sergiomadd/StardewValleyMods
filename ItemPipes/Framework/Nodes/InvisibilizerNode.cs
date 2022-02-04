@@ -15,9 +15,12 @@ namespace ItemPipes.Framework.Nodes
 {
     public class InvisibilizerNode : Node
     {
+        public List<Network> AdjNetworks { get; set; }
         public InvisibilizerNode() { }
         public InvisibilizerNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
+            State = "off";
+            AdjNetworks = new List<Network>();
         }
 
         public void ChangeState()
@@ -25,12 +28,25 @@ namespace ItemPipes.Framework.Nodes
             if(State.Equals("on"))
             {
                 State = "off";
+                foreach(Network network in AdjNetworks)
+                {
+                    if (network != null)
+                    {
+                        network.Deinvisibilize(this);
+                    }
+                }
             }
             else
             {
                 State = "on";
+                foreach (Network network in AdjNetworks)
+                {
+                    if(network != null)
+                    {
+                        network.Invisibilize(this);
+                    }
+                }
             }
-            Printer.Info("INVIS: "+State);
         }
     }
 }

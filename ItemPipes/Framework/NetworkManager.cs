@@ -189,28 +189,32 @@ namespace ItemPipes.Framework
                 if (northNode != null && northNode is PipeNode)
                 {
                     PipeNode northPipeNode = (PipeNode)northNode;
-                    northPipeNode.AddInvisibilizer(newInvisibilizerNode);
+                    newInvisibilizerNode.AdjNetworks.Add(northNode.ParentNetwork);
+                    northPipeNode.ParentNetwork.AddNode(newInvisibilizerNode);
                 }
                 Vector2 south = new Vector2(x, y + 1);
                 Node southNode = nodes.Find(n => n.Position.Equals(south));
                 if (southNode != null && southNode is PipeNode)
                 {
                     PipeNode southIOPipeNode = (PipeNode)southNode;
-                    southIOPipeNode.AddInvisibilizer(newInvisibilizerNode);
+                    newInvisibilizerNode.AdjNetworks.Add(southNode.ParentNetwork);
+                    southIOPipeNode.ParentNetwork.AddNode(newInvisibilizerNode);
                 }
                 Vector2 west = new Vector2(x + 1, y);
                 Node westNode = nodes.Find(n => n.Position.Equals(west));
                 if (westNode != null && westNode is PipeNode)
                 {
                     PipeNode westIOPipeNode = (PipeNode)westNode;
-                    westIOPipeNode.AddInvisibilizer(newInvisibilizerNode);
+                    newInvisibilizerNode.AdjNetworks.Add(westNode.ParentNetwork);
+                    westIOPipeNode.ParentNetwork.AddNode(newInvisibilizerNode);
                 }
                 Vector2 east = new Vector2(x - 1, y);
                 Node eastNode = nodes.Find(n => n.Position.Equals(east));
                 if (eastNode != null && eastNode is PipeNode)
                 {
                     PipeNode eastIOPipeNode = (PipeNode)eastNode;
-                    eastIOPipeNode.AddInvisibilizer(newInvisibilizerNode);
+                    newInvisibilizerNode.AdjNetworks.Add(eastNode.ParentNetwork);
+                    eastIOPipeNode.ParentNetwork.AddNode(newInvisibilizerNode);
                 }
             }
         }
@@ -239,7 +243,7 @@ namespace ItemPipes.Framework
             {
                 List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
                 Node node = nodes.Find(n => n.Position.Equals(obj.Key));
-                nodes.Remove(node); //Doesn't update
+                nodes.Remove(node);
                 if (node is IOPipeNode)
                 {
                     IOPipeNode IOPipeNode = (IOPipeNode)node;
@@ -297,6 +301,48 @@ namespace ItemPipes.Framework
                     IOPipeNode eastIOPipeNode = (IOPipeNode)eastNode;
                     eastIOPipeNode.RemoveConnectedContainer(node);
                 }
+                nodes.Remove(node);
+            }
+            else if (obj.Value is InvisibilizerItem)
+            {
+                List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+                Node node = nodes.Find(n => n.Position.Equals(obj.Key)); 
+                InvisibilizerNode invisibilizerNode = (InvisibilizerNode)node;
+                int x = (int)node.Position.X;
+                int y = (int)node.Position.Y;
+                nodes.Remove(node);
+                Vector2 north = new Vector2(x, y - 1);
+                Node northNode = nodes.Find(n => n.Position.Equals(north));
+                if (northNode != null && northNode is PipeNode)
+                {
+                    PipeNode northPipeNode = (PipeNode)northNode;
+                    invisibilizerNode.AdjNetworks.Remove(northNode.ParentNetwork);
+                    northPipeNode.ParentNetwork.RemoveNode(invisibilizerNode);
+                }
+                Vector2 south = new Vector2(x, y + 1);
+                Node southNode = nodes.Find(n => n.Position.Equals(south));
+                if (southNode != null && southNode is PipeNode)
+                {
+                    PipeNode southIOPipeNode = (PipeNode)southNode;
+                    invisibilizerNode.AdjNetworks.Remove(southNode.ParentNetwork);
+                    southIOPipeNode.ParentNetwork.RemoveNode(invisibilizerNode);
+                }
+                Vector2 west = new Vector2(x + 1, y);
+                Node westNode = nodes.Find(n => n.Position.Equals(west));
+                if (westNode != null && westNode is PipeNode)
+                {
+                    PipeNode westIOPipeNode = (PipeNode)westNode;
+                    invisibilizerNode.AdjNetworks.Remove(westNode.ParentNetwork);
+                    westIOPipeNode.ParentNetwork.RemoveNode(invisibilizerNode);
+                }
+                Vector2 east = new Vector2(x - 1, y);
+                Node eastNode = nodes.Find(n => n.Position.Equals(east));
+                if (eastNode != null && eastNode is PipeNode)
+                {
+                    PipeNode eastIOPipeNode = (PipeNode)eastNode;
+                    invisibilizerNode.AdjNetworks.Remove(eastNode.ParentNetwork);
+                    eastIOPipeNode.ParentNetwork.RemoveNode(invisibilizerNode);
+                }
             }
         }
 
@@ -304,7 +350,6 @@ namespace ItemPipes.Framework
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if (Globals.UltraDebug) { Printer.Info("Remaking networks..."); }
-            List<Network> networkList;
             foreach (KeyValuePair<Side, Node> adj in node.Adjacents)
             {
                 if (adj.Value != null)
@@ -319,15 +364,6 @@ namespace ItemPipes.Framework
                         }
                         Node newNode = NetworkBuilder.BuildNetworkRecursive(adj.Value.Position, Game1.currentLocation, null);
                     }
-                }
-            }
-            networkList = DataAccess.LocationNetworks[Game1.currentLocation];
-            if (Globals.UltraDebug) 
-            { 
-                Printer.Info("NUMBER OF GRAPGHS: " + networkList.Count.ToString()); 
-                foreach (Network network in networkList)
-                {
-                    Printer.Info(network.Print());
                 }
             }
         }

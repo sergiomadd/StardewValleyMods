@@ -49,12 +49,13 @@ namespace ItemPipes.Framework.Factories
             {
                 return new ChestContainerNode(position, location, obj);
             }
-            else if (obj.name.Equals("Invisibilizer"))
+            else if (obj.name.Equals("P.P.M."))
             {
-                return new InvisibilizerNode(position, location, obj);
+                return new PPMNode(position, location, obj);
             }
             else
             {
+                Printer.Info($"Node creation for {obj.Name} failed.");
                 return null;
             }
         }

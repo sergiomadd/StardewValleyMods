@@ -28,7 +28,6 @@ namespace ItemPipes.Framework
 		public string SpriteTexturePath { get; set; }
 		[XmlIgnore]
 		public Dictionary<int, int> DrawGuide { get; set; }
-		public bool Passable { get; set; }
 		public PipeItem() : base()
 		{
 
@@ -47,12 +46,6 @@ namespace ItemPipes.Framework
 			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
 			SpriteTexturePath = $"assets/Pipes/{IDName}/{IDName}_Sprite.png";
 			SpriteTexture = ModEntry.helper.Content.Load<Texture2D>(SpriteTexturePath);
-		}
-
-
-		public override bool isPassable()
-		{
-			return Passable;
 		}
 
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
@@ -175,7 +168,7 @@ namespace ItemPipes.Framework
 			//0 = 6
 			//West = 100 = 11
 			if (location.objects.ContainsKey(surroundingLocations) && (location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this)
-				|| location.objects[surroundingLocations] is InvisibilizerItem))
+				|| location.objects[surroundingLocations] is PPMItem))
 			{
 				drawSum += 100;
 			}
@@ -187,7 +180,7 @@ namespace ItemPipes.Framework
 			//W + E = 110 = 8
 			surroundingLocations.X -= 2f;
 			if (location.objects.ContainsKey(surroundingLocations) && (location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this)
-				|| location.objects[surroundingLocations] is InvisibilizerItem))
+				|| location.objects[surroundingLocations] is PPMItem))
 			{
 				drawSum += 10;
 			}
@@ -202,7 +195,7 @@ namespace ItemPipes.Framework
 			surroundingLocations.X += 1f;
 			surroundingLocations.Y += 1f;
 			if (location.objects.ContainsKey(surroundingLocations) && (location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this)
-				|| location.objects[surroundingLocations] is InvisibilizerItem))
+				|| location.objects[surroundingLocations] is PPMItem))
 			{
 				drawSum += 500;
 			}
@@ -220,7 +213,7 @@ namespace ItemPipes.Framework
 			//N + S + W = 1510 = 3
 			//N + E + W  + S = 1610 = 5
 			if (location.objects.ContainsKey(surroundingLocations) && (location.objects[surroundingLocations] is PipeItem && ((PipeItem)location.objects[surroundingLocations]).countsForDrawing(this)
-				|| location.objects[surroundingLocations] is InvisibilizerItem))
+				|| location.objects[surroundingLocations] is PPMItem))
 			{
 				drawSum += 1000;
 			}

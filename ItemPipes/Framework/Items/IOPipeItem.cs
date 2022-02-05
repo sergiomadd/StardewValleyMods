@@ -56,10 +56,14 @@ namespace ItemPipes.Framework.Items
                 if (DataAccess.IOPipeNames.Contains(this.Name))
                 {
                     List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-                    IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
-                    if (pipe != null)
+                    Node node = nodes.Find(n => n.Position.Equals(this.TileLocation));
+                    if(node is IOPipeNode)
                     {
-                        Printer.Info($"{Name} is {pipe.State}");
+                        IOPipeNode pipe = (IOPipeNode)node;
+                        if (pipe != null)
+                        {
+                            Printer.Info($"{Name} is {pipe.State}");
+                        }
                     }
                 }
             }

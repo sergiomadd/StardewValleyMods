@@ -36,7 +36,69 @@ namespace ItemPipes.Framework.Nodes
             Broken = false;
         }
 
-        public override string GetState()
+        public bool CanConnectedWith(PipeNode target)
+        {
+            bool connected = false;
+            List<PipeNode> path = GetPath(target);
+            if (path.Count > 0 && path.Last().Equals(target))
+            {
+                connected = true;
+            }
+            return connected;
+        }
+
+        public List<PipeNode> GetPath(PipeNode target)
+        {
+            if (Globals.UltraDebug) { Printer.Info($"Getting path for {target.Print()}"); }
+            List<PipeNode> path = new List<PipeNode>();
+            path = GetPathRecursive(target, path);
+            return path;
+        }
+
+        public List<PipeNode> GetPathRecursive(PipeNode target, List<PipeNode> path)
+        {
+            if (Globals.UltraDebug) { Printer.Info(Print()); }
+            Node adj;
+            if (path.Contains(target))
+            {
+                return path;
+            }
+            else
+            {
+                path.Add(this);
+                adj = Adjacents[Sides.North];
+                if (!path.Contains(target) && adj != null && adj is PipeNode && !path.Contains(adj))
+                {
+                    PipeNode adjPipe = (PipeNode)adj;
+                    path = adjPipe.GetPathRecursive(target, path);
+                }
+                adj = Adjacents[Sides.South];
+                if (!path.Contains(target) && adj != null && adj is PipeNode && !path.Contains(adj))
+                {
+                    PipeNode adjPipe = (PipeNode)adj;
+                    path = adjPipe.GetPathRecursive(target, path);
+                }
+                adj = Adjacents[Sides.East];
+                if (!path.Contains(target) && adj != null && adj is PipeNode && !path.Contains(adj))
+                {
+                    PipeNode adjPipe = (PipeNode)adj;
+                    path = adjPipe.GetPathRecursive(target, path);
+                }
+                adj = Adjacents[Sides.West];
+                if (!path.Contains(target) && adj != null && adj is PipeNode && !path.Contains(adj))
+                {
+                    PipeNode adjPipe = (PipeNode)adj;
+                    path = adjPipe.GetPathRecursive(target, path);
+                }
+                if (!path.Contains(target))
+                {
+                    path.Remove(this);
+                }
+                return path;
+            }
+        }
+
+        public virtual string GetState()
         {
             if (!Passable)
             {
@@ -47,9 +109,9 @@ namespace ItemPipes.Framework.Nodes
                 return State + "_passable";
             }
         }
-        public Node MoveItem(Item item, Node target, int index, List<Node> path)
+        public PipeNode MoveItem(Item item, PipeNode target, int index, List<PipeNode> path)
         {
-            Node broken = null;
+            PipeNode broken = null;
             DisplayItem(item);
             if (!this.Equals(target))
             {
@@ -58,24 +120,20 @@ namespace ItemPipes.Framework.Nodes
                 if (index < path.Count-1)
                 {
                     index++;
-                    Node nextNode = path[index];
+                    PipeNode nextNode = path[index];
                     if (Location.getObjectAtTile((int)nextNode.Position.X, (int)nextNode.Position.Y) != null)
                     {
-                        if (nextNode is PipeNode)
+                        //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Index: " + index);
+                        //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? " + Broken);
+                        if (!Broken)
                         {
-                            PipeNode pipe = (PipeNode)nextNode;
-                            //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Index: " + index);
-                            //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? " + Broken);
-                            if (!Broken)
-                            {
-                                broken = pipe.MoveItem(item, target, index, path);
-                            }
-                            else
-                            {
-                                //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? when true " + Broken);
-                                broken = nextNode;
-                                return broken;
-                            }
+                            broken = nextNode.MoveItem(item, target, index, path);
+                        }
+                        else
+                        {
+                            //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] Broken? when true " + Broken);
+                            broken = nextNode;
+                            return broken;
                         }
                     }
                     else
@@ -109,23 +167,19 @@ namespace ItemPipes.Framework.Nodes
             return canLoad;
         }
 
-        public Node ConnectPipe(Node target, int index, List<Node> path)
+        public PipeNode ConnectPipe(PipeNode target, int index, List<PipeNode> path)
         {
-            Node broken = null;
+            PipeNode broken = null;
             if (!this.Equals(target))
             {
                 DisplayConnection();
                 if (index < path.Count - 1)
                 {
                     index++;
-                    Node nextNode = path[index];
+                    PipeNode nextNode = path[index];
                     if (Location.getObjectAtTile((int)nextNode.Position.X, (int)nextNode.Position.Y) != null)
                     {
-                        if (nextNode is PipeNode)
-                        {
-                            PipeNode pipe = (PipeNode)nextNode;
-                            broken = pipe.ConnectPipe(target, index, path);
-                        }
+                        broken = nextNode.ConnectPipe(target, index, path);
                     }
                     else
                     {

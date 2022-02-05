@@ -40,9 +40,9 @@ namespace ItemPipes.Framework.Factories
             {
                 return new GoldPipeItem();
             }
-            else if (obj.name.Equals("Invisibilizer"))
+            else if (obj.name.Equals("P.P.M."))
             {
-                return new InvisibilizerItem();
+                return new PPMItem();
             }
             else
             {
@@ -77,9 +77,9 @@ namespace ItemPipes.Framework.Factories
             {
                 return new GoldPipeItem(position);
             }
-            else if (obj.name.Equals("Invisibilizer"))
+            else if (obj.name.Equals("P.P.M."))
             {
-                return new InvisibilizerItem(position);
+                return new PPMItem(position);
             }
             else
             {

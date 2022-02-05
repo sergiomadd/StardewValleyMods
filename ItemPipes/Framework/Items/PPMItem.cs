@@ -19,16 +19,16 @@ using ItemPipes.Framework.Factories;
 
 namespace ItemPipes.Framework.Items
 {
-	[XmlType("Mods_sergiomadd.ItemPipes_InvisibilizerItem")]
+	[XmlType("Mods_sergiomadd.ItemPipes_PPMItem")]
 
-	public class InvisibilizerItem : CustomObjectItem
+	public class PPMItem : CustomObjectItem
 	{
-
-		public InvisibilizerItem() : base()
+        public bool ToolCall { get; set; }
+        public PPMItem() : base()
 		{
-			Name = "Invisibilizer";
-			IDName = "Invisibilizer";
-			Description = "Invisibilizer DESCRIPTION";
+			Name = "P.P.M.";
+			IDName = "PPM";
+			Description = "A machine that when right clickled, will turn all connected pipes crossable.";
 			State = "off";
 			ItemTexturePath = $"assets/Objects/{IDName}/{IDName}_{State}.png";
 			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
@@ -37,13 +37,14 @@ namespace ItemPipes.Framework.Items
 			setOutdoors.Value = true;
 			setIndoors.Value = true;
 
+			ToolCall = false;
 		}
 
-		public InvisibilizerItem(Vector2 position) : base(position)
+		public PPMItem(Vector2 position) : base(position)
 		{
-			Name = "Invisibilizer";
-			IDName = "Invisibilizer";
-			Description = "Invisibilizer DESCRIPTION";
+			Name = "P.P.M.";
+			IDName = "PPM";
+			Description = "P.P.M. DESCRIPTION";
 			State = "off";
 			ItemTexturePath = $"assets/Objects/{IDName}/{IDName}_{State}.png";
 			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
@@ -52,33 +53,47 @@ namespace ItemPipes.Framework.Items
 			setOutdoors.Value = true;
 			setIndoors.Value = true;
 
+			ToolCall = false;
 		}
 
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
 		{
+			bool result = false;
 			if (justCheckingForActivity)
 			{
-				return true;
-
+				result = true;
 			}
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true))
 			{
-				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-				Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-				if(node != null && node is InvisibilizerNode)
+				//When right clicking using a tool
+				//it calls checkforaction 2 times, dont know why.
+				if(!ToolCall)
                 {
-					InvisibilizerNode invis = (InvisibilizerNode)node;
-					invis.ChangeState();
-					return false;
+					List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+					Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+					if (node != null && node is PPMNode)
+					{
+						PPMNode invis = (PPMNode)node;
+						if (invis.ChangeState())
+						{
+							Passable = true;
+						}
+						else
+						{
+							Passable = false;
+						}
+						result = false;
+					}
 				}
-			}
-			else if (!justCheckingForActivity && who != null && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())
-			{
-				this.performToolAction(null, who.currentLocation);
+				if (who.CurrentTool != null && !ToolCall)
+				{
+					ToolCall = true;
+					result = true;
+				}
 
 			}
-			return true;
+			return result;
 		}
 
 		public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
@@ -130,13 +145,16 @@ namespace ItemPipes.Framework.Items
 
 		public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
 		{
+			//Misc asigment for refresh
+			ToolCall = false;
+			//Printer.Info("TO FALSE");
+
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			//int sourceRectPosition = new Rectangle(0, 0, 16, 32);
 			List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
 			Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-			if (node != null && node is InvisibilizerNode)
+			if (node != null && node is PPMNode)
 			{
-				InvisibilizerNode invis = (InvisibilizerNode)node;
+				PPMNode invis = (PPMNode)node;
 				State = invis.State;
 			}
 

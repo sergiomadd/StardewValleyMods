@@ -25,8 +25,9 @@ namespace ItemPipes.Framework.Items
 		[XmlIgnore]
 		public Texture2D ItemTexture { get; set; }
 		public string ItemTexturePath { get; set; }
-		[XmlIgnore]
 		public string State { get; set; }
+		public bool Passable { get; set; }
+
 
 		public CustomObjectItem()
 		{
@@ -73,6 +74,10 @@ namespace ItemPipes.Framework.Items
 			return Name;
 		}
 
+		public override bool isPassable()
+		{
+			return Passable;
+		}
 
 		public override bool placementAction(GameLocation location, int x, int y, Farmer who = null)
 		{

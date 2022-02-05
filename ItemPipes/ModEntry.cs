@@ -150,7 +150,7 @@ namespace ItemPipes
             spaceCore.RegisterSerializerType(typeof(PolymorphicPipeItem));
             spaceCore.RegisterSerializerType(typeof(FilterPipeItem));
 
-            spaceCore.RegisterSerializerType(typeof(InvisibilizerItem));
+            spaceCore.RegisterSerializerType(typeof(PPMItem));
 
 
             spaceCore.RegisterSerializerType(typeof(WrenchItem));
@@ -254,17 +254,22 @@ namespace ItemPipes
             List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in addedObjects)
             {
-                NetworkManager.AddObject(obj);
-                NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
+                if(DataAccess.ModItems.Contains(obj.Value.Name))
+                {
+                    NetworkManager.AddObject(obj);
+                    NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
+                }
             }
 
             List<KeyValuePair<Vector2, StardewValley.Object>> removedObjects = e.Removed.ToList();
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in removedObjects)
             {
-                NetworkManager.RemoveObject(obj);
-                NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
+                if (DataAccess.ModItems.Contains(obj.Value.Name))
+                {
+                    NetworkManager.RemoveObject(obj);
+                    NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
+                }
             }
-            Printer.Info("THREADS:" +DataAccess.GetDataAccess().Threads.Count.ToString());
         }
 
         private void OnDayStarted(object sender, DayStartedEventArgs e)
@@ -278,7 +283,7 @@ namespace ItemPipes
                 Game1.player.addItemToInventory(new InserterPipeItem());
                 Game1.player.addItemToInventory(new PolymorphicPipeItem());
                 Game1.player.addItemToInventory(new FilterPipeItem());
-                Game1.player.addItemToInventory(new InvisibilizerItem());
+                Game1.player.addItemToInventory(new PPMItem());
                 //Game1.player.addItemToInventory(new Pipe());
             }
             if (!Game1.player.hasItemInInventoryNamed("Wrench"))

@@ -106,6 +106,54 @@ namespace ItemPipes.Framework
             }
         }
 
+        public override bool AddAdjacent(Side side, Node node)
+        {
+            bool added = false;
+            if (Adjacents[side] == null)
+            {
+                added = true;
+                Adjacents[side] = node;
+                node.AddAdjacent(Sides.GetInverse(side), this);
+                if (node is IOPipeNode)
+                {
+                    IOPipeNode iOPipeNode = (IOPipeNode)node;
+                    iOPipeNode.AddConnectedContainer(this);
+                }
+            }
+            return added;
+        }
+
+        public override bool RemoveAdjacent(Side side, Node node)
+        {
+            bool removed = false;
+            if (Adjacents[side] != null)
+            {
+                removed = true;
+                Adjacents[side] = null;
+                node.RemoveAdjacent(Sides.GetInverse(side), this);
+                if (node is IOPipeNode)
+                {
+                    IOPipeNode iOPipeNode = (IOPipeNode)node;
+                    iOPipeNode.RemoveConnectedContainer(this);
+                }
+            }
+            return removed;
+        }
+
+
+        public override bool RemoveAllAdjacents()
+        {
+            bool removed = false;
+            foreach (KeyValuePair<Side, Node> adj in Adjacents.ToList())
+            {
+                if (adj.Value != null)
+                {
+                    removed = true;
+                    RemoveAdjacent(adj.Key, adj.Value);
+                }
+            }
+            return removed;
+        }
 
         public virtual bool IsEmpty()
         {

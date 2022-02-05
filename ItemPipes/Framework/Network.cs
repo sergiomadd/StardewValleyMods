@@ -21,7 +21,7 @@ namespace ItemPipes.Framework
         public List<InputNode> Inputs { get; set; }
         public List<ConnectorNode> Connectors { get; set; }
         public bool IsPassable { get; set; }
-        public InvisibilizerNode Invis { get; set; }
+        public PPMNode Invis { get; set; }
 
         public Network() { }
         public Network(int id)
@@ -86,9 +86,9 @@ namespace ItemPipes.Framework
                 {
                     Connectors.Add((ConnectorNode)node);
                 }
-                else if (node is InvisibilizerNode && Invis == null)
+                else if (node is PPMNode && Invis == null)
                 {
-                    Invis = (InvisibilizerNode)node;
+                    Invis = (PPMNode)node;
                 }
             }
             return added;
@@ -113,12 +113,12 @@ namespace ItemPipes.Framework
                 {
                     Connectors.Remove((ConnectorNode)node);
                 }
-                else if (node is InvisibilizerNode && Invis != null)
+                else if (node is PPMNode && Invis != null)
                 {
                     Invis = null;
                     if(IsPassable)
                     {
-                        Deinvisibilize((InvisibilizerNode)node);
+                        Deinvisibilize((PPMNode)node);
                     }
                 }
             }
@@ -228,7 +228,7 @@ namespace ItemPipes.Framework
             }
         }
 
-        public void Invisibilize(InvisibilizerNode invis)
+        public void Invisibilize(PPMNode invis)
         {
             Invis = invis;
             IsPassable = true;
@@ -238,7 +238,7 @@ namespace ItemPipes.Framework
             }
         }
 
-        public void Deinvisibilize(InvisibilizerNode invis)
+        public void Deinvisibilize(PPMNode invis)
         {
             Invis = invis;
             IsPassable = false;

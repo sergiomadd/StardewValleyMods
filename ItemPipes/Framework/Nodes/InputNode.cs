@@ -7,12 +7,13 @@ using ItemPipes.Framework.Model;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Buildings;
+using Netcode;
 
 namespace ItemPipes.Framework
 {
     public abstract class InputNode : IOPipeNode
     {
-        public List<string> Filter { get; set; }
+        public NetObjectList<Item> Filter { get; set; }
         public int Priority { get; set; }
 
         public InputNode() : base()
@@ -23,7 +24,7 @@ namespace ItemPipes.Framework
         public InputNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            Filter = new List<string>();
+            Filter = new NetObjectList<Item>();
         }
 
         public bool HasFilter()

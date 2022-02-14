@@ -77,11 +77,14 @@ namespace ItemPipes.Framework.Nodes
                 removed = true;
                 Adjacents[side] = null;
                 node.RemoveAdjacent(Sides.GetInverse(side), this);
-                if (node is PipeNode)
+                if (node != null && node is PipeNode)
                 {
                     PipeNode pipeNode = (PipeNode)node;
                     AdjNetworks.Remove(pipeNode.ParentNetwork);
-                    pipeNode.ParentNetwork.RemoveNode(this);
+                    if(pipeNode.ParentNetwork != null)
+                    {
+                        pipeNode.ParentNetwork.RemoveNode(this);
+                    }
                 }
             }
             return removed;

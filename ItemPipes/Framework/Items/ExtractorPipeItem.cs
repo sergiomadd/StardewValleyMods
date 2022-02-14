@@ -17,7 +17,6 @@ namespace ItemPipes.Framework.Items
 
         public ExtractorPipeItem() : base()
         {
-            State = "unconnected";
             Name = "Extractor Pipe";
             IDName = "ExtractorPipe";
             Description = "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.";
@@ -26,7 +25,6 @@ namespace ItemPipes.Framework.Items
 
         public ExtractorPipeItem(Vector2 position) : base(position)
         {
-            State = "unconnected";
             Name = "Extractor Pipe";
             IDName = "ExtractorPipe";
             Description = "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.";

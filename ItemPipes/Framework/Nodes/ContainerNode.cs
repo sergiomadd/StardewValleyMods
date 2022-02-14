@@ -13,57 +13,44 @@ using Netcode;
 
 namespace ItemPipes.Framework
 {
-    public class ContainerNode : PipeNode
+    public class ContainerNode : Node
     {
         public string Type { get; set; }
-        public OutputNode Output { get; set; }
-        public InputNode Input { get; set; }
-        public List<string> Filter { get; set; }
+        public List<IOPipeNode> IOPipes { get; set; }
+        public NetObjectList<Item> Filter { get; set; }
 
         public ContainerNode() { }
         public ContainerNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             Type = "";
-            Output = null;
-            Input = null;
-            Filter = new List<string>();
+            IOPipes = new List<IOPipeNode>();
+            Filter = new NetObjectList<Item>();
         }
 
 
-        public bool AddIOPipe(Node entity)
+        public bool AddIOPipe(Node node)
         {
             bool added = false;
-            if (Output == null && entity is OutputNode)
+
+            if (IOPipes.Count < 4 && !IOPipes.Contains(node) && node is IOPipeNode)
             {
-                Output = (OutputNode)entity;
                 added = true;
-                if (Globals.UltraDebug) { Printer.Info($"[?] OUTPUT ADDED"); }
-            }
-            else if (Input == null && entity is InputNode)
-            {
-                Input = (InputNode)entity;
-                added = true;
-                if (Globals.UltraDebug) { Printer.Info($"[?] INPUT ADDED"); }
+                IOPipes.Add(node as IOPipeNode);
+                if (Globals.UltraDebug) { Printer.Info($"[?] IOPipe ADDED"); }
             }
             return added;
         }
 
-        public bool RemoveIOPipe(Node entity)
+        public bool RemoveIOPipe(Node node)
         {
             bool removed = false;
-            if (Output != null && entity is OutputNode)
+            if (IOPipes.Count > 0 && IOPipes.Contains(node) && node is IOPipeNode)
             {
-                Output = null;
                 removed = true;
-                if (Globals.UltraDebug) { Printer.Info($"[?] OUTPUT REMOVED"); }
+                IOPipes.Remove(node as IOPipeNode);
+                if (Globals.UltraDebug) { Printer.Info($"[?] IOPipe REMOVED"); }
             }
-            else if (Input != null && entity is InputNode)
-            {
-                Input = null;
-                removed = true;
-                if (Globals.UltraDebug) { Printer.Info($"[?] INPUT REMOVED"); }
-            }
-            if(removed)
+            if (removed)
             {
                 ScanMoreIOPipes();
             }
@@ -157,11 +144,10 @@ namespace ItemPipes.Framework
 
         public virtual bool IsEmpty()
         {
-            Printer.Info("submethod");
             return false;
         }
 
-        public virtual List<string> UpdateFilter(NetObjectList<Item> filteredItems)
+        public virtual NetObjectList<Item> UpdateFilter(NetObjectList<Item> filteredItems)
         {
             return null;
         }

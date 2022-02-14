@@ -135,7 +135,6 @@ namespace ItemPipes
                 }
                 
             }
-            
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -207,6 +206,7 @@ namespace ItemPipes
                 NetworkManager.UpdateLocationNetworks(location);
             }
             if (Globals.UltraDebug) { Printer.Info("Location networks loaded!"); }
+
         }
 
         private void Reset()
@@ -222,33 +222,60 @@ namespace ItemPipes
             {
                 if (Context.IsWorldReady)
                 {
-                    /*if (e.IsMultipleOf(30))
-                    {
-                        if (Globals.Debug) { Printer.Info($"[X] UPDATETICKET"); }
-                        Animator.updated = true;
-                    }*/
                     //Tier 1 Extractors
                     if (e.IsMultipleOf(120))
                     {
-                        DataAccess DataAccess = DataAccess.GetDataAccess();
                         foreach (GameLocation location in Game1.locations)
                         {
                             List<Network> networks = DataAccess.LocationNetworks[location];
                             if (networks.Count > 0)
                             {
-                                if (Globals.UltraDebug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
+                                //if (Globals.UltraDebug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
                                 foreach (Network network in networks)
                                 {
                                     //Printer.Info(network.Print());
-                                    network.ProcessExchanges(1);
+                                    if (network.Outputs.Count > 0)
+                                    {
+                                        network.ProcessExchanges(1);
+                                    }
+
                                 }
                             }
                         }
+                        /*
+                        Thread thread = new Thread(new ThreadStart(ProcessNetworks));
+                        if (Globals.UltraDebug) { Printer.Info($"CREATED NEW THREAD WITH ID [{thread.ManagedThreadId}]"); }
+                        DataAccess.GetDataAccess().Threads.Add(thread);
+                        thread.Start();
+                        */
                     }
                 }
             }
         }
+        /*
+        private void ProcessNetworks()
+        {
+            DataAccess DataAccess = DataAccess.GetDataAccess();
+            foreach (GameLocation location in Game1.locations)
+            {
+                List<Network> networks = DataAccess.LocationNetworks[location];
+                if (networks.Count > 0)
+                {
+                    //if (Globals.UltraDebug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
+                    foreach (Network network in networks)
+                    {
+                        //Printer.Info(network.Print());
+                        if (network.Outputs.Count > 0)
+                        {
+                            network.ProcessExchanges(1);
+                        }
 
+                    }
+                }
+            }
+            DataAccess.GetDataAccess().Threads.Add(Thread.CurrentThread);
+        }
+        */
         private void OnObjectListChanged(object sender, ObjectListChangedEventArgs e)
         {
             List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();

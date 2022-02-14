@@ -21,7 +21,7 @@ namespace ItemPipes.Framework.Items
 {
 	[XmlType("Mods_sergiomadd.ItemPipes_PPMItem")]
 
-	public class PPMItem : CustomObjectItem
+	public class PPMItem : CustomBigCraftableItem
 	{
         public bool ToolCall { get; set; }
         public PPMItem() : base()
@@ -32,10 +32,6 @@ namespace ItemPipes.Framework.Items
 			State = "off";
 			ItemTexturePath = $"assets/Objects/{IDName}/{IDName}_{State}.png";
 			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
-
-			bigCraftable.Value = true;
-			setOutdoors.Value = true;
-			setIndoors.Value = true;
 
 			ToolCall = false;
 		}
@@ -48,10 +44,6 @@ namespace ItemPipes.Framework.Items
 			State = "off";
 			ItemTexturePath = $"assets/Objects/{IDName}/{IDName}_{State}.png";
 			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
-
-			bigCraftable.Value = true;
-			setOutdoors.Value = true;
-			setIndoors.Value = true;
 
 			ToolCall = false;
 		}

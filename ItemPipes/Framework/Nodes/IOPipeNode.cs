@@ -57,19 +57,18 @@ namespace ItemPipes.Framework
             }
         }
 
-        public bool AddConnectedContainer(Node entity)
+        public bool AddConnectedContainer(Node node)
         {
             bool added = false;
-            if (Globals.UltraDebug) { Printer.Info($"[?] Adding {entity.Name} container to {Print()} "); }
+            if (Globals.UltraDebug) { Printer.Info($"[?] Adding {node.Name} container to {Print()} "); }
             if (Globals.UltraDebug) { Printer.Info($"[?] Alreadyhas a container? {ConnectedContainer != null}"); }
-            if (ConnectedContainer == null && entity is ContainerNode)
+            if (ConnectedContainer == null && node is ContainerNode)
             {
                 if (Globals.UltraDebug) { Printer.Info($"[?] Connecting adjacent container.."); }
-                ContainerNode container = (ContainerNode)entity;
-                if ((this is OutputNode && container.Output == null) ||
-                    (this is InputNode && container.Input == null))
+                ContainerNode container = (ContainerNode)node;
+                if (container.IOPipes.Count < 4)
                 {
-                    ConnectedContainer = (ContainerNode)entity;
+                    ConnectedContainer = (ContainerNode)node;
                     ConnectedContainer.AddIOPipe(this);
                     if (Globals.UltraDebug) { Printer.Info($"[?] CONNECTED CONTAINER ADDED"); }
                 }
@@ -87,11 +86,11 @@ namespace ItemPipes.Framework
             return added;
         }
 
-        public bool RemoveConnectedContainer(Node entity)
+        public bool RemoveConnectedContainer(Node node)
         {
             bool removed = false;
-            if (Globals.UltraDebug) { Printer.Info($"[?] Removing {entity.Name} container "); }
-            if (ConnectedContainer != null && entity is ContainerNode)
+            if (Globals.UltraDebug) { Printer.Info($"[?] Removing {node.Name} container "); }
+            if (ConnectedContainer != null && node is ContainerNode)
             {
                 ConnectedContainer.RemoveIOPipe(this);
                 ConnectedContainer = null;

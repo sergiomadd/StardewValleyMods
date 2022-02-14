@@ -21,7 +21,7 @@ namespace ItemPipes.Framework.Nodes
                 ShippingBin = (ShippingBin)building;
             }
 			Farm = Game1.getFarm();
-            Filter = new List<string>();
+            Filter = new NetObjectList<Item>();
             Type = "ShippingBin";
         }
 
@@ -37,18 +37,18 @@ namespace ItemPipes.Framework.Nodes
 			}
 
 		}
-        public override List<string> UpdateFilter(NetObjectList<Item> filteredItems)
+        public override NetObjectList<Item> UpdateFilter(NetObjectList<Item> filteredItems)
         {
-            Filter = new List<string>();
+            Filter = new NetObjectList<Item>();
             if (filteredItems == null)
             {
-                Filter.Add(Farm.lastItemShipped.Name);
+                Filter.Add(Farm.lastItemShipped);
             }
             else
             {
                 foreach (Item item in filteredItems.ToList())
                 {
-                    Filter.Add(item.Name);
+                    Filter.Add(item);
                 }
             }
             return Filter;

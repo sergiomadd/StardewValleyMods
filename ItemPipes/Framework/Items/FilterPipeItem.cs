@@ -8,13 +8,18 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Nodes;
+using StardewValley.Menus;
+using Netcode;
+
 
 namespace ItemPipes.Framework.Items
 {
     [XmlType("Mods_sergiomadd.ItemPipes_FilterPipeItem")]
     public class FilterPipeItem : InputItem
     {
-        public FilterPipeItem() : base()
+		public Filter Filter { get; set; }
+
+		public FilterPipeItem() : base()
         {
 			Name = "Filter Pipe";
 			IDName = "FilterPipe";
@@ -28,6 +33,7 @@ namespace ItemPipes.Framework.Items
 			IDName = "FilterPipe";
 			Description = "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.";
 			LoadTextures();
+			Filter = new Filter();
 		}
 
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
@@ -36,12 +42,9 @@ namespace ItemPipes.Framework.Items
 			{
 				return true;
 			}
-			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true))
 			{
-				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-				FilterPipeNode pipe = (FilterPipeNode)nodes.Find(n => n.Position.Equals(TileLocation));
-				pipe.Chest.ShowMenu();
+				Filter.ShowMenu();
 				return false;
 			}
 			if (!justCheckingForActivity && who != null && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() - 1) && who.currentLocation.isObjectAtTile(who.getTileX(), who.getTileY() + 1) && who.currentLocation.isObjectAtTile(who.getTileX() + 1, who.getTileY()) && who.currentLocation.isObjectAtTile(who.getTileX() - 1, who.getTileY()) && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() - 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX(), who.getTileY() + 1).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() - 1, who.getTileY()).isPassable() && !who.currentLocation.getObjectAtTile(who.getTileX() + 1, who.getTileY()).isPassable())

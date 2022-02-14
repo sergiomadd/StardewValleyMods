@@ -30,7 +30,7 @@ namespace ItemPipes.Framework
 		public Dictionary<int, int> DrawGuide { get; set; }
 		public PipeItem() : base()
 		{
-
+			State = "default";
 		}
 
 		public PipeItem(Vector2 position) : base(position)
@@ -38,13 +38,14 @@ namespace ItemPipes.Framework
 			TileLocation = position;
 			base.boundingBox.Value = new Rectangle((int)tileLocation.X * 64, (int)tileLocation.Y * 64, 64, 64);
 			Passable = false;
+			State = "default";
 		}
 
 		public virtual void LoadTextures()
 		{
 			ItemTexturePath = $"assets/Pipes/{IDName}/{IDName}_Item.png";
 			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
-			SpriteTexturePath = $"assets/Pipes/{IDName}/{IDName}_Sprite.png";
+			SpriteTexturePath = $"assets/Pipes/{IDName}/{IDName}_{State}_Sprite.png";
 			SpriteTexture = ModEntry.helper.Content.Load<Texture2D>(SpriteTexturePath);
 		}
 

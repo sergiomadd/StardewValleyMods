@@ -37,7 +37,7 @@ namespace ItemPipes.Framework.Nodes
                 {
                     if (input.HasFilter())
                     {
-                        if (input.Filter.Contains(itemList[index].Name))
+                        if (input.Filter.Any(i => i.Name.Equals(itemList[index].Name)))
                         {
                             item = itemList[index];
                             itemList.RemoveAt(index);
@@ -56,24 +56,6 @@ namespace ItemPipes.Framework.Nodes
             return item;
         }
 
-        public Item TrySendItem(ChestContainerNode input, NetObjectList<Item> itemList, int index)
-        {
-            Item item = null;
-            if (input.CanStackItem(item))
-            {
-                item = itemList[index];
-                itemList.RemoveAt(index);
-                Chest.clearNulls();
-            }
-            else if (input.CanReceiveItems())
-            {
-                item = itemList[index];
-                itemList.RemoveAt(index);
-                Chest.clearNulls();
-            }
-            return item;
-        }
-
         public Item CanSendItem(ChestContainerNode input)
         {
             Item item = null;
@@ -83,28 +65,87 @@ namespace ItemPipes.Framework.Nodes
                 int index = itemList.Count - 1;
                 while (index >= 0 && item == null)
                 {
-
                     if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?] Trying to send: " +itemList[index].Name); }
                     if(itemList[index] != null)
                     {
                         if (input.HasFilter())
                         {
                             if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?] Input has filter" + input.Filter.Count.ToString()); }
-                            if (input.Filter.Contains(itemList[index].Name))
+                            //input.Filter.fin
+                            if (input.Filter.Any(i => i.Name.Equals(itemList[index].Name)))
                             {
-                                item = TrySendItem(input, itemList, index);
+                                item = TryGetItem(input, itemList, index);
                             }
                         }
                         else
                         {
 
-                            item = TrySendItem(input, itemList, index);
+                            item = TryGetItem(input, itemList, index);
                         }
                     }
                     index--;
                 }
             }
             return item;
+        }
+
+        public Item TryGetItem(ChestContainerNode input, NetObjectList<Item> itemList, int index)
+        {
+            //Exception for multiple thread collisions
+            Item item = null;
+            try
+            {
+                if (input.CanStackItem(item))
+                {
+                    item = itemList[index];
+                    itemList.RemoveAt(index);
+                    Chest.clearNulls();
+                }
+                else if (input.CanReceiveItems())
+                {
+                    item = itemList[index];
+                    itemList.RemoveAt(index);
+                    Chest.clearNulls();
+                }
+            }
+            catch(Exception e)
+            {
+
+            }
+            return item;
+        }
+
+        public bool SendItem(ChestContainerNode input, Item item)
+        {
+            bool sent = false;
+            if (input != null)
+            {
+                if (input.HasFilter() && input.Filter.Any(i => i.Name.Equals(item.Name)))
+                {
+                    if (input.InsertItem(item))
+                    {
+                        sent = true;
+                    }
+                    else
+                    {
+                        InsertItem(item);
+                        sent = false;
+                    }
+                }
+                else if (!input.HasFilter())
+                {
+                    if (input.InsertItem(item))
+                    {
+                        sent = true;
+                    }
+                    else
+                    {
+                        InsertItem(item);
+                        sent = false;
+                    }
+                }
+            }
+            return sent;
         }
 
         public bool InsertItem(Item item)
@@ -123,115 +164,6 @@ namespace ItemPipes.Framework.Nodes
             return sent;
         }
 
-        public bool SendItem(ChestContainerNode input, Item item)
-        {
-            bool sent = false;
-            if(input != null)
-            {
-                if (input.HasFilter() && input.Filter.Contains(item.Name))
-                {
-                    if (input.InsertItem(item))
-                    {
-                        sent = true;
-                    }
-                    else
-                    {
-                        InsertItem(item);
-                        sent = false;
-                    }
-                }
-                else if(!input.HasFilter())
-                {
-                    if (input.InsertItem(item))
-                    {
-                        sent = true;
-                    }
-                    else
-                    {
-                        InsertItem(item);
-                        sent = false;
-                    }
-                }
-            }
-            return sent;
-        }
-        /*
-        public bool SendItem(ChestContainerNode input, Item item)
-        {
-            bool sent = false;
-            if (!IsEmpty() && input != null && input.HasFilter())
-            {
-                if (input.Filter.Contains(item.Name))
-                {
-                    if (input.CanStackItem(item))
-                    {
-                        input.ReceiveStack(item);
-                        sent = true;
-                    }
-                    else if (input.CanReceiveItems())
-                    {
-                        input.ReceiveItem(item);
-                        sent = true;
-                    }
-                }
-                else
-                {
-                    if (CanStackItem(item))
-                    {
-                        ReceiveStack(item);
-                        sent = false;
-                    }
-                    else if (CanReceiveItems())
-                    {
-                        ReceiveItem(item);
-                        sent = false;
-                    }
-                    else
-                    {
-                        //Drop item
-                        sent = false;
-                    }
-                }
-
-            }
-            else
-            {
-                if (input.CanStackItem(item))
-                {
-                    input.ReceiveStack(item);
-                    sent = true;
-                }
-                else if (input.CanReceiveItems())
-                {
-                    input.ReceiveItem(item);
-                    sent = true;
-                }
-                else
-                {
-                    if (CanStackItem(item))
-                    {
-                        ReceiveStack(item);
-                        sent = false;
-                    }
-                    else if (CanReceiveItems())
-                    {
-                        ReceiveItem(item);
-                        sent = false;
-                    }
-                    //If returning chest is full
-                    else
-                    {
-                        //Drop item
-                        //Game1.currentLocation.dropObject(item);
-                        sent = false;
-                    }
-                }
-
-            }
-            if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?] Item sent? " + sent.ToString()); }
-            return sent;
-        }
-        */
         public bool CanStack()
         {
             bool canStack = false;
@@ -251,6 +183,7 @@ namespace ItemPipes.Framework.Nodes
 
             return canStack;
         }
+
         public bool CanStackItem(Item item)
         {
             bool canStack = false;
@@ -286,22 +219,22 @@ namespace ItemPipes.Framework.Nodes
             Chest.addItem(item);
         }
 
-        public override List<string> UpdateFilter(NetObjectList<Item> filteredItems)
+        public override NetObjectList<Item> UpdateFilter(NetObjectList<Item> filteredItems)
         {
-            Filter = new List<string>();
+            Filter = new NetObjectList<Item>();
             if (filteredItems == null)
             {
                 NetObjectList<Item> itemList = GetItemList();
                 foreach (Item item in itemList.ToList())
                 {
-                    Filter.Add(item.Name);
+                    Filter.Add(item);
                 }
             }
             else
             {
                 foreach (Item item in filteredItems.ToList())
                 {
-                    Filter.Add(item.Name);
+                    Filter.Add(item);
                 }
             }
             return Filter;
@@ -314,6 +247,7 @@ namespace ItemPipes.Framework.Nodes
             {
                 hasFilter = true;
             }
+
             return hasFilter;
         }
 

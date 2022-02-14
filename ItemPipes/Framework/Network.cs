@@ -56,7 +56,7 @@ namespace ItemPipes.Framework
                 case 1:
                     foreach (OutputNode output in Outputs)
                     {
-                        if(output.Tier == 1)
+                        if (output.Tier == 1)
                         {
                             output.ProcessExchanges();
                         }

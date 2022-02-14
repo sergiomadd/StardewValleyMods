@@ -27,13 +27,6 @@ namespace ItemPipes.Framework.Items
         {
 
         }
-        public override void LoadTextures()
-        {
-            ItemTexturePath = $"assets/Pipes/{IDName}/{IDName}_Item.png";
-            ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
-            SpriteTexturePath = $"assets/Pipes/{IDName}/{IDName}_{State}_Sprite.png";
-            SpriteTexture = ModEntry.helper.Content.Load<Texture2D>(SpriteTexturePath);
-        }
 
         public override bool performToolAction(Tool t, GameLocation location)
         {

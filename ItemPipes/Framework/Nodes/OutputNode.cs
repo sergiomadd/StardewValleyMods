@@ -45,16 +45,16 @@ namespace ItemPipes.Framework
 
         public void ProcessExchanges()
         {
-            if (Globals.UltraDebug) { Printer.Info($"[{ParentNetwork.ID}] Procesing Exchanges..."); }
-            if (Globals.UltraDebug) { Printer.Info($"[{ParentNetwork.ID}] Are there connected input? " + (ConnectedInputs.Count > 0).ToString()); }
+            if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Procesing Exchanges..."); }
+            if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Are there connected input? " + (ConnectedInputs.Count > 0).ToString()); }
             if (ConnectedContainer != null && !ConnectedContainer.IsEmpty()
                 && ConnectedInputs.Count > 0 && Signal.Equals("on"))
             {
-                if (Globals.UltraDebug) { Printer.Info($"[{ ParentNetwork.ID}] Is output empty? " + ConnectedContainer.IsEmpty().ToString()); }
-                if (Globals.UltraDebug) { Printer.Info($"[{ParentNetwork.ID}] CREATED NEW THREAD"); }
+                if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Is output empty? " + ConnectedContainer.IsEmpty().ToString()); }
                 try
                 {
                     Thread thread = new Thread(new ThreadStart(StartExchage));
+                    if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] CREATED NEW THREAD WITH ID [{thread.ManagedThreadId}]"); }
                     DataAccess.GetDataAccess().Threads.Add(thread);
                     thread.Start();
                 }
@@ -66,7 +66,7 @@ namespace ItemPipes.Framework
 
         public void StartExchage()
         {
-            if (Globals.UltraDebug) { Printer.Info($"[{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
+            if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][N{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
             Item item = null;
             int index = 0;
             Dictionary<InputNode, List<PipeNode>> priorityInputs = ConnectedInputs;
@@ -86,47 +86,51 @@ namespace ItemPipes.Framework
                     {
                         ChestContainerNode outChest = (ChestContainerNode)ConnectedContainer;
                         ChestContainerNode inChest = (ChestContainerNode)input.ConnectedContainer;
-                        item = outChest.CanSendItem(inChest);
-                        if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] Can send {item.Name}? " + (item != null).ToString()); }
-                        if (item != null)
+                        if(!outChest.IsEmpty())
                         {
-                            if (Globals.UltraDebug)
+                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] its not emppty"); 
+                            item = outChest.CanSendItem(inChest);
+                            if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] Can send {item.Name}? " + (item != null).ToString()); }
+                            if (item != null)
                             {
-                                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
-                                foreach (Node node in path)
+                                if (Globals.UltraDebug)
                                 {
-                                    Printer.Info(node.Print());
-                                }
-                                Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
-                            }
-                            PipeNode broken = MoveItem(item, input, 0, path);
-                            //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] IS IT BROKEN " +broken);
-                            //Check with try connect/discoonnect also
-                            if (outChest != null && inChest != null)
-                            {
-                                if(broken == null)
-                                {
-                                    bool sent = outChest.SendItem(inChest, item);
-                                    if (!sent)
+                                    Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
+                                    foreach (Node node in path)
                                     {
-                                        if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] {item.Name} CANT ENTER, REVERSE"); }
-                                        List<PipeNode> reversePath = path;
-                                        reversePath.Reverse();
-                                        input.MoveItem(item, this, 0, reversePath);
+                                        Printer.Info(node.Print());
+                                    }
+                                    Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
+                                }
+                                PipeNode broken = MoveItem(item, input, 0, path);
+                                //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] IS IT BROKEN " +broken);
+                                //Check with try connect/discoonnect also
+                                if (outChest != null && inChest != null)
+                                {
+                                    if (broken == null)
+                                    {
+                                        bool sent = outChest.SendItem(inChest, item);
+                                        if (!sent)
+                                        {
+                                            if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] {item.Name} CANT ENTER, REVERSE"); }
+                                            List<PipeNode> reversePath = path;
+                                            reversePath.Reverse();
+                                            input.MoveItem(item, this, 0, reversePath);
+                                        }
+                                        else
+                                        {
+                                            if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] {item.Name} CORRECTLY SENT"); }
+                                        }
                                     }
                                     else
                                     {
-                                        if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] {item.Name} CORRECTLY SENT"); }
+                                        if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] {item.Name} PATH BROKEN, REVERSE"); }
+                                        List<PipeNode> reversePath = path;
+                                        reversePath.Reverse();
+                                        int brokenIndex = reversePath.IndexOf(broken);
+                                        input.MoveItem(item, this, brokenIndex + 1, reversePath);
+                                        inChest.SendItem(outChest, item);
                                     }
-                                }
-                                else
-                                {
-                                    if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] {item.Name} PATH BROKEN, REVERSE"); }
-                                    List<PipeNode> reversePath = path;
-                                    reversePath.Reverse();
-                                    int brokenIndex = reversePath.IndexOf(broken);
-                                    input.MoveItem(item, this, brokenIndex+1, reversePath);
-                                    inChest.SendItem(outChest, item);
                                 }
                             }
                         }
@@ -135,33 +139,45 @@ namespace ItemPipes.Framework
                     {
                         ShippingBinContainerNode shipBin = (ShippingBinContainerNode)input.ConnectedContainer;
                         ChestContainerNode outChest = (ChestContainerNode)ConnectedContainer;
-                        item = outChest.GetItemToShip(input);
-                        if (item != null)
+                        if (!outChest.IsEmpty())
                         {
-                            PipeNode broken = MoveItem(item, input, 0, path);
-                            if (outChest != null)
+                            item = outChest.GetItemToShip(input);
+                            if (item != null)
                             {
-                                if (broken == null)
+                                PipeNode broken = MoveItem(item, input, 0, path);
+                                if (outChest != null)
                                 {
-                                    shipBin.ShipItem(item);
-                                }
-                                else
-                                {
-                                    if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] {item.Name} PATH BROKEN, REVERSE"); }
-                                    List<PipeNode> reversePath = path;
-                                    reversePath.Reverse();
-                                    int brokenIndex = reversePath.IndexOf(broken);
-                                    input.MoveItem(item, this, brokenIndex + 1, reversePath);
-                                    outChest.InsertItem(item);
+                                    if (broken == null)
+                                    {
+                                        shipBin.ShipItem(item);
+                                    }
+                                    else
+                                    {
+                                        if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] {item.Name} PATH BROKEN, REVERSE"); }
+                                        List<PipeNode> reversePath = path;
+                                        reversePath.Reverse();
+                                        int brokenIndex = reversePath.IndexOf(broken);
+                                        input.MoveItem(item, this, brokenIndex + 1, reversePath);
+                                        outChest.InsertItem(item);
+                                    }
                                 }
                             }
                         }
-
                     }
                 }
                 index++;
             }
-            DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
+            try
+            {
+                if (DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
+                {
+                    DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
+                }
+            }
+            catch (Exception e)
+            {
+                DataAccess.GetDataAccess().Threads.Clear();
+            }
         }
 
         public bool IsInputConnected(InputNode input)
@@ -198,7 +214,18 @@ namespace ItemPipes.Framework
         private void AnimateConnection(List<PipeNode> path)
         {
             ConnectPipe(path.Last(), 0, path);
-            DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
+            try
+            {
+                if(DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
+                {
+                    DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
+                }
+            }
+            catch(Exception e)
+            {
+                DataAccess.GetDataAccess().Threads.Clear();
+            }
+
         }
 
         public bool RemoveConnectedInput(InputNode input)

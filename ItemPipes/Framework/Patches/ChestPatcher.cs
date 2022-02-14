@@ -25,14 +25,6 @@ namespace ItemPipes.Framework.Patches
             try
             {
                 harmony.Patch(
-                    original: AccessTools.Method(typeof(Chest), nameof(Chest.addItem)),
-                    prefix: new HarmonyMethod(typeof(ChestPatcher), nameof(ChestPatcher.Chest_addItem_Prefix))
-                );
-                harmony.Patch(
-                    original: AccessTools.Method(typeof(Chest), nameof(Chest.grabItemFromInventory)),
-                    prefix: new HarmonyMethod(typeof(ChestPatcher), nameof(ChestPatcher.Chest_grabItemFromInventory_Prefix))
-                );
-                harmony.Patch(
                     original: AccessTools.Method(typeof(Utility), nameof(Utility.CollectSingleItemOrShowChestMenu)),
                     prefix: new HarmonyMethod(typeof(ChestPatcher), nameof(ChestPatcher.Utility_CollectSingleItemOrShowChestMenu_Prefix))
                 );

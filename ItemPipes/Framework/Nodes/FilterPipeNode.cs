@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
-using ItemPipes.Framework;
-using ItemPipes.Framework.Model;
+using ItemPipes.Framework.Util;
+using ItemPipes.Framework.Items;
+using StardewValley.Menus;
+using Netcode;
+
 
 namespace ItemPipes.Framework.Nodes
 {
     public class FilterPipeNode : InputNode
     {
-        public Chest Chest { get; set; }
         public FilterPipeNode() : base()
         {
 
@@ -21,15 +23,18 @@ namespace ItemPipes.Framework.Nodes
         public FilterPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            Chest = new Chest(true, position, 130);
             Priority = 3;
+            if(obj != null && obj is FilterPipeItem)
+            {
+                Filter = (obj as FilterPipeItem).Filter.items;
+            }
         }
 
         public override void UpdateFilter()
         {
             if (ConnectedContainer != null)
             {
-                Filter = ConnectedContainer.UpdateFilter(Chest.items);
+                ConnectedContainer.UpdateFilter(Filter);
             }
         }
     }

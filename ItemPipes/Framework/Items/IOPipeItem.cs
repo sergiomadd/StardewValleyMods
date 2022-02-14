@@ -18,11 +18,11 @@ namespace ItemPipes.Framework.Items
     {
         public IOPipeItem() : base()
         {
-            State = "unconnected";
+
         }
         public IOPipeItem(Vector2 position) : base(position)
         {
-            State = "unconnected";
+
         }
 
         public override bool performToolAction(Tool t, GameLocation location)

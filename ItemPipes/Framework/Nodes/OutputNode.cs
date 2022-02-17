@@ -88,8 +88,8 @@ namespace ItemPipes.Framework
                         ChestContainerNode inChest = (ChestContainerNode)input.ConnectedContainer;
                         if(!outChest.IsEmpty())
                         {
-                            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] its not emppty"); 
-                            item = outChest.CanSendItem(inChest);
+                            if (Globals.UltraDebug) {Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] its not emppty");}
+                                item = outChest.CanSendItem(inChest);
                             if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] Can send {item.Name}? " + (item != null).ToString()); }
                             if (item != null)
                             {

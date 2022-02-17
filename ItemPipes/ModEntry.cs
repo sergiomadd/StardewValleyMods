@@ -143,6 +143,7 @@ namespace ItemPipes
             var spaceCore = this.Helper.ModRegistry.GetApi<ISpaceCoreApi>("spacechase0.SpaceCore");
             spaceCore.RegisterSerializerType(typeof(IronPipeItem));
             spaceCore.RegisterSerializerType(typeof(GoldPipeItem));
+            spaceCore.RegisterSerializerType(typeof(IridiumPipeItem));
 
             spaceCore.RegisterSerializerType(typeof(ExtractorPipeItem));
             spaceCore.RegisterSerializerType(typeof(InserterPipeItem));
@@ -306,6 +307,7 @@ namespace ItemPipes
                 //Game1.player.addItemToInventory(new Test());
                 Game1.player.addItemToInventory(new IronPipeItem());
                 Game1.player.addItemToInventory(new GoldPipeItem());
+                Game1.player.addItemToInventory(new IridiumPipeItem());
                 Game1.player.addItemToInventory(new ExtractorPipeItem());
                 Game1.player.addItemToInventory(new InserterPipeItem());
                 Game1.player.addItemToInventory(new PolymorphicPipeItem());

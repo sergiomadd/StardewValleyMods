@@ -191,7 +191,7 @@ namespace ItemPipes.Framework.Nodes
             if (itemList.Contains(item))
             {
                 int index = itemList.IndexOf(item);
-                if (itemList[index].canStackWith(item))
+                if (index < itemList.Count && itemList[index].canStackWith(item))
                 {
                     canStack = true;
                 }

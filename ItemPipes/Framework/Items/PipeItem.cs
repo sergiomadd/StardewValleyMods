@@ -135,15 +135,15 @@ namespace ItemPipes.Framework
 
 		public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
 		{
-			DataAccess DataAccess = DataAccess.GetDataAccess();
-			int sourceRectPosition = 1;
 			int drawSum = this.getDrawSum(Game1.currentLocation);
-			sourceRectPosition = GetNewDrawGuide()[drawSum];
-			SpriteTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_Sprite.png");
-			spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+			int sourceRectPosition = GetNewDrawGuide()[drawSum];
+			spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)),
+				new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width,
+				sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight,
+				Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
 		}
 
-		public bool countsForDrawing(SObject adj)
+		public virtual bool countsForDrawing(SObject adj)
 		{
 			if (adj is PipeItem)
 			{

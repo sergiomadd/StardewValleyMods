@@ -40,6 +40,10 @@ namespace ItemPipes.Framework.Factories
             {
                 return new GoldPipeItem();
             }
+            else if (obj.name.Equals("Iridium Pipe"))
+            {
+                return new IridiumPipeItem();
+            }
             else if (obj.name.Equals("P.P.M."))
             {
                 return new PPMItem();
@@ -76,6 +80,10 @@ namespace ItemPipes.Framework.Factories
             else if (obj.name.Equals("Gold Pipe"))
             {
                 return new GoldPipeItem(position);
+            }
+            else if (obj.name.Equals("Iridium Pipe"))
+            {
+                return new IridiumPipeItem(position);
             }
             else if (obj.name.Equals("P.P.M."))
             {

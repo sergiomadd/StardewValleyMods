@@ -13,19 +13,44 @@ using StardewValley.Tools;
 using StardewValley.Objects;
 using SObject = StardewValley.Object;
 using System.Threading;
+using System.Xml.Serialization;
 
 
 namespace ItemPipes.Framework.Items
 {
     public class ConnectorItem : PipeItem
     {
+        [XmlIgnore]
+        public Texture2D ItemMovingSprite { get; set; }
+        [XmlIgnore]
+        public Texture2D DefaultSprite { get; set; }
+        [XmlIgnore]
+        public Texture2D ConnectingSprite { get; set; }
+        [XmlIgnore]
+        public Texture2D ItemMovingSprite_passable { get; set; }
+        [XmlIgnore]
+        public Texture2D DefaultSprite_passable { get; set; }
+        [XmlIgnore]
+        public Texture2D ConnectingSprite_passable { get; set; }
+
         public ConnectorItem() : base()
         {
-
+            
         }
         public ConnectorItem(Vector2 position) : base(position)
         {
-
+            
+        }
+        public override void LoadTextures()
+        {
+            ItemMovingSprite = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_item_Sprite.png");
+            DefaultSprite = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_default_Sprite.png");
+            ConnectingSprite = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_connecting_Sprite.png");
+            ItemMovingSprite_passable = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_item_passable_Sprite.png");
+            DefaultSprite_passable = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_default_passable_Sprite.png");
+            ConnectingSprite_passable = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_connecting_passable_Sprite.png");
+            ItemTexture = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_Item.png");
+            SpriteTexture = DefaultSprite;
         }
 
         public override bool performToolAction(Tool t, GameLocation location)
@@ -59,8 +84,35 @@ namespace ItemPipes.Framework.Items
             return false;
         }
 
+        public override bool countsForDrawing(SObject adj)
+        {
+            if (adj is PipeItem && !(adj is ConnectorItem))
+            {
+                return true;
+            }
+            else if(adj is PipeItem && adj is ConnectorItem)
+            {
+                if(adj.GetType().Equals(this.GetType()))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
         public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
         {
+            int sourceRectPosition = 1;
+            int drawSum = getDrawSum(Game1.currentLocation);
+            sourceRectPosition = GetNewDrawGuide()[drawSum];
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
             {
@@ -69,22 +121,45 @@ namespace ItemPipes.Framework.Items
                 if (node != null && node is ConnectorNode)
                 {
                     ConnectorNode pipe = (ConnectorNode)node;
-                    if(pipe.Passable && !Passable)
+                    if(pipe.Passable)
                     {
-                        Passable = true;
+                        Passable = true; 
+                        if (pipe.StoredItem != null)
+                        {
+                            SpriteTexture = ItemMovingSprite_passable;
+                            spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+                            drawItem(pipe, spriteBatch, x, y, alpha);
+                        }
+                        else if (State == "connecting")
+                        {
+                            SpriteTexture = ConnectingSprite_passable;
+                            spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+                        }
+                        else
+                        {
+                            SpriteTexture = DefaultSprite_passable;
+                            spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+                        }
                     }
-                    else if (!pipe.Passable && Passable)
+                    else if (!pipe.Passable)
                     {
-                        Passable = false;
-                    }
-                    int sourceRectPosition = 1;
-                    int drawSum = getDrawSum(Game1.currentLocation);
-                    sourceRectPosition = GetNewDrawGuide()[drawSum];
-                    SpriteTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_{pipe.GetState()}_Sprite.png");
-                    spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
-                    if (pipe.StoredItem != null)
-                    {
-                        drawItem(pipe, spriteBatch, x, y, alpha);
+                        Passable = false; 
+                        if (pipe.StoredItem != null)
+                        {
+                            SpriteTexture = ItemMovingSprite;
+                            spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+                            drawItem(pipe, spriteBatch, x, y, alpha);
+                        }
+                        else if (State == "connecting")
+                        {
+                            SpriteTexture = ConnectingSprite;
+                            spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+                        }
+                        else
+                        {
+                            SpriteTexture = DefaultSprite;
+                            spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+                        }
                     }
                 }
             }

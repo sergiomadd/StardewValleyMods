@@ -7,11 +7,11 @@ using StardewValley;
 
 namespace ItemPipes.Framework.Nodes
 {
-    public class GoldPipeNode : ConnectorNode
+    public class IridiumPipeNode : ConnectorNode
     {
-        public GoldPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
+        public IridiumPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
-            ItemTimer = 300;
+            ItemTimer = 150;
         }
     }
 }

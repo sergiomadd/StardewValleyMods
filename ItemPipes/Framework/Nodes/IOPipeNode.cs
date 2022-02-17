@@ -137,12 +137,6 @@ namespace ItemPipes.Framework
         public override bool RemoveAllAdjacents()
         {
             bool removed = false;
-            /*
-            if (ConnectedContainer != null)
-            {
-                ConnectedContainer.RemoveIOPipe(this);
-            }
-            */
             foreach (KeyValuePair<Side, Node> adj in Adjacents.ToList())
             {
                 if (adj.Value != null)

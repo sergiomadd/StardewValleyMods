@@ -19,7 +19,7 @@ namespace ItemPipes.Framework.Items
             Name = "Gold Pipe";
             IDName = "GoldPipe";
             Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 5 tiles/1 second.";
-            LoadTextures();
+            base.LoadTextures();
         }
 
         public GoldPipeItem(Vector2 position) : base(position)
@@ -27,7 +27,7 @@ namespace ItemPipes.Framework.Items
             Name = "Gold Pipe";
             IDName = "GoldPipe";
             Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 5 tiles/1 second.";
-            LoadTextures();
+            base.LoadTextures();
         }
     }
 }

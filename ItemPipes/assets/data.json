@@ -2,6 +2,7 @@
   "ModItems": [
     "Iron Pipe",
     "Gold Pipe",
+    "Iridium Pipe",
     "Extractor Pipe",
     "Inserter Pipe",
     "Polymorphic Pipe",
@@ -14,6 +15,7 @@
   "NetworkItems": [
     "Iron Pipe",
     "Gold Pipe",
+    "Iridium Pipe",
     "Extractor Pipe",
     "Inserter Pipe",
     "Polymorphic Pipe",
@@ -22,6 +24,7 @@
   "PipeNames": [
     "Iron Pipe",
     "Gold Pipe",
+    "Iridium Pipe",
     "Extractor Pipe",
     "Inserter Pipe",
     "Polymorphic Pipe",

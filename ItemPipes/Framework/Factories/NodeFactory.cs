@@ -41,6 +41,10 @@ namespace ItemPipes.Framework.Factories
             {
                 return new GoldPipeNode(position, location, obj);
             }
+            else if (obj.name.Equals("Iridium Pipe"))
+            {
+                return new IridiumPipeNode(position, location, obj);
+            }
             else if (obj.name.Equals("Chest"))
             {
                 return new ChestContainerNode(position, location, obj);

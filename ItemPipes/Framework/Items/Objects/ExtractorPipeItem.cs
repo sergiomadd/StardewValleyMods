@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ItemPipes.Framework.Model;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StardewValley;
+﻿using Microsoft.Xna.Framework;
 using System.Xml.Serialization;
 
-namespace ItemPipes.Framework.Items
+namespace ItemPipes.Framework.Items.Objects
 {
     [XmlType("Mods_sergiomadd.ItemPipes_ExtractorPipe")]
     public class ExtractorPipeItem : OutputItem

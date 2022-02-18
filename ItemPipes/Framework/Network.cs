@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using System.Threading;
 using StardewModdingAPI;
 using StardewValley;
+using ItemPipes.Framework.Nodes.ObjectNodes;
 
 namespace ItemPipes.Framework
 {
@@ -51,19 +52,14 @@ namespace ItemPipes.Framework
         public void ProcessExchanges(int tier)
         {
             Update();
-            switch (tier)
+            foreach (OutputNode output in Outputs)
             {
-                case 1:
-                    foreach (OutputNode output in Outputs)
-                    {
-                        if (output.Tier == 1)
-                        {
-                            output.ProcessExchanges();
-                        }
-                    }
-                    break;
-                case 2:
-                    break;
+                if (output.Tier == tier)
+                {
+                    Printer.Info(tier.ToString());
+
+                    output.ProcessExchanges();
+                }
             }
         }
 

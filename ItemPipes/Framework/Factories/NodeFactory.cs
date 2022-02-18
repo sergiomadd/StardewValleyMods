@@ -9,6 +9,8 @@ using StardewValley.Buildings;
 using ItemPipes.Framework.Nodes;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
+using ItemPipes.Framework.Nodes.ObjectNodes;
+
 
 namespace ItemPipes.Framework.Factories
 {
@@ -21,7 +23,15 @@ namespace ItemPipes.Framework.Factories
             {
                 return new ExtractorPipeNode(position, location, obj);
             }
-            if (obj.name.Equals("Inserter Pipe"))
+            else if (obj.name.Equals("Gold Extractor Pipe"))
+            {
+                return new GoldExtractorPipeNode(position, location, obj);
+            }
+            else if (obj.name.Equals("Iridium Extractor Pipe"))
+            {
+                return new IridiumExtractorPipeNode(position, location, obj);
+            }
+            else if (obj.name.Equals("Inserter Pipe"))
             {
                 return new InserterPipeNode(position, location, obj);
             }

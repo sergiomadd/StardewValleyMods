@@ -10,6 +10,7 @@ using StardewValley.Tools;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Factories;
+using ItemPipes.Framework.Items.Objects;
 
 
 namespace ItemPipes.Framework.Items

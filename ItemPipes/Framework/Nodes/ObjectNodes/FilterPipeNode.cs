@@ -10,9 +10,11 @@ using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Items;
 using StardewValley.Menus;
 using Netcode;
+using ItemPipes.Framework.Items.Objects;
 
 
-namespace ItemPipes.Framework.Nodes
+
+namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
     public class FilterPipeNode : InputNode
     {

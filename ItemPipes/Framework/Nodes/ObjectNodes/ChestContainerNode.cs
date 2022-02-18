@@ -11,7 +11,7 @@ using Netcode;
 using System.Threading;
 
 
-namespace ItemPipes.Framework.Nodes
+namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
     public class ChestContainerNode : ContainerNode
     {
@@ -99,12 +99,16 @@ namespace ItemPipes.Framework.Nodes
                 {
                     item = itemList[index];
                     itemList.RemoveAt(index);
+                    //item.Stack = 20;
+                    //itemList[index].Stack = itemList[index].Stack-20;
                     Chest.clearNulls();
                 }
                 else if (input.CanReceiveItems())
                 {
                     item = itemList[index];
                     itemList.RemoveAt(index);
+                    //item.Stack = 20;
+                    //itemList[index].Stack = itemList[index].Stack - 20;
                     Chest.clearNulls();
                 }
             }

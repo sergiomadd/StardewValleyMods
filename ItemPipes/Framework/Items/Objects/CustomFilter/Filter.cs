@@ -8,14 +8,13 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
 using ItemPipes.Framework.Util;
-using ItemPipes.Framework.Nodes.CustomFilter;
 using ItemPipes.Framework.Nodes;
 using StardewValley.Menus;
 using Microsoft.Xna.Framework.Graphics;
 using Netcode;
 
 
-namespace ItemPipes.Framework.Nodes
+namespace ItemPipes.Framework.Items.CustomFilter
 {
     public class Filter
 	{
@@ -24,12 +23,16 @@ namespace ItemPipes.Framework.Nodes
         public int Cols { get; set; }
         public int Rows { get; set; }
         public int Capacity { get; set; }
-
         public Filter()
         {
+
+        }
+        public Filter(int capacity)
+        {
             items = new NetObjectList<Item>();
-            message = "TESTINGG";
-            Capacity = 9;
+            message = "Filter";
+            Capacity = capacity;
+            //Generate cols and rows based on capacity
             Cols = 9;
             Rows = 1;
         }

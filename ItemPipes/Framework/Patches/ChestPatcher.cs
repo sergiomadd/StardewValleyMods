@@ -12,6 +12,7 @@ using ItemPipes.Framework.Nodes;
 using ItemPipes.Framework.Util;
 using Netcode;
 using StardewValley.Menus;
+using ItemPipes.Framework.Nodes.ObjectNodes;
 
 
 namespace ItemPipes.Framework.Patches

@@ -10,9 +10,11 @@ using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Nodes;
 using StardewValley.Menus;
 using Netcode;
+using ItemPipes.Framework.Items.CustomFilter;
 
 
-namespace ItemPipes.Framework.Items
+
+namespace ItemPipes.Framework.Items.Objects
 {
     [XmlType("Mods_sergiomadd.ItemPipes_FilterPipeItem")]
     public class FilterPipeItem : InputItem
@@ -33,7 +35,7 @@ namespace ItemPipes.Framework.Items
 			IDName = "FilterPipe";
 			Description = "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.";
 			LoadTextures();
-			Filter = new Filter();
+			Filter = new Filter(9);
 		}
 
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)

@@ -60,7 +60,6 @@ namespace ItemPipes.Framework
         public override bool AddAdjacent(Side side, Node node)
         {
             bool added = false;
-            Printer.Info("THIS "+ this.Print()+" ADJACENT: "+node.GetType() + " " + node.Print());
             if (Adjacents[side] == null)
             {
                 if(!(node is ConnectorNode) || (node is ConnectorNode && node.GetType().Equals(this.GetType())))

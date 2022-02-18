@@ -9,7 +9,7 @@ using StardewValley.Objects;
 using ItemPipes.Framework;
 using ItemPipes.Framework.Model;
 
-namespace ItemPipes.Framework.Nodes
+namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
     public class InserterPipeNode : InputNode
     {

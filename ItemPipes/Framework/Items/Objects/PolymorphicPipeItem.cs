@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 
 
-namespace ItemPipes.Framework.Items
+namespace ItemPipes.Framework.Items.Objects
 {
     [XmlType("Mods_sergiomadd.ItemPipes_PolymorphicPipeItem")]
 

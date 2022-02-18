@@ -10,6 +10,8 @@ using ItemPipes.Framework.Util;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
+using ItemPipes.Framework.Nodes.ObjectNodes;
+
 
 namespace ItemPipes.Framework
 {
@@ -24,7 +26,6 @@ namespace ItemPipes.Framework
         public OutputNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedInputs = new Dictionary<InputNode, List<PipeNode>>();
-            Tier = 1;
         }
 
         public override void UpdateSignal()
@@ -75,6 +76,7 @@ namespace ItemPipes.Framework
                 ThenBy(pair => pair.Value.Count).
                 ToDictionary(x => x.Key, x => x.Value);
             index = 0;
+            //Mirar para hacer round robin
             while (index < priorityInputs.Count && item == null)
             {
                 InputNode input = priorityInputs.Keys.ToList()[index];
@@ -89,7 +91,7 @@ namespace ItemPipes.Framework
                         if(!outChest.IsEmpty())
                         {
                             if (Globals.UltraDebug) {Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] its not emppty");}
-                                item = outChest.CanSendItem(inChest);
+                            item = outChest.CanSendItem(inChest);
                             if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] Can send {item.Name}? " + (item != null).ToString()); }
                             if (item != null)
                             {

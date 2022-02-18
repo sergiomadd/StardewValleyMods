@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ItemPipes.Framework.Model;
-using ItemPipes.Framework.Nodes;
+using ItemPipes.Framework.Nodes.ObjectNodes;
 using ItemPipes.Framework.Util;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
 
 
-namespace ItemPipes.Framework.Nodes
+namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
     public class PPMNode : Node
     {

@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using StardewValley;
 
-namespace ItemPipes.Framework.Nodes
+namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
     public class GoldPipeNode : ConnectorNode
     {

@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Xml.Serialization;
 using StardewValley;
 
-namespace ItemPipes.Framework.Items
+namespace ItemPipes.Framework.Items.Objects
 {
     [XmlType("Mods_sergiomadd.ItemPipes_IridiumPipeItem")]
     public class IridiumPipeItem : ConnectorItem

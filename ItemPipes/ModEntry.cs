@@ -14,7 +14,7 @@ using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Patches;
 using ItemPipes.Framework.Nodes;
-using ItemPipes.Framework.Items;
+using ItemPipes.Framework.Items.Objects;
 using ItemPipes.Framework.Items.Recipes;
 using HarmonyLib;
 using SpaceCore;
@@ -115,7 +115,7 @@ namespace ItemPipes
             helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             helper.Events.GameLoop.DayStarted += this.OnDayStarted;
             helper.Events.World.ObjectListChanged += this.OnObjectListChanged;
-            helper.Events.GameLoop.OneSecondUpdateTicked += this.OnOneSecondUpdateTicked;
+            helper.Events.GameLoop.UpdateTicked += this.OnUpdateTicked;
             helper.Events.GameLoop.Saving += this.OnSaving;
 
         }
@@ -146,6 +146,9 @@ namespace ItemPipes
             spaceCore.RegisterSerializerType(typeof(IridiumPipeItem));
 
             spaceCore.RegisterSerializerType(typeof(ExtractorPipeItem));
+            spaceCore.RegisterSerializerType(typeof(GoldExtractorPipeItem));
+            spaceCore.RegisterSerializerType(typeof(IridiumExtractorPipeItem));
+
             spaceCore.RegisterSerializerType(typeof(InserterPipeItem));
             spaceCore.RegisterSerializerType(typeof(PolymorphicPipeItem));
             spaceCore.RegisterSerializerType(typeof(FilterPipeItem));
@@ -217,9 +220,9 @@ namespace ItemPipes
             DataAccess.UsedNetworkIDs.Clear();
         }
 
-        private void OnOneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
+        private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            if(Globals.DisableItemSending)
+            if (Globals.DisableItemSending)
             {
                 if (Context.IsWorldReady)
                 {
@@ -243,12 +246,45 @@ namespace ItemPipes
                                 }
                             }
                         }
-                        /*
-                        Thread thread = new Thread(new ThreadStart(ProcessNetworks));
-                        if (Globals.UltraDebug) { Printer.Info($"CREATED NEW THREAD WITH ID [{thread.ManagedThreadId}]"); }
-                        DataAccess.GetDataAccess().Threads.Add(thread);
-                        thread.Start();
-                        */
+                    }
+                    //Tier 2 Extractors
+                    if (e.IsMultipleOf(60))
+                    {
+                        foreach (GameLocation location in Game1.locations)
+                        {
+                            List<Network> networks = DataAccess.LocationNetworks[location];
+                            if (networks.Count > 0)
+                            {
+                                //if (Globals.UltraDebug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
+                                foreach (Network network in networks)
+                                {
+                                    //Printer.Info(network.Print());
+                                    if (network.Outputs.Count > 0)
+                                    {
+                                        network.ProcessExchanges(2);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                    //Tier 3 Extractors
+                    if (e.IsMultipleOf(30))
+                    {
+                        foreach (GameLocation location in Game1.locations)
+                        {
+                            List<Network> networks = DataAccess.LocationNetworks[location];
+                            if (networks.Count > 0)
+                            {
+                                foreach (Network network in networks)
+                                {
+                                    if (network.Outputs.Count > 0)
+                                    {
+                                        network.ProcessExchanges(3);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -304,16 +340,16 @@ namespace ItemPipes
         {
             for(int i=0;i<15;i++)
             {
-                //Game1.player.addItemToInventory(new Test());
                 Game1.player.addItemToInventory(new IronPipeItem());
                 Game1.player.addItemToInventory(new GoldPipeItem());
                 Game1.player.addItemToInventory(new IridiumPipeItem());
                 Game1.player.addItemToInventory(new ExtractorPipeItem());
+                Game1.player.addItemToInventory(new GoldExtractorPipeItem());
+                Game1.player.addItemToInventory(new IridiumExtractorPipeItem());
                 Game1.player.addItemToInventory(new InserterPipeItem());
                 Game1.player.addItemToInventory(new PolymorphicPipeItem());
                 Game1.player.addItemToInventory(new FilterPipeItem());
                 Game1.player.addItemToInventory(new PPMItem());
-                //Game1.player.addItemToInventory(new Pipe());
             }
             if (!Game1.player.hasItemInInventoryNamed("Wrench"))
             {

@@ -16,6 +16,7 @@ using StardewValley.Network;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework.Factories;
 using ItemPipes.Framework.Items;
+using ItemPipes.Framework.Items.Objects;
 
 
 

@@ -4,6 +4,8 @@
     "Gold Pipe",
     "Iridium Pipe",
     "Extractor Pipe",
+    "Gold Extractor Pipe",
+    "Iridium Extractor Pipe",
     "Inserter Pipe",
     "Polymorphic Pipe",
     "Filter Pipe",
@@ -17,6 +19,8 @@
     "Gold Pipe",
     "Iridium Pipe",
     "Extractor Pipe",
+    "Gold Extractor Pipe",
+    "Iridium Extractor Pipe",
     "Inserter Pipe",
     "Polymorphic Pipe",
     "Filter Pipe"
@@ -26,12 +30,16 @@
     "Gold Pipe",
     "Iridium Pipe",
     "Extractor Pipe",
+    "Gold Extractor Pipe",
+    "Iridium Extractor Pipe",
     "Inserter Pipe",
     "Polymorphic Pipe",
     "Filter Pipe"
   ],
   "IOPipeNames": [
     "Extractor Pipe",
+    "Gold Extractor Pipe",
+    "Iridium Extractor Pipe",
     "Inserter Pipe",
     "Polymorphic Pipe",
     "Filter Pipe"

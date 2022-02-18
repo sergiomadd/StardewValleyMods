@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
 using ItemPipes.Framework.Util;
-using ItemPipes.Framework.Nodes.CustomFilter;
 using ItemPipes.Framework.Nodes;
 using StardewValley.Menus;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,7 +18,7 @@ using Microsoft.Xna.Framework.Input;
 using Object = StardewValley.Object;
 
 
-namespace ItemPipes.Framework.Nodes.CustomFilter
+namespace ItemPipes.Framework.Items.CustomFilter
 {
     public class FilterItemGrabMenu : MenuWithInventory
 	{

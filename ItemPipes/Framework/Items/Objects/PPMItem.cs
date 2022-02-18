@@ -15,9 +15,10 @@ using System.Xml.Serialization;
 using StardewValley.Network;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework.Factories;
+using ItemPipes.Framework.Nodes.ObjectNodes;
 
 
-namespace ItemPipes.Framework.Items
+namespace ItemPipes.Framework.Items.Objects
 {
 	[XmlType("Mods_sergiomadd.ItemPipes_PPMItem")]
 

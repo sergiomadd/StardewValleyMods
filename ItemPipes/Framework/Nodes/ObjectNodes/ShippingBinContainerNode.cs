@@ -6,7 +6,7 @@ using Netcode;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ItemPipes.Framework.Nodes
+namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
     public class ShippingBinContainerNode : ContainerNode
     {

@@ -13,6 +13,8 @@ using Microsoft.Xna.Framework;
 using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Factories;
 using ItemPipes.Framework.Items;
+using ItemPipes.Framework.Nodes.ObjectNodes;
+
 
 namespace ItemPipes.Framework
 {

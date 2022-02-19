@@ -8,13 +8,14 @@ using StardewValley;
 
 namespace ItemPipes.Framework.Items
 {
-    public class InputItem : IOPipeItem
+    public abstract class OutputPipeItem : IOPipeItem
     {
-        public InputItem() : base()
+        public OutputPipeItem() : base()
         {
 
         }
-        public InputItem(Vector2 position) : base(position)
+
+        public OutputPipeItem(Vector2 position) : base(position)
         {
 
         }

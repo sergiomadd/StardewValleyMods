@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -11,19 +10,39 @@ using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Factories;
 using ItemPipes.Framework.Items.Objects;
-
+using System.Xml.Serialization;
 
 namespace ItemPipes.Framework.Items
 {
     public abstract class IOPipeItem : PipeItem
     {
+        [XmlIgnore]
+        public Texture2D SignalTexture { get; set; }
+        [XmlIgnore]
+        public Texture2D OnSignal { get; set; }
+        [XmlIgnore]
+        public Texture2D OffSignal { get; set; }
+        [XmlIgnore]
+        public Texture2D UnconnectedSignal { get; set; }
+        [XmlIgnore]
+        public Texture2D NoChestSignal { get; set; }
+
         public IOPipeItem() : base()
         {
-
+            LoadSignals();
         }
         public IOPipeItem(Vector2 position) : base(position)
         {
+            LoadSignals();
+        }
 
+        public void LoadSignals()
+        {
+            OnSignal = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/on.png");
+            OffSignal = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/off.png");
+            UnconnectedSignal = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/unconnected.png");
+            NoChestSignal = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/nochest.png");
+            SignalTexture = UnconnectedSignal;
         }
 
         public override bool performToolAction(Tool t, GameLocation location)
@@ -39,7 +58,8 @@ namespace ItemPipes.Framework.Items
             }
             if (t is WrenchItem)
             {
-                changeState();
+                Printer.Info("WRENCH");
+                ChangeSignal();
                 return false;
             }
             return false;
@@ -63,7 +83,7 @@ namespace ItemPipes.Framework.Items
                         IOPipeNode pipe = (IOPipeNode)node;
                         if (pipe != null)
                         {
-                            Printer.Info($"{Name} is {pipe.State}");
+                            Printer.Info($"{Name} is {pipe.Signal}");
                         }
                     }
                 }
@@ -71,16 +91,37 @@ namespace ItemPipes.Framework.Items
             return false;
         }
 
-        private void changeState()
+        public void ChangeSignal()
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
             List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
             IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
-            pipe.UpdateSignal();
+            pipe.ChangeSignal();
+            UpdateSignal(pipe.Signal);
+        }
+
+        public void UpdateSignal(string signal)
+        {
+            switch (signal)
+            {
+                case "on":
+                    SignalTexture = OnSignal;
+                    break;
+                case "off":
+                    SignalTexture = OffSignal;
+                    break;
+                case "unconnected":
+                    SignalTexture = UnconnectedSignal;
+                    break;
+                case "nochest":
+                    SignalTexture = NoChestSignal;
+                    break;
+            }
         }
 
         public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
         {
+            base.draw(spriteBatch, x, y);
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if(DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
             {
@@ -91,15 +132,20 @@ namespace ItemPipes.Framework.Items
                     IOPipeNode IONode = (IOPipeNode)node;
                     if (IONode.Signal != null)
                     {
-                        int sourceRectPosition = 1;
-                        int drawSum = getDrawSum(Game1.currentLocation);
-                        sourceRectPosition = GetNewDrawGuide()[drawSum];
-                        SpriteTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_{IONode.State}_Sprite.png");
-                        spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width, sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight, Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
-
+                        UpdateSignal(IONode.Signal);
+                        float transparency = 1f;
+                        if (IONode.Passable)
+                        {
+                            Passable = true;
+                            transparency = 0.5f;
+                        }
+                        else
+                        {
+                            Passable = false;
+                            transparency = 1f;
+                        }
                         Rectangle srcRect = new Rectangle(0, 0, 16, 16);
-                        Texture2D signalTexture = Helper.GetHelper().Content.Load<Texture2D>($"assets/Pipes/{IONode.Signal}.png");
-                        spriteBatch.Draw(signalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
+                        spriteBatch.Draw(SignalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
                     }
                 }
             }

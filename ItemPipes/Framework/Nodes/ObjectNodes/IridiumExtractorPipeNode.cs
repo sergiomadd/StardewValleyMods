@@ -3,7 +3,7 @@ using StardewValley;
 
 namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
-    public class IridiumExtractorPipeNode : OutputNode
+    public class IridiumExtractorPipeNode : OutputPipeNode
     {
         public IridiumExtractorPipeNode()
         {

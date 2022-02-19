@@ -12,7 +12,7 @@ using StardewValley;
 namespace ItemPipes.Framework.Items.Objects
 {
     [XmlType("Mods_sergiomadd.ItemPipes_IronPipeItem")]
-    public class IronPipeItem : ConnectorItem
+    public class IronPipeItem : ConnectorPipeItem
     {
         public IronPipeItem() : base()
         {

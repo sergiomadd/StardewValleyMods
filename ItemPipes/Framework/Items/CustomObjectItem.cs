@@ -24,15 +24,12 @@ namespace ItemPipes.Framework.Items
 		public string Description { get; set; }
 		[XmlIgnore]
 		public Texture2D ItemTexture { get; set; }
-		public string ItemTexturePath { get; set; }
 		public string State { get; set; }
 		public bool Passable { get; set; }
 
 
 		public CustomObjectItem()
 		{
-			Name = "DEFAULT NAME";
-			Description = "DEFAULT DESCRIPTION";
 			State = "default";
 			type.Value = "Crafting";
 			canBeSetDown.Value = true;

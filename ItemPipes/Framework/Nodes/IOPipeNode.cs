@@ -34,27 +34,36 @@ namespace ItemPipes.Framework
 
         public virtual void UpdateSignal()
         {
-            if (ConnectedContainer == null)
+            if(!Signal.Equals("off"))
             {
-                Signal = "nochest";
+                if (ConnectedContainer == null)
+                {
+                    Signal = "nochest";
+                }
+                else if (ConnectedContainer != null)
+                {
+                    Signal = "on";
+                }
             }
-            else if (ConnectedContainer != null)
-            {
-                Signal = "on";
-            }
-
         }
 
-        public void ChangeSignal()
+        public virtual void ChangeSignal()
         {
             if(Signal.Equals("off"))
             {
-                Signal = "on";
+                if (ConnectedContainer == null)
+                {
+                    Signal = "nochest";
+                }
+                else if (ConnectedContainer != null)
+                {
+                    Signal = "on";
+                }
             }
             else
             {
                 Signal = "off";
-            }
+            }           
         }
 
         public bool AddConnectedContainer(Node node)

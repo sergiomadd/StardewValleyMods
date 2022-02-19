@@ -31,9 +31,7 @@ namespace ItemPipes.Framework.Items.Objects
 			IDName = "PPM";
 			Description = "A machine that when right clickled, will turn all connected pipes crossable.";
 			State = "off";
-			ItemTexturePath = $"assets/Objects/{IDName}/{IDName}_{State}.png";
-			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
-
+			ItemTexture = ModEntry.helper.Content.Load<Texture2D>($"assets/Objects/{IDName}/{IDName}_{State}.png");
 			ToolCall = false;
 		}
 
@@ -43,8 +41,7 @@ namespace ItemPipes.Framework.Items.Objects
 			IDName = "PPM";
 			Description = "P.P.M. DESCRIPTION";
 			State = "off";
-			ItemTexturePath = $"assets/Objects/{IDName}/{IDName}_{State}.png";
-			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
+			ItemTexture = ModEntry.helper.Content.Load<Texture2D>($"assets/Objects/{IDName}/{IDName}_{State}.png");
 
 			ToolCall = false;
 		}

@@ -26,28 +26,29 @@ namespace ItemPipes.Framework
 	{
 		[XmlIgnore]
 		public Texture2D SpriteTexture { get; set; }
-		public string SpriteTexturePath { get; set; }
+		[XmlIgnore]
+		public Texture2D DefaultSprite { get; set; }
+		[XmlIgnore]
+		public Texture2D ConnectingSprite { get; set; }
 		[XmlIgnore]
 		public Dictionary<int, int> DrawGuide { get; set; }
+
 		public PipeItem() : base()
 		{
-			State = "default";
+
 		}
 
 		public PipeItem(Vector2 position) : base(position)
 		{
-			TileLocation = position;
-			base.boundingBox.Value = new Rectangle((int)tileLocation.X * 64, (int)tileLocation.Y * 64, 64, 64);
 			Passable = false;
-			State = "default";
 		}
 
 		public virtual void LoadTextures()
 		{
-			ItemTexturePath = $"assets/Pipes/{IDName}/{IDName}_Item.png";
-			ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
-			SpriteTexturePath = $"assets/Pipes/{IDName}/{IDName}_{State}_Sprite.png";
-			SpriteTexture = ModEntry.helper.Content.Load<Texture2D>(SpriteTexturePath);
+			ItemTexture = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_Item.png");
+			DefaultSprite = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_default_Sprite.png");
+			ConnectingSprite = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_connecting_Sprite.png");
+			SpriteTexture = DefaultSprite;
 		}
 
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
@@ -138,10 +139,31 @@ namespace ItemPipes.Framework
 		{
 			int drawSum = this.getDrawSum(Game1.currentLocation);
 			int sourceRectPosition = GetNewDrawGuide()[drawSum];
-			spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)),
-				new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width,
-				sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight,
-				Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+			DataAccess DataAccess = DataAccess.GetDataAccess();
+			if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
+			{
+				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+				Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+				if (node != null && node is PipeNode)
+				{
+					PipeNode pipe = (PipeNode)node;
+					float transparency = 1f;
+					if (pipe.Passable)
+					{
+						Passable = true;
+						transparency = 0.5f;
+					}
+					else
+					{
+						Passable = false;
+						transparency = 1f;
+					}
+					spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)),
+						new Rectangle(sourceRectPosition * Fence.fencePieceWidth % SpriteTexture.Bounds.Width,
+						sourceRectPosition * Fence.fencePieceWidth / SpriteTexture.Bounds.Width * Fence.fencePieceHeight,
+						Fence.fencePieceWidth, Fence.fencePieceHeight), Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
+				}
+			}
 		}
 
 		public virtual bool countsForDrawing(SObject adj)
@@ -234,9 +256,9 @@ namespace ItemPipes.Framework
 			{
 				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
 				Node node = nodes.Find(n => n.Position.Equals(this.TileLocation));
-				if (node is ConnectorNode)
+				if (node is ConnectorPipeNode)
 				{
-					ConnectorNode connector = (ConnectorNode)node;
+					ConnectorPipeNode connector = (ConnectorPipeNode)node;
 					if (connector.PassingItem)
 					{
 						drawSum += 5;

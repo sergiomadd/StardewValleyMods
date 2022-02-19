@@ -12,7 +12,7 @@ namespace ItemPipes.Framework.Items.Objects
 {
     [XmlType("Mods_sergiomadd.ItemPipes_PolymorphicPipeItem")]
 
-    public class PolymorphicPipeItem : InputItem
+    public class PolymorphicPipeItem : InputPipeItem
     {
         public PolymorphicPipeItem() : base()
         {

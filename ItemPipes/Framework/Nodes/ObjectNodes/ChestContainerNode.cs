@@ -26,7 +26,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             Type = "Chest";
         }
 
-        public Item GetItemToShip(InputNode input)
+        public Item GetItemToShip(InputPipeNode input)
         {
             Item item = null;
             if (!IsEmpty() && input != null)

@@ -20,7 +20,7 @@ using ItemPipes.Framework.Items;
 
 namespace ItemPipes.Framework.Items
 {
-    public class CustomBigCraftableItem : CustomObjectItem
+    public abstract class CustomBigCraftableItem : CustomObjectItem
     {
 		public CustomBigCraftableItem() : base()
 		{

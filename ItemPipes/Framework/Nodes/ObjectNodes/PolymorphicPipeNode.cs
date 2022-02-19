@@ -11,7 +11,7 @@ using ItemPipes.Framework.Model;
 
 namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
-    public class PolymorphicPipeNode : InputNode
+    public class PolymorphicPipeNode : InputPipeNode
     {
         public PolymorphicPipeNode() : base()
         {

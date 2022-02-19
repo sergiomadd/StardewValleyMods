@@ -11,17 +11,17 @@ using Netcode;
 
 namespace ItemPipes.Framework
 {
-    public abstract class InputNode : IOPipeNode
+    public abstract class InputPipeNode : IOPipeNode
     {
         public NetObjectList<Item> Filter { get; set; }
         public int Priority { get; set; }
 
-        public InputNode() : base()
+        public InputPipeNode() : base()
         {
 
         }
 
-        public InputNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
+        public InputPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
             Filter = new NetObjectList<Item>();

@@ -15,32 +15,58 @@ using ItemPipes.Framework.Nodes.ObjectNodes;
 
 namespace ItemPipes.Framework
 {
-    public abstract class OutputNode : IOPipeNode
+    public abstract class OutputPipeNode : IOPipeNode
     {
         public int Tier { get; set; }
-        public Dictionary<InputNode, List<PipeNode>> ConnectedInputs { get; set; }
-        public OutputNode() : base()
+        public Dictionary<InputPipeNode, List<PipeNode>> ConnectedInputs { get; set; }
+        public OutputPipeNode() : base()
         {
 
         }
-        public OutputNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
+        public OutputPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
-            ConnectedInputs = new Dictionary<InputNode, List<PipeNode>>();
+            ConnectedInputs = new Dictionary<InputPipeNode, List<PipeNode>>();
         }
 
         public override void UpdateSignal()
         {
-            if(ConnectedContainer == null)
+            if(!Signal.Equals("off"))
             {
-                Signal = "nochest";
+                if (ConnectedContainer == null)
+                {
+                    Signal = "nochest";
+                }
+                else if (ConnectedInputs.Count < 1)
+                {
+                    Signal = "unconnected";
+                }
+                else if (ConnectedContainer != null && ConnectedInputs.Count >= 1)
+                {
+                    Signal = "on";
+                }
             }
-            else if (ConnectedInputs.Count < 1)
+        }
+
+        public override void ChangeSignal()
+        {
+            if (Signal.Equals("off"))
             {
-                Signal = "unconnected";
+                if (ConnectedContainer == null)
+                {
+                    Signal = "nochest";
+                }
+                else if (ConnectedInputs.Count < 1)
+                {
+                    Signal = "unconnected";
+                }
+                else if (ConnectedContainer != null && ConnectedInputs.Count >= 1)
+                {
+                    Signal = "on";
+                }
             }
-            else if (ConnectedContainer != null && ConnectedInputs.Count >= 1)
+            else
             {
-                Signal = "on";
+                Signal = "off";
             }
         }
 
@@ -70,7 +96,7 @@ namespace ItemPipes.Framework
             if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][N{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
             Item item = null;
             int index = 0;
-            Dictionary<InputNode, List<PipeNode>> priorityInputs = ConnectedInputs;
+            Dictionary<InputPipeNode, List<PipeNode>> priorityInputs = ConnectedInputs;
             priorityInputs = priorityInputs.
                 OrderByDescending(pair => pair.Key.Priority).
                 ThenBy(pair => pair.Value.Count).
@@ -79,7 +105,7 @@ namespace ItemPipes.Framework
             //Mirar para hacer round robin
             while (index < priorityInputs.Count && item == null)
             {
-                InputNode input = priorityInputs.Keys.ToList()[index];
+                InputPipeNode input = priorityInputs.Keys.ToList()[index];
                 if (input.Signal.Equals("on"))
                 {
                     List<PipeNode> path = priorityInputs.Values.ToList()[index];
@@ -182,7 +208,7 @@ namespace ItemPipes.Framework
             }
         }
 
-        public bool IsInputConnected(InputNode input)
+        public bool IsInputConnected(InputPipeNode input)
         {
             bool connected = false;
             if (ConnectedInputs.Keys.Contains(input))
@@ -192,7 +218,7 @@ namespace ItemPipes.Framework
             return connected;
         }
 
-        public bool AddConnectedInput(InputNode input)
+        public bool AddConnectedInput(InputPipeNode input)
         {
             bool added = false;
             if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Does {Print()} have a valid adjacent container? " + (ConnectedContainer != null).ToString()); }
@@ -230,7 +256,7 @@ namespace ItemPipes.Framework
 
         }
 
-        public bool RemoveConnectedInput(InputNode input)
+        public bool RemoveConnectedInput(InputPipeNode input)
         {
             bool removed = false;
             if (ConnectedInputs.Keys.Contains(input))

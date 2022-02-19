@@ -11,7 +11,7 @@ namespace ItemPipes.Framework.Items.Objects
 {
     [XmlType("Mods_sergiomadd.ItemPipes_InserterPipeItem")]
 
-    public class InserterPipeItem : InputItem
+    public class InserterPipeItem : InputPipeItem
     {
         public InserterPipeItem() : base()
         {

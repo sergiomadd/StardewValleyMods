@@ -14,15 +14,15 @@ namespace ItemPipes.Framework.Util
 {
     public static class Animator
     {
-        public static ConnectorNode current;
+        public static ConnectorPipeNode current;
         public static bool updated;
         public static void AnimateItemSending(List<Node> path)
         {
             foreach (Node node in path.ToList())
             {
-                if (node != null && node is ConnectorNode)
+                if (node != null && node is ConnectorPipeNode)
                 {
-                    ConnectorNode conn = (ConnectorNode)node;
+                    ConnectorPipeNode conn = (ConnectorPipeNode)node;
                     AnimateItemMovement(conn);
                 }
             }
@@ -60,7 +60,7 @@ namespace ItemPipes.Framework.Util
             */
         }
 
-        private static void AnimateItemMovement(ConnectorNode conn)
+        private static void AnimateItemMovement(ConnectorPipeNode conn)
         {
             conn.PassingItem = true;
             System.Threading.Thread.Sleep(500);
@@ -71,15 +71,15 @@ namespace ItemPipes.Framework.Util
         {
             foreach (Node node in path.ToList())
             {
-                if (node != null && node is ConnectorNode)
+                if (node != null && node is ConnectorPipeNode)
                 {
-                    ConnectorNode conn = (ConnectorNode)node;
+                    ConnectorPipeNode conn = (ConnectorPipeNode)node;
                     AnimateInput(conn);
                 }
             }
         }
 
-        private static void AnimateInput(ConnectorNode conn)
+        private static void AnimateInput(ConnectorPipeNode conn)
         {
             conn.Connecting = true;
             System.Threading.Thread.Sleep(100);

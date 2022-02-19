@@ -17,7 +17,7 @@ using ItemPipes.Framework.Items.CustomFilter;
 namespace ItemPipes.Framework.Items.Objects
 {
     [XmlType("Mods_sergiomadd.ItemPipes_FilterPipeItem")]
-    public class FilterPipeItem : InputItem
+    public class FilterPipeItem : InputPipeItem
     {
 		public Filter Filter { get; set; }
 

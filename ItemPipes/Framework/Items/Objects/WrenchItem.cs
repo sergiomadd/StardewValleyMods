@@ -10,6 +10,8 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ItemPipes.Framework.Model;
+using ItemPipes.Framework.Util;
+
 
 namespace ItemPipes.Framework.Items.Objects
 {
@@ -57,34 +59,13 @@ namespace ItemPipes.Framework.Items.Objects
         {
             int tileX = x / 64;
             int tileY = y / 64;
-            Vector2 position = new Vector2(tileX, tileY);
-            DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-            Node node = nodes.Find(n => n.Position.Equals(position));
-            if (node != null)
+            StardewValley.Object obj = location.getObjectAtTile(tileX, tileY);
+            if(obj != null)
             {
-                if (DataAccess.IOPipeNames.Contains(node.Name))
+                if(obj is IOPipeItem)
                 {
-                    IOPipeNode pipe = (IOPipeNode)node;
-                    switch (pipe.State)
-                    {
-                        case "off":
-                            if (pipe.ConnectedContainer != null)
-                            {
-                                pipe.State = "on";
-                            }
-                            else
-                            {
-                                pipe.State = "unconnected";
-                            }
-                            break;
-                        case "on":
-                            pipe.State = "off";
-                            break;
-                        case "unconnected":
-                            pipe.State = "off";
-                            break;
-                    }
+                    IOPipeItem pipe = (IOPipeItem)obj;
+                    pipe.ChangeSignal();
                     location.playSound("smallSelect");
                 }
             }

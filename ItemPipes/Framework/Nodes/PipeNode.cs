@@ -15,7 +15,7 @@ using System.Threading;
 
 namespace ItemPipes.Framework.Nodes
 {
-    public class PipeNode : Node
+    public abstract class PipeNode : Node
     {
         public Item StoredItem { get; set; }
         public int ItemTimer { get; set; }
@@ -98,17 +98,6 @@ namespace ItemPipes.Framework.Nodes
             }
         }
 
-        public virtual string GetState()
-        {
-            if (!Passable)
-            {
-                return State;
-            }
-            else
-            {
-                return State + "_passable";
-            }
-        }
         public PipeNode MoveItem(Item item, PipeNode target, int index, List<PipeNode> path)
         {
             PipeNode broken = null;
@@ -214,16 +203,5 @@ namespace ItemPipes.Framework.Nodes
             pipe.Connecting = false;
             System.Threading.Thread.Sleep(10);
         }
-        /*
-        public void AddInvisibilizer(InvisibilizerNode invis)
-        {
-            ParentNetwork.Invisibilize(this, invis);
-        }
-
-        public void RemoveInvisibilizer(InvisibilizerNode invis)
-        {
-            ParentNetwork.Deinvisibilize(this, invis);
-        }
-        */
     }
 }

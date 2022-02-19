@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace ItemPipes.Framework.Items.Objects
 {
     [XmlType("Mods_sergiomadd.ItemPipes_GoldExtractorPipe")]
-    public class GoldExtractorPipeItem : OutputItem
+    public class GoldExtractorPipeItem : OutputPipeItem
     {
 
         public GoldExtractorPipeItem() : base()

@@ -7,7 +7,7 @@ using StardewValley;
 
 namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
-    public class IridiumPipeNode : ConnectorNode
+    public class IridiumPipeNode : ConnectorPipeNode
     {
         public IridiumPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {

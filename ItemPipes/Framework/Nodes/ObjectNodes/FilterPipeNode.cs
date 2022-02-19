@@ -16,7 +16,7 @@ using ItemPipes.Framework.Items.Objects;
 
 namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
-    public class FilterPipeNode : InputNode
+    public class FilterPipeNode : InputPipeNode
     {
         public FilterPipeNode() : base()
         {

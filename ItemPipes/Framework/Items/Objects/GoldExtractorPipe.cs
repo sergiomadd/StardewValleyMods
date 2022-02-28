@@ -12,7 +12,7 @@ namespace ItemPipes.Framework.Items.Objects
             Name = "Gold Extractor Pipe";
             IDName = "GoldExtractorPipe";
             Description = "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.";
-            LoadTextures();
+            Init();
         }
 
         public GoldExtractorPipeItem(Vector2 position) : base(position)
@@ -20,7 +20,7 @@ namespace ItemPipes.Framework.Items.Objects
             Name = "Gold Extractor Pipe";
             IDName = "GoldExtractorPipe";
             Description = "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.";
-            LoadTextures();
+            Init();
         }
     }
 }

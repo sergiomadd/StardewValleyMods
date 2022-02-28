@@ -47,7 +47,7 @@ namespace ItemPipes.Framework.Items.Objects
             IDName = "IridiumExtractorPipe";
             Description = "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.";
             LoadStages();
-            LoadTextures();
+            Init();
         }
 
         public IridiumExtractorPipeItem(Vector2 position) : base(position)
@@ -56,7 +56,7 @@ namespace ItemPipes.Framework.Items.Objects
             IDName = "IridiumExtractorPipe";
             Description = "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.";
             LoadStages();
-            LoadTextures();
+            Init();
         }
         public void LoadStages()
         {
@@ -79,7 +79,7 @@ namespace ItemPipes.Framework.Items.Objects
             SpriteTexture3 = DefaultSprite3;
         }
 
-        public override void LoadTextures()
+        public override void Init()
         {
             ItemTexture = ItemTexture1;
             SpriteTexture = SpriteTexture1;

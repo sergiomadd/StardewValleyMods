@@ -19,9 +19,10 @@ namespace ItemPipes.Framework
     {
         public int Tier { get; set; }
         public Dictionary<InputPipeNode, List<PipeNode>> ConnectedInputs { get; set; }
+        public bool RoundRobin { get; set; }
         public OutputPipeNode() : base()
         {
-
+            RoundRobin = false;
         }
         public OutputPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
@@ -80,7 +81,7 @@ namespace ItemPipes.Framework
                 if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Is output empty? " + ConnectedContainer.IsEmpty().ToString()); }
                 try
                 {
-                    Thread thread = new Thread(new ThreadStart(StartExchage));
+                    Thread thread = new Thread(new ThreadStart(StartExchage2));
                     if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] CREATED NEW THREAD WITH ID [{thread.ManagedThreadId}]"); }
                     DataAccess.GetDataAccess().Threads.Add(thread);
                     thread.Start();
@@ -90,7 +91,7 @@ namespace ItemPipes.Framework
                 }
             }
         }
-
+        /*
         public void StartExchage()
         {
             if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][N{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
@@ -195,6 +196,120 @@ namespace ItemPipes.Framework
                 }
                 index++;
             }
+            try
+            {
+                if (DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
+                {
+                    DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
+                }
+            }
+            catch (Exception e)
+            {
+                DataAccess.GetDataAccess().Threads.Clear();
+            }
+        }
+        */
+        public bool CanSendItems(InputPipeNode input)
+        {
+            bool canSend = false;
+            if(ConnectedContainer != null && ConnectedContainer.CanSendItems() 
+                && input.CanRecieveItems())
+            {
+                canSend = true;
+            }
+            return canSend;
+        }
+
+        public Item GetItemFor(InputPipeNode input)
+        {
+            Item item = null;
+            item = ConnectedContainer.GetItemForInput(input);
+            return item;
+        }
+
+        public void StartExchage2()
+        {
+            if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][N{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
+            Item item = null;
+            int index = 0;
+            Dictionary<InputPipeNode, List<PipeNode>> priorityInputs = ConnectedInputs;
+            priorityInputs = priorityInputs.
+                OrderByDescending(pair => pair.Key.Priority).
+                ThenBy(pair => pair.Value.Count).
+                ToDictionary(x => x.Key, x => x.Value);
+            //Mirar para hacer round robin
+            if (!RoundRobin)
+            {
+                while (index < priorityInputs.Count && item == null)
+                {
+                    InputPipeNode input = priorityInputs.Keys.ToList()[index];
+                    if (input.Signal.Equals("on"))
+                    {
+                        List<PipeNode> path = priorityInputs.Values.ToList()[index];
+                        input.UpdateFilter();
+                        if (CanSendItems(input))
+                        {
+                            item = GetItemFor(input);
+                            if (item != null && StoredItem == null)
+                            {
+                                Printer.Info($"Item to send: {item.Name}({item.Stack})");
+                                SendItem(item, input);
+                            }
+                            else if(StoredItem != null)
+                            {
+                                //Printer.Info($"Output locked");
+                                //Output locked
+                            }
+                            else if(item == null)
+                            {
+                                //Printer.Info($"Item is null");
+                                //Item is null
+                            }
+                        }
+                    }
+                }
+            }
+            /*
+                            else if (ConnectedContainer is ChestContainerNode && input.ConnectedContainer is ShippingBinContainerNode)
+                            {
+                                ShippingBinContainerNode shipBin = (ShippingBinContainerNode)input.ConnectedContainer;
+                                ChestContainerNode outChest = (ChestContainerNode)ConnectedContainer;
+                                if (!outChest.IsEmpty())
+                                {
+                                    item = outChest.GetItemToShip(input);
+                                    if (item != null)
+                                    {
+                                        PipeNode broken = MoveItem(item, input, 0, path);
+                                        if (outChest != null)
+                                        {
+                                            if (broken == null)
+                                            {
+                                                shipBin.ShipItem(item);
+                                            }
+                                            else
+                                            {
+                                                if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][{ParentNetwork.ID}] {item.Name} PATH BROKEN, REVERSE"); }
+                                                List<PipeNode> reversePath = path;
+                                                reversePath.Reverse();
+                                                int brokenIndex = reversePath.IndexOf(broken);
+                                                input.MoveItem(item, this, brokenIndex + 1, reversePath);
+                                                outChest.InsertItem(item);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        index++;
+                    }
+                }
+                else
+                {
+
+                }
+
+
+            /*/
             try
             {
                 if (DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))

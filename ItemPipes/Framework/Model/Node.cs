@@ -15,7 +15,7 @@ using System.Threading;
 
 namespace ItemPipes.Framework.Model
 {
-    public class Node
+    public abstract class Node
     {
         public string Name { get; set; }
         public Vector2 Position { get; set; }

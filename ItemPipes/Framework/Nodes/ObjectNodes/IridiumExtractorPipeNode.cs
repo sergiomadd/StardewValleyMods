@@ -12,6 +12,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
         public IridiumExtractorPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             Tier = 3;
+            ItemTimer = 150;
         }
     }
 }

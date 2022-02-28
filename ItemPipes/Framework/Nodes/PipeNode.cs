@@ -98,6 +98,67 @@ namespace ItemPipes.Framework.Nodes
             }
         }
 
+        public void SendItem(Item item, InputPipeNode input)
+        {
+            List<PipeNode> path = GetPath(input);
+            /*
+            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
+            foreach (Node node in path)
+            {
+                Printer.Info(node.Print());
+            }
+            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
+            */
+            MoveItemRecursive(item, input, path, 0);
+        }
+
+        public PipeNode MoveItemRecursive(Item item, InputPipeNode input, List<PipeNode> path, int index)
+        {
+            //Printer.Info($"Current node: {Print()}");
+            PipeNode node = null;
+            if (this.Equals(input))
+            {
+                StoredItem = item;
+                PassingItem = true;
+                while (!input.ConnectedContainer.InsertItem(item))
+                {
+                    StoredItem = item;
+                    PassingItem = true;
+                }
+                try
+                {
+                    System.Threading.Thread.Sleep(ItemTimer);
+                }
+                catch (ThreadInterruptedException exception) { }
+                StoredItem = null;
+                PassingItem = false;
+                return input;
+            }
+            else 
+            {
+                if (index < path.Count - 1 && path[index + 1] != null)
+                {
+                    StoredItem = item;
+                    PassingItem = true;
+                    while (path[index + 1].StoredItem != null)
+                    {
+                        StoredItem = item;
+                        PassingItem = true;
+                    }
+                    try
+                    {
+                        System.Threading.Thread.Sleep(ItemTimer);
+                    }
+                    catch (ThreadInterruptedException exception) { }
+                    StoredItem = null;
+                    PassingItem = false;
+                    index++;
+                    path[index].MoveItemRecursive(item, input, path, index);
+                }
+            }
+            return node;
+        }
+
         public PipeNode MoveItem(Item item, PipeNode target, int index, List<PipeNode> path)
         {
             PipeNode broken = null;
@@ -133,6 +194,43 @@ namespace ItemPipes.Framework.Nodes
                 }
             }
 
+            return broken;
+        }
+
+        public PipeNode MoveItem2(Item item, InputPipeNode input, int index, List<PipeNode> path)
+        {
+            PipeNode broken = null;
+
+            if(this.Equals(input))
+            {
+                while(input.TryInsertItem(item))
+                {
+                    StoredItem = item;
+                    PassingItem = true;
+                }
+                StoredItem = null;
+                PassingItem = false;
+                return input;
+            }
+            if(index < path.Count-1 && path[index + 1] != null)
+            {
+                while (path[index + 1].StoredItem != null)
+                {
+                    StoredItem = item;
+                    PassingItem = true;
+                }
+                index++;
+                try
+                {
+                    System.Threading.Thread.Sleep(ItemTimer);
+                }
+                catch (ThreadInterruptedException exception)
+                {
+                }
+                StoredItem = null;
+                PassingItem = false;
+                MoveItem2(item, input, index, path);
+            }
             return broken;
         }
 

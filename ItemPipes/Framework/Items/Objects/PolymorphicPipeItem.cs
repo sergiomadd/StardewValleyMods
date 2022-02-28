@@ -19,14 +19,14 @@ namespace ItemPipes.Framework.Items.Objects
             Name = "Polymorphic Pipe";
             IDName = "PolymorphicPipe";
             Description = "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the adjacent container.";
-            LoadTextures();
+            Init();
         }
         public PolymorphicPipeItem(Vector2 position) : base(position)
         {
             Name = "Polymorphic Pipe";
             IDName = "PolymorphicPipe";
             Description = "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the adjacent container.";
-            LoadTextures();
+            Init();
         }
     }
 }

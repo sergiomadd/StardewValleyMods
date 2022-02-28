@@ -59,7 +59,7 @@ namespace ItemPipes.Framework.Items.Objects
             IDName = "IridiumPipe";
             Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 5 tiles/1 second.";
             LoadStages();
-            LoadTextures();
+            Init();
         }
 
         public IridiumPipeItem(Vector2 position) : base(position)
@@ -69,7 +69,7 @@ namespace ItemPipes.Framework.Items.Objects
             IDName = "IridiumPipe";
             Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 5 tiles/1 second.";
             LoadStages();
-            LoadTextures();
+            Init();
         }
 
         public void LoadStages()
@@ -96,7 +96,7 @@ namespace ItemPipes.Framework.Items.Objects
             SpriteTexture3 = DefaultSprite3;
         }
 
-        public override void LoadTextures()
+        public override void Init()
         {
             ItemTexture = ItemTexture1;
             SpriteTexture = SpriteTexture1;

@@ -19,7 +19,7 @@ namespace ItemPipes.Framework.Items.Objects
             Name = "Iron Pipe";
             IDName = "IronPipe";
             Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 2 tiles/1 second.";
-            base.LoadTextures();
+            base.Init();
         }
 
         public IronPipeItem(Vector2 position) : base(position)
@@ -27,7 +27,7 @@ namespace ItemPipes.Framework.Items.Objects
             Name = "Iron Pipe";
             IDName = "IronPipe";
             Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 2 tiles/1 second.";
-            base.LoadTextures();
+            base.Init();
         }
     }
 }

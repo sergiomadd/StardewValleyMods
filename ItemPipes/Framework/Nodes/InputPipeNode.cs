@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ItemPipes.Framework.Model;
+using ItemPipes.Framework.Nodes.ObjectNodes;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Buildings;
@@ -25,6 +25,34 @@ namespace ItemPipes.Framework
         {
             ConnectedContainer = null;
             Filter = new NetObjectList<Item>();
+        }
+
+        public bool CanRecieveItems()
+        {
+            bool canReceive = false;
+            if (ConnectedContainer.CanRecieveItems())
+            {
+                canReceive = true;
+            }
+            return canReceive;
+        }
+
+        public bool TryInsertItem(Item item)
+        {
+            bool inserted = false;
+            //Cambiar esto para que use method de container, y
+            //luego override en subclasses
+            if (ConnectedContainer is ChestContainerNode)
+            {
+                ChestContainerNode chest = (ChestContainerNode)ConnectedContainer;
+                chest.InsertItem(item);
+                inserted = true;
+            }
+            else if(ConnectedContainer is ShippingBinContainerNode)
+            {
+
+            }
+            return inserted;
         }
 
         public bool HasFilter()

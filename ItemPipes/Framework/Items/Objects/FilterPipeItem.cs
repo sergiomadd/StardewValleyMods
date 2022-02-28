@@ -26,7 +26,7 @@ namespace ItemPipes.Framework.Items.Objects
 			Name = "Filter Pipe";
 			IDName = "FilterPipe";
 			Description = "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.";
-			LoadTextures();
+			Init();
 		}
 
         public FilterPipeItem(Vector2 position) : base(position)
@@ -34,7 +34,7 @@ namespace ItemPipes.Framework.Items.Objects
 			Name = "Filter Pipe";
 			IDName = "FilterPipe";
 			Description = "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.";
-			LoadTextures();
+			Init();
 			Filter = new Filter(9);
 		}
 

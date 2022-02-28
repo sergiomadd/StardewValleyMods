@@ -27,6 +27,26 @@ namespace ItemPipes.Framework
             Filter = new NetObjectList<Item>();
         }
 
+        public abstract bool CanSendItems();
+
+        public abstract bool CanRecieveItems();
+        public abstract bool CanRecieveItem(Item item);
+        public abstract bool CanStackItem(Item item);
+        public abstract bool InsertItem(Item item);
+
+        public abstract bool IsEmpty();
+        public abstract Item GetItemForInput(InputPipeNode input);
+
+        public bool HasFilter()
+        {
+            bool hasFilter = false;
+            if (Filter.Count > 0)
+            {
+                hasFilter = true;
+            }
+
+            return hasFilter;
+        }
 
         public bool AddIOPipe(Node node)
         {
@@ -142,10 +162,7 @@ namespace ItemPipes.Framework
             return removed;
         }
 
-        public virtual bool IsEmpty()
-        {
-            return false;
-        }
+
 
         public virtual NetObjectList<Item> UpdateFilter(NetObjectList<Item> filteredItems)
         {

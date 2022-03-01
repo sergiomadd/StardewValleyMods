@@ -55,18 +55,11 @@ namespace ItemPipes.Framework
 
 		public virtual void Init()
 		{
-            try
-            {
-				ItemTexture = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_Item.png");
-				DefaultSprite = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_default_Sprite.png");
-				ConnectingSprite = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_connecting_Sprite.png");
-				ItemMovingSprite = ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{IDName}/{IDName}_item_Sprite.png");
-			}
-			catch(Exception e)
-            {
-				Printer.Info("Can't load pipe sprites!");
-            }
-
+			DataAccess DataAccess = DataAccess.GetDataAccess();
+			ItemTexture = DataAccess.Sprites[IDName + "_Item"];
+			DefaultSprite = DataAccess.Sprites[IDName + "_default_Sprite"];
+			ConnectingSprite = DataAccess.Sprites[IDName + "_connecting_Sprite"];
+			ItemMovingSprite = DataAccess.Sprites[IDName + "_item_Sprite"];
 			SpriteTexture = DefaultSprite;
 		}
 
@@ -220,6 +213,9 @@ namespace ItemPipes.Framework
 			Vector2 originalPosition;
 			Vector2 position;
 			//How to handle drawing custom mod items
+			//Igual hacer como coger la sprite y redimensionarla 
+			//relativamente a su size original y listo
+			//try catch para loadear la sprite
 			if (item is PipeItem)
 			{
 				PipeItem pipeItem = (PipeItem)item;

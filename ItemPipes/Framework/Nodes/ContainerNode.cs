@@ -28,7 +28,6 @@ namespace ItemPipes.Framework
         }
 
         public abstract bool CanSendItems();
-
         public abstract bool CanRecieveItems();
         public abstract bool CanRecieveItem(Item item);
         public abstract bool CanStackItem(Item item);

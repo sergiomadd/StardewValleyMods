@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
+using SObject = StardewValley.Object;
 using ItemPipes.Framework.Util;
 using Netcode;
 using System.Threading;
@@ -116,31 +117,43 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
         public Item TryExtractItem(ContainerNode input, NetObjectList<Item> itemList, int index)
         {
             //Exception for multiple thread collisions
-            Item item = null;
-            try
+            Item source = itemList[index];
+            Item tosend = null;
+            int removal = 20;
+            if (source is SObject)
             {
-                if (input.CanStackItem(item))
+                SObject obj = (SObject)source;
+                SObject tosendObject = (SObject)tosend;
+                if (input.CanStackItem(source) || input.CanRecieveItems())
                 {
-                    item = itemList[index];
-                    itemList.RemoveAt(index);
-                    //item.Stack = 20;
-                    //itemList[index].Stack = itemList[index].Stack-20;
+                    if (obj.Stack <= removal)
+                    {
+                        tosendObject = obj;
+                        itemList.RemoveAt(index);
+                    }
+                    else
+                    {
+                        obj.stack.Value -= removal;
+                        tosendObject = (SObject)obj.getOne();
+                        tosendObject.stack.Value = removal;
+                    }
                     Chest.clearNulls();
-                }
-                else if (input.CanRecieveItems())
-                {
-                    item = itemList[index];
-                    itemList.RemoveAt(index);
-                    //item.Stack = 20;
-                    //itemList[index].Stack = itemList[index].Stack - 20;
-                    Chest.clearNulls();
+                    return tosendObject;
                 }
             }
-            catch (Exception e)
+            else if (source is Tool)
             {
-
+                Tool tool = (Tool)source;
+                Tool tosendTool = (Tool)tosend;
+                if (input.CanRecieveItems())
+                {
+                    tosendTool = tool;
+                    itemList.RemoveAt(index);
+                }
+                Chest.clearNulls();
+                return tosendTool;
             }
-            return item;
+            return null;
         }
 
         public override bool CanStackItem(Item item)
@@ -203,131 +216,5 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             }
             return itemList;
         }
-
-        /*
-        public Item GetItemToShip(InputPipeNode input)
-        {
-            Item item = null;
-            if (!IsEmpty() && input != null)
-            {
-                NetObjectList<Item> itemList = GetItemList();
-                int index = itemList.Count - 1;
-                while (index >= 0 && item == null)
-                {
-                    if (input.HasFilter())
-                    {
-                        if (input.Filter.Any(i => i.Name.Equals(itemList[index].Name)))
-                        {
-                            item = itemList[index];
-                            itemList.RemoveAt(index);
-                            Chest.clearNulls();
-                        }
-                    }
-                    else
-                    {
-                        item = itemList[index];
-                        itemList.RemoveAt(index);
-                        Chest.clearNulls();
-                    }
-                    index--;
-                }
-            }
-            return item;
-        }
-
-        public Item CanSendItem(ChestContainerNode input)
-        {
-            Item item = null;
-            if (!IsEmpty() && input != null)
-            {
-                NetObjectList<Item> itemList = GetItemList();
-                int index = itemList.Count - 1;
-                while (index >= 0 && item == null)
-                {
-                    if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?] Trying to send: " +itemList[index].Name); }
-                    if(itemList[index] != null)
-                    {
-                        if (input.HasFilter())
-                        {
-                            if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?] Input has filter" + input.Filter.Count.ToString()); }
-                            //input.Filter.fin
-                            if (input.Filter.Any(i => i.Name.Equals(itemList[index].Name)))
-                            {
-                                item = TryGetItem(input, itemList, index);
-                            }
-                        }
-                        else
-                        {
-
-                            item = TryGetItem(input, itemList, index);
-                        }
-                    }
-                    index--;
-                }
-            }
-            return item;
-        }
-
-
-
-        public bool SendItem(ChestContainerNode input, Item item)
-        {
-            bool sent = false;
-            if (input != null)
-            {
-                if (input.HasFilter() && input.Filter.Any(i => i.Name.Equals(item.Name)))
-                {
-                    if (input.InsertItem(item))
-                    {
-                        sent = true;
-                    }
-                    else
-                    {
-                        InsertItem(item);
-                        sent = false;
-                    }
-                }
-                else if (!input.HasFilter())
-                {
-                    if (input.InsertItem(item))
-                    {
-                        sent = true;
-                    }
-                    else
-                    {
-                        InsertItem(item);
-                        sent = false;
-                    }
-                }
-            }
-            return sent;
-        }
-
-
-
-        public bool CanStack()
-        {
-            bool canStack = false;
-            NetObjectList<Item> itemList = GetItemList();
-            int index = itemList.Count - 1;
-            while (index >= 0 && !canStack)
-            {
-                if (itemList[index] != null)
-                {
-                    if (itemList[index].getRemainingStackSpace() > 0)
-                    {
-                        canStack = true;
-                    }
-                }
-                index--;
-            }
-
-            return canStack;
-        }
-
-
-
-
-        */
     }
 }

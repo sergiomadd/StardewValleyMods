@@ -18,7 +18,7 @@ using ItemPipes.Framework.Factories;
 
 namespace ItemPipes.Framework.Items
 {
-    public abstract class CustomObjectItem : SObject
+	public abstract class CustomObjectItem : SObject
 	{
 		public string IDName { get; set; }
 		public string Description { get; set; }

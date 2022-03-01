@@ -8,10 +8,10 @@ using StardewValley;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using SVObject = StardewValley.Objects;
-using ItemPipes.Framework;
+using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Model;
 using System.Threading;
-
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ItemPipes.Framework
 {
@@ -30,6 +30,8 @@ namespace ItemPipes.Framework
 
         public List<int> UsedNetworkIDs { get; set; }
         public List<Thread> Threads { get; set; }
+
+        public Dictionary<string, Texture2D> Sprites { get; set; }
 
 
         public DataAccess()
@@ -53,6 +55,7 @@ namespace ItemPipes.Framework
             */
 
             UsedNetworkIDs = new List<int>();
+            Sprites = new Dictionary<string, Texture2D>();
         }
 
         public static DataAccess GetDataAccess()
@@ -90,6 +93,53 @@ namespace ItemPipes.Framework
                 }
             }
             return graphList;
+        }
+
+        public void LoadSprites()
+        {
+            try
+            {
+                List<string> pipes = new List<string>
+                {"IronPipe", "GoldPipe", "IridiumPipe", "ExtractorPipe", "GoldExtractorPipe",
+                 "IridiumExtractorPipe", "InserterPipe", "PolymorphicPipe", "FilterPipe"};
+                foreach (string name in pipes)
+                {
+                    if (!name.Contains("Iridium"))
+                    {
+                        Sprites.Add($"{name}_Item", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/{name}_Item.png"));
+                        Sprites.Add($"{name}_default_Sprite", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/{name}_default_Sprite.png"));
+                        Sprites.Add($"{name}_connecting_Sprite", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/{name}_connecting_Sprite.png"));
+                        Sprites.Add($"{name}_item_Sprite", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/{name}_item_Sprite.png"));
+                    }
+                    else
+                    {
+                        Sprites.Add($"{name}_Item1", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/1/{name}_Item.png"));
+                        Sprites.Add($"{name}_default_Sprite1", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/1/{name}_default_Sprite.png"));
+                        Sprites.Add($"{name}_connecting_Sprite1", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/1/{name}_connecting_Sprite.png"));
+                        Sprites.Add($"{name}_item_Sprite1", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/1/{name}_item_Sprite.png"));
+
+                        Sprites.Add($"{name}_Item2", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/2/{name}_Item.png"));
+                        Sprites.Add($"{name}_default_Sprite2", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/2/{name}_default_Sprite.png"));
+                        Sprites.Add($"{name}_connecting_Sprite2", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/2/{name}_connecting_Sprite.png"));
+                        Sprites.Add($"{name}_item_Sprite2", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/2/{name}_item_Sprite.png"));
+
+                        Sprites.Add($"{name}_Item3", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/3/{name}_Item.png"));
+                        Sprites.Add($"{name}_default_Sprite3", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/3/{name}_default_Sprite.png"));
+                        Sprites.Add($"{name}_connecting_Sprite3", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/3/{name}_connecting_Sprite.png"));
+                        Sprites.Add($"{name}_item_Sprite3", ModEntry.helper.Content.Load<Texture2D>($"assets/Pipes/{name}/3/{name}_item_Sprite.png"));
+                    }
+                }
+
+                Sprites.Add("PPM_on", ModEntry.helper.Content.Load<Texture2D>($"assets/Objects/PPM/PPM_on.png"));
+                Sprites.Add("PPM_off", ModEntry.helper.Content.Load<Texture2D>($"assets/Objects/PPM/PPM_off.png"));
+                Sprites.Add("Wrench", ModEntry.helper.Content.Load<Texture2D>($"assets/Objects/Wrench/Wrench_Item.png"));
+            }
+            catch (Exception e)
+            {
+                Printer.Info("Can't load Item Pipes mod sprites!");
+                Printer.Info(e.Message);
+                Printer.Info(e.StackTrace);
+            }
         }
     }
 }

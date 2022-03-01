@@ -34,7 +34,8 @@ namespace ItemPipes.Framework.Items.Objects
             IDName = "Wrench";
             Description = "Teh tool for enabling/disabling IOPipes";
             ItemTexturePath = $"assets/{IDName}_Item.png";
-            ItemTexture = ModEntry.helper.Content.Load<Texture2D>(ItemTexturePath);
+            DataAccess DataAccess = DataAccess.GetDataAccess();
+            ItemTexture = DataAccess.Sprites[IDName];
             this.BaseName = Name;
             this.Stackable = false;
             this.numAttachmentSlots.Value = 0;

@@ -139,6 +139,7 @@ namespace ItemPipes
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
+            DataAccess.LoadSprites();
             Helper.Content.AssetEditors.Add(this);
             var spaceCore = this.Helper.ModRegistry.GetApi<ISpaceCoreApi>("spacechase0.SpaceCore");
             spaceCore.RegisterSerializerType(typeof(IronPipeItem));
@@ -159,6 +160,8 @@ namespace ItemPipes
             spaceCore.RegisterSerializerType(typeof(WrenchItem));
             //spaceCore.RegisterSerializerType(typeof(IronPipeRecipe));
             CustomCraftingRecipe.CraftingRecipes.Add("Iron Pipe", new IronPipeRecipe());
+
+            
         }
         public bool CanLoad<T>(IAssetInfo asset)
         {
@@ -200,8 +203,9 @@ namespace ItemPipes
         }
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
-        {
-            Reset();
+        {    
+            Reset(); 
+            
             foreach (GameLocation location in Game1.locations)
             {
                 DataAccess.LocationNetworks.Add(location, new List<Network>());
@@ -289,30 +293,7 @@ namespace ItemPipes
                 }
             }
         }
-        /*
-        private void ProcessNetworks()
-        {
-            DataAccess DataAccess = DataAccess.GetDataAccess();
-            foreach (GameLocation location in Game1.locations)
-            {
-                List<Network> networks = DataAccess.LocationNetworks[location];
-                if (networks.Count > 0)
-                {
-                    //if (Globals.UltraDebug) { Printer.Info("Network amount: " + networks.Count.ToString()); }
-                    foreach (Network network in networks)
-                    {
-                        //Printer.Info(network.Print());
-                        if (network.Outputs.Count > 0)
-                        {
-                            network.ProcessExchanges(1);
-                        }
 
-                    }
-                }
-            }
-            DataAccess.GetDataAccess().Threads.Add(Thread.CurrentThread);
-        }
-        */
         private void OnObjectListChanged(object sender, ObjectListChangedEventArgs e)
         {
             List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();

@@ -7,7 +7,6 @@ using StardewValley;
 
 namespace ItemPipes.Framework.Items.Objects
 {
-    [XmlType("Mods_sergiomadd.ItemPipes_IridiumExtractorPipe")]
     public class IridiumExtractorPipeItem : OutputPipeItem
     {
         public int Stage { get; set; }
@@ -49,20 +48,12 @@ namespace ItemPipes.Framework.Items.Objects
 
         public IridiumExtractorPipeItem() : base()
         {
-            Name = "Iridium Extractor Pipe";
-            IDName = "IridiumExtractorPipe";
-            Description = "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.";
             LoadStages();
-            Init();
         }
 
         public IridiumExtractorPipeItem(Vector2 position) : base(position)
         {
-            Name = "Iridium Extractor Pipe";
-            IDName = "IridiumExtractorPipe";
-            Description = "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.";
             LoadStages();
-            Init();
         }
         public void LoadStages()
         {
@@ -89,12 +80,12 @@ namespace ItemPipes.Framework.Items.Objects
             SpriteTexture3 = DefaultSprite3;
         }
 
-        public override void Init()
+        public override void LoadTextures()
         {
             ItemTexture = ItemTexture1;
             SpriteTexture = SpriteTexture1;
             DefaultSprite = DefaultSprite1;
-            ConnectingSprite = ConnectingSprite1;
+            ConnectingSprite = ConnectingSprite1;  
         }
 
         public void StageChange()

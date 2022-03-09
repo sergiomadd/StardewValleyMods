@@ -11,23 +11,14 @@ using StardewValley;
 
 namespace ItemPipes.Framework.Items.Objects
 {
-    [XmlType("Mods_sergiomadd.ItemPipes_GoldPipeItem")]
     public class GoldPipeItem : ConnectorPipeItem
     {
         public GoldPipeItem() : base()
         {
-            Name = "Gold Pipe";
-            IDName = "GoldPipe";
-            Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 5 tiles/1 second.";
-            Init();
         }
 
         public GoldPipeItem(Vector2 position) : base(position)
         {
-            Name = "Gold Pipe";
-            IDName = "GoldPipe";
-            Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 5 tiles/1 second.";
-            Init();
         }
     }
 }

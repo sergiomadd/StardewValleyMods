@@ -13,21 +13,12 @@ using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
 
 
-namespace ItemPipes.Framework.Items.Objects
+namespace ItemPipes.Framework.Items.Tools
 {
     [XmlType("Mods_sergiomadd.ItemPipes_WrenchItem")]
 
-    public class WrenchItem : Tool
+    public class WrenchItem : CustomToolItem
     {
-        public string IDName { get; set; }
-        public string Description { get; set; }
-
-        [XmlIgnore]
-        public Texture2D SpriteTexture { get; set; }
-        public string SpriteTexturePath { get; set; }
-        [XmlIgnore]
-        public Texture2D ItemTexture { get; set; }
-        public string ItemTexturePath { get; set; }
         public WrenchItem() : base()
         {
             Name = "Wrench";
@@ -35,11 +26,8 @@ namespace ItemPipes.Framework.Items.Objects
             Description = "Teh tool for enabling/disabling IOPipes";
             ItemTexturePath = $"assets/{IDName}_Item.png";
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            ItemTexture = DataAccess.Sprites[IDName];
+            ItemTexture = DataAccess.Sprites[IDName+"_Item"];
             this.BaseName = Name;
-            this.Stackable = false;
-            this.numAttachmentSlots.Value = 0;
-            this.InstantUse = true;
         }
 
         public override void leftClick(Farmer who)
@@ -101,29 +89,6 @@ namespace ItemPipes.Framework.Items.Objects
         public override Item getOne()
         {
             return new WrenchItem();
-        }
-        public override string getCategoryName()
-        {
-            return "Item Pipes";
-        }
-        public override Color getCategoryColor()
-        {
-            return Color.Black;
-        }
-
-        public override string getDescription()
-        {
-            return Description;
-        }
-
-        protected override string loadDescription()
-        {
-            return Description;
-        }
-
-        protected override string loadDisplayName()
-        {
-            return Name;
         }
     }
 }

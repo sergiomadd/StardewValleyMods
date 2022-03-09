@@ -20,7 +20,6 @@ using ItemPipes.Framework.Nodes.ObjectNodes;
 
 namespace ItemPipes.Framework.Items.Objects
 {
-	[XmlType("Mods_sergiomadd.ItemPipes_PPMItem")]
 
 	public class PPMItem : CustomBigCraftableItem
 	{
@@ -32,9 +31,6 @@ namespace ItemPipes.Framework.Items.Objects
 
 		public PPMItem() : base()
 		{
-			Name = "P.P.M.";
-			IDName = "PPM";
-			Description = "A machine that when right clickled, will turn all connected pipes crossable.";
 			State = "off";
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			OnTexture = DataAccess.Sprites[IDName + "_on"];
@@ -45,9 +41,6 @@ namespace ItemPipes.Framework.Items.Objects
 
 		public PPMItem(Vector2 position) : base(position)
 		{
-			Name = "P.P.M.";
-			IDName = "PPM";
-			Description = "P.P.M. DESCRIPTION";
 			State = "off";
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			OnTexture = DataAccess.Sprites[IDName + "_on"];

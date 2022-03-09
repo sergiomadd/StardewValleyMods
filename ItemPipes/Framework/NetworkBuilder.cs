@@ -18,6 +18,7 @@ namespace ItemPipes.Framework
 {
     public static class NetworkBuilder
     {
+        //Maintain for 1.6
         public static void BuildLocationNetworks(GameLocation location)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
@@ -51,7 +52,6 @@ namespace ItemPipes.Framework
                     {
                         if (DataAccess.ModItems.Contains(obj.Value.Name))
                         {
-                            Printer.Info(obj.Value.Name);
                             BuildNetworkRecursive(new Vector2(obj.Key.X, obj.Key.Y), location, null);
                         }
                     }

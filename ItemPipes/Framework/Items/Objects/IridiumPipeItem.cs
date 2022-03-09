@@ -12,10 +12,8 @@ using StardewValley;
 
 namespace ItemPipes.Framework.Items.Objects
 {
-    [XmlType("Mods_sergiomadd.ItemPipes_IridiumPipeItem")]
     public class IridiumPipeItem : ConnectorPipeItem
     {
-        public int Stage { get; set; }
         //Stage 1
         [XmlIgnore]
         public Texture2D ItemTexture1 { get; set; }
@@ -54,20 +52,12 @@ namespace ItemPipes.Framework.Items.Objects
 
         public IridiumPipeItem() : base()
         {
-            Stage = 1;
-            Name = "Iridium Pipe";
-            IDName = "IridiumPipe";
-            Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 5 tiles/1 second.";
             LoadStages();
             Init();
         }
 
         public IridiumPipeItem(Vector2 position) : base(position)
         {
-            Stage = 1;
-            Name = "Iridium Pipe";
-            IDName = "IridiumPipe";
-            Description = "Type: Connector Pipe\nThe link between IO pipes. It moves items at 5 tiles/1 second.";
             LoadStages();
             Init();
         }
@@ -97,7 +87,7 @@ namespace ItemPipes.Framework.Items.Objects
             SpriteTexture3 = DefaultSprite3;
         }
 
-        public override void Init()
+        public override void LoadTextures()
         {
             ItemTexture = ItemTexture1;
             SpriteTexture = SpriteTexture1;
@@ -110,7 +100,6 @@ namespace ItemPipes.Framework.Items.Objects
         {
             if (((int)Game1.currentGameTime.TotalGameTime.TotalSeconds) % 2 == 0 && ((int)Game1.currentGameTime.TotalGameTime.TotalSeconds) % 3 == 0)
             {
-                Stage = 3;
                 ItemTexture = ItemTexture3;
                 SpriteTexture = SpriteTexture3;
                 ItemMovingSprite = ItemMovingSprite3;
@@ -119,7 +108,6 @@ namespace ItemPipes.Framework.Items.Objects
             }
             else if (((int)Game1.currentGameTime.TotalGameTime.TotalSeconds) % 2 == 0)
             {
-                Stage = 2;
                 ItemTexture = ItemTexture2;
                 SpriteTexture = SpriteTexture2;
                 ItemMovingSprite = ItemMovingSprite2;
@@ -128,7 +116,6 @@ namespace ItemPipes.Framework.Items.Objects
             }
             else
             {
-                Stage = 1;
                 ItemTexture = ItemTexture1;
                 SpriteTexture = SpriteTexture1;
                 ItemMovingSprite = ItemMovingSprite1;

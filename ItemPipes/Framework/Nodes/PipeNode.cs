@@ -178,53 +178,56 @@ namespace ItemPipes.Framework.Nodes
             }
             return canLoad;
         }
-
-        public PipeNode ConnectPipe(PipeNode target, int index, List<PipeNode> path)
+        public void ConnectPipe(PipeNode target)
         {
-            PipeNode broken = null;
-            if (!this.Equals(target))
+            List<PipeNode> path = GetPath(target);
+            /*
+            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
+            foreach (Node node in path)
             {
-                DisplayConnection();
-                if (index < path.Count - 1)
+                Printer.Info(node.Print());
+            }
+            Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] PATH---------------");
+            */
+            ConnectPipeRecursive(target, path, 0);
+            foreach (PipeNode pipe in path)
+            {
+                pipe.Connecting = false;
+                try
                 {
-                    index++;
-                    PipeNode nextNode = path[index];
-                    if (Location.getObjectAtTile((int)nextNode.Position.X, (int)nextNode.Position.Y) != null)
-                    {
-                        broken = nextNode.ConnectPipe(target, index, path);
-                    }
-                    else
-                    {
-                        broken = nextNode;
-                        return broken;
-                    }
+                    System.Threading.Thread.Sleep(20);
                 }
+                catch (ThreadInterruptedException exception) { }
+            }
+        }
+        public PipeNode ConnectPipeRecursive(PipeNode target, List<PipeNode> path, int index)
+        {
+            PipeNode node = null;
+            if (this.Equals(target))
+            {
+                Connecting = true;
+                try
+                {
+                    System.Threading.Thread.Sleep(60);
+                }
+                catch (ThreadInterruptedException exception) { }
+                return target;
             }
             else
             {
-                foreach(Node node in path)
+                if (index < path.Count - 1 && path[index + 1] != null)
                 {
-                    if (node is PipeNode)
+                    Connecting = true;
+                    try
                     {
-                        PipeNode pipe = (PipeNode)node;
-                        EndConnection(pipe);
+                        System.Threading.Thread.Sleep(60);
                     }
+                    catch (ThreadInterruptedException exception) { }
+                    index++;
+                    path[index].ConnectPipeRecursive(target, path, index);
                 }
             }
-
-            return broken;
-        }
-
-        public void DisplayConnection()
-        {
-            Connecting = true;
-            System.Threading.Thread.Sleep(60);
-        }
-
-        public void EndConnection(PipeNode pipe)
-        {
-            pipe.Connecting = false;
-            System.Threading.Thread.Sleep(10);
+            return node;
         }
     }
 }

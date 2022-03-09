@@ -18,6 +18,7 @@ namespace ItemPipes.Framework
     public abstract class OutputPipeNode : IOPipeNode
     {
         public int Tier { get; set; }
+        public int Flux { get; set; }
         public Dictionary<InputPipeNode, List<PipeNode>> ConnectedInputs { get; set; }
         public bool RoundRobin { get; set; }
         public OutputPipeNode() : base()
@@ -202,7 +203,7 @@ namespace ItemPipes.Framework
 
         private void AnimateConnection(List<PipeNode> path)
         {
-            ConnectPipe(path.Last(), 0, path);
+            ConnectPipe(path.Last());
             try
             {
                 if(DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))

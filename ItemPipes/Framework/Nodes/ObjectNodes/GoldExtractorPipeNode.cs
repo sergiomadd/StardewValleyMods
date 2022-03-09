@@ -13,6 +13,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
         {
             Tier = 2;
             ItemTimer = 300;
+            Flux = 10;
         }
     }
 }

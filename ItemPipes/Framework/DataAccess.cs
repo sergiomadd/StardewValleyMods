@@ -79,6 +79,24 @@ namespace ItemPipes.Framework
             return myDataAccess;
         }
 
+        public bool RemoveThread(Thread thread)
+        {
+            try
+            {
+                if (DataAccess.GetDataAccess().Threads.Contains(thread))
+                {
+                    DataAccess.GetDataAccess().Threads.Remove(thread);
+                    thread.Abort();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                DataAccess.GetDataAccess().Threads.Clear();
+                return true;
+            }
+        }
         public int GetNewNetworkID()
         {
             if(UsedNetworkIDs.Count == 0)

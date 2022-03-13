@@ -48,38 +48,24 @@ namespace ItemPipes.Framework.Items
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			ItemTexture = DataAccess.Sprites[IDName + "_Item"];
 			Name = DataAccess.ItemNames[IDName];
+			DisplayName = DataAccess.ItemNames[IDName];
 			Description = DataAccess.ItemDescriptions[IDName];
 			parentSheetIndex.Value = DataAccess.ItemIDs[IDName];
 		}
 
 		public virtual SObject Save()
 		{
-			if (!modData.ContainsKey("ItemPipes"))
-			{
-				modData.Add("ItemPipes", "true");
-			}
-			else
-			{
-				modData["ItemPipes"] = "true";
-			}
-			if (!modData.ContainsKey("Type"))
-			{
-				modData.Add("Type", IDName);
-			}
-			else
-			{
-				modData["Type"] = IDName;
-			}
-			if (!modData.ContainsKey("State"))
-			{
-				modData.Add("State", State);
-			}
-			else
-			{
-				modData["State"] = State;
-			}
+			if (!modData.ContainsKey("ItemPipes")){ modData.Add("ItemPipes", "true"); }
+			else { modData["ItemPipes"] = "true"; }
+			if (!modData.ContainsKey("Type")){ modData.Add("Type", IDName); }
+			else { modData["Type"] = IDName; }
+			if (!modData.ContainsKey("Stack")){ modData.Add("Stack", Stack.ToString()); }
+			else { modData["Type"] = IDName; }
+			if (!modData.ContainsKey("State")){ modData.Add("State", State); }
+			else { modData["State"] = State; }
 			Fence fence = new Fence(tileLocation, 1, false);
 			fence.modData = modData;
+			
 			return fence;
 		}
 

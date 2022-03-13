@@ -97,7 +97,7 @@ namespace ItemPipes.Framework
         {
             bool canSend = false;
             if(ConnectedContainer != null && ConnectedContainer.CanSendItems() 
-                && input.CanRecieveItems())
+                && (input.CanRecieveItems() || input.ConnectedContainer.CanStackItems()))
             {
                 canSend = true;
             }
@@ -107,7 +107,7 @@ namespace ItemPipes.Framework
         public Item GetItemFor(InputPipeNode input)
         {
             Item item = null;
-            item = ConnectedContainer.GetItemForInput(input);
+            item = ConnectedContainer.GetItemForInput(input, Flux);
             return item;
         }
 
@@ -141,16 +141,17 @@ namespace ItemPipes.Framework
                             }
                             else if(StoredItem != null)
                             {
-                                //Printer.Info($"Output locked");
+                                Printer.Info($"Output locked");
                                 //Output locked
                             }
                             else if(item == null)
                             {
-                                //Printer.Info($"Item is null");
+                                Printer.Info($"Item is null");
                                 //Item is null
                             }
                         }
                     }
+                    index++;
                 }
             }
             else
@@ -162,6 +163,8 @@ namespace ItemPipes.Framework
                 if (DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
                 {
                     DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
+                    //Printer.Info("Removing T" + Thread.CurrentThread.ManagedThreadId);
+
                 }
             }
             catch (Exception e)
@@ -206,16 +209,15 @@ namespace ItemPipes.Framework
             ConnectPipe(path.Last());
             try
             {
-                if(DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
+                if (DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
                 {
                     DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 DataAccess.GetDataAccess().Threads.Clear();
             }
-
         }
 
         public bool RemoveConnectedInput(InputPipeNode input)

@@ -26,7 +26,10 @@ namespace ItemPipes.Framework
             List<Network> networkList = DataAccess.LocationNetworks[location];
             foreach (Network network in networkList)
             {
-                network.Update();
+                if(network != null)
+                {
+                    network.Update();
+                }
             }
         }
 
@@ -110,9 +113,14 @@ namespace ItemPipes.Framework
                     MergeNetworks(orderedAdjNetworks);
                 }
                 Printer.Info($"Assigned network: [N{newNode.ParentNetwork.ID}]");
+                
             }
             Node node = nodes.Find(n => n.Position.Equals(obj.Key));
-            
+            List<Network> networks = DataAccess.LocationNetworks[node.Location];
+            if (!networks.Contains(node.ParentNetwork))
+            {
+                networks.Add(node.ParentNetwork);
+            }
             foreach(KeyValuePair<Side, Node> pair in node.Adjacents)
             {
                 if(pair.Value is PPMNode)

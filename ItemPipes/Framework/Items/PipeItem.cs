@@ -58,6 +58,94 @@ namespace ItemPipes.Framework
 			SpriteTexture = DefaultSprite;
 		}
 
+		public override SObject Save()
+		{
+			Printer.Info("SAVINGGGG");
+			if (!modData.ContainsKey("ItemPipes")) { modData.Add("ItemPipes", "true"); }
+			else { modData["ItemPipes"] = "true"; }
+			if (!modData.ContainsKey("Type")) { modData.Add("Type", IDName); }
+			else { modData["Type"] = IDName; }
+			if (!modData.ContainsKey("Stack")) { modData.Add("Stack", Stack.ToString()); }
+			else { modData["Type"] = IDName; }
+			if (!modData.ContainsKey("State")) { modData.Add("State", State); }
+			else { modData["State"] = State; }
+			DataAccess DataAccess = DataAccess.GetDataAccess();
+			if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
+			{
+				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+				Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+				if (node != null && node is PipeNode)
+				{
+					PipeNode pipe = (PipeNode)node;
+					if (pipe.StoredItem != null)
+					{
+						Printer.Info("Pipe with item");
+
+						if (!modData.ContainsKey("StoredItem")) { modData.Add("StoredItem", pipe.StoredItem.Name); }
+						else { modData["StoredItem"] = pipe.StoredItem.Name; }
+						if (!modData.ContainsKey("StoredItemStack")) { modData.Add("StoredItemStack", pipe.StoredItem.Stack.ToString()); }
+						else { modData["StoredItemStack"] = pipe.StoredItem.Stack.ToString(); }
+						//Implement with 1.6
+						//Create item with utility method
+						//Temp solution:
+						//Return to extractor
+						if (Globals.Debug) { Printer.Info("Waiting for clogged pipes to return to output..."); }
+						int i = 0;
+						bool sent = false;
+						while (i < pipe.ParentNetwork.Outputs.Count && !sent)
+						{
+							if (pipe.ParentNetwork.Outputs[i].ConnectedContainer.CanRecieveItem(pipe.StoredItem))
+							{
+								pipe.SendItem(pipe.StoredItem, pipe.ParentNetwork.Outputs[i]);
+								sent = true;
+							}
+							i++;
+						}
+					}
+				}
+			}
+
+			Fence fence = new Fence(tileLocation, 1, false);
+			fence.modData = modData;
+
+			return fence;
+		}
+
+		public override void Load(ModDataDictionary data)
+		{
+			DataAccess DataAccess = DataAccess.GetDataAccess();
+			modData = data;
+			if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
+			{
+				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+				Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+				if (node != null && node is PipeNode)
+				{
+					PipeNode pipe = (PipeNode)node;
+					if (modData["StoredItem"] != null)
+					{
+						string name = modData["StoredItem"];
+						if (DataAccess.ModItems.Contains(name) && name != "Wrench")
+						{
+							CustomObjectItem obj = Factories.ItemFactory.CreateItem(name);
+							if (modData["StoredItemStack"] != null)
+							{
+								obj.stack.Value = Int32.Parse(modData["StoredItemStack"]);
+							}
+							pipe.StoredItem = obj;
+													}
+						else if (DataAccess.ModItems.Contains(name) && name == "Wrench")
+						{
+							CustomToolItem obj = Factories.ItemFactory.CreateTool(name);
+							pipe.StoredItem = obj;
+						}
+					}
+
+				}
+			}
+		}
+
+
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
 		{
 			if (justCheckingForActivity)

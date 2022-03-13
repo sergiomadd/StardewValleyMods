@@ -207,6 +207,21 @@ namespace ItemPipes
         {
             if (Context.IsMainPlayer)
             {
+                if (Globals.Debug) { Printer.Info("Waiting for all items to arrive at input..."); }
+                //Quick end all threads
+                while (DataAccess.Threads.Count > 0)
+                {
+                    foreach (Thread thread in DataAccess.Threads.ToList())
+                    {
+                        if (thread != null && thread.IsAlive)
+                        {
+                            Printer.Info("INTERRUPTION "+ thread.ManagedThreadId.ToString());
+                            
+                            thread.Interrupt();
+                        }
+                    }
+                }
+                Printer.Info("Threads cleaned");
                 ConvertToVanillaMap();
                 ConvertToVanillaPlayer();
             }
@@ -216,23 +231,10 @@ namespace ItemPipes
         {
             if (Context.IsMainPlayer) 
             {
-                if (Globals.Debug) { Printer.Info("Waiting for all items to arrive at input..."); }
-                //Quick end all threads
-                while (DataAccess.Threads.Count > 0)
-                {
-                    foreach (Thread thread in DataAccess.Threads.ToList())
-                    {
-                        if (thread != null && thread.IsAlive)
-                        {
-                            thread.Interrupt();
-                        }
-                    }
-
-                }
                 Reset();
                 ConvertFromVanillaMap();
                 ConvertFromVanillaPlayer();
-
+                
                 foreach (GameLocation location in Game1.locations)
                 {
                     DataAccess.LocationNetworks.Add(location, new List<Network>());
@@ -240,6 +242,7 @@ namespace ItemPipes
                     NetworkBuilder.BuildLocationNetworks(location);
                     NetworkManager.UpdateLocationNetworks(location);
                 }
+                
                 if (Globals.UltraDebug) { Printer.Info("Location networks loaded!"); }
             }
         }
@@ -271,6 +274,7 @@ namespace ItemPipes
             DataAccess.LocationNodes.Clear();
             DataAccess.LocationNetworks.Clear();
             DataAccess.UsedNetworkIDs.Clear();
+            DataAccess.Threads.Clear();
         }
 
         public void ConvertToVanillaMap()
@@ -285,6 +289,7 @@ namespace ItemPipes
                         SObject tempObj = customObj.Save();
                         location.objects.Remove(obj.Key);
                         location.objects.Add(obj.Key, tempObj);
+
                     }
                     if (obj.Value is Chest && (obj.Value as Chest).items.Any(i => i is CustomObjectItem || i is CustomToolItem))
                     {
@@ -353,19 +358,20 @@ namespace ItemPipes
                     {
                         for (int i = 0; i < (obj.Value as Chest).items.Count; i++)
                         {
-                            if ((obj.Value as Chest).items[i] is Fence && obj.Value.modData.ContainsKey("ItemPipes"))
+                            if ((obj.Value as Chest).items[i] is Fence && (obj.Value as Chest).items[i].modData.ContainsKey("ItemPipes"))
                             {
                                 Fence tempObj = (Fence)(obj.Value as Chest).items[i];
                                 CustomObjectItem customObj = ItemFactory.CreateItem(tempObj.modData["Type"]);
+                                customObj.stack.Value = Int32.Parse(tempObj.modData["Stack"]);
                                 (obj.Value as Chest).items.RemoveAt(i);
                                 (obj.Value as Chest).items.Insert(i, customObj);
                             }
-                            else if ((obj.Value as Chest).items[i] is Axe && obj.Value.modData.ContainsKey("ItemPipes"))
+                            else if ((obj.Value as Chest).items[i] is Axe && (obj.Value as Chest).items[i].modData.ContainsKey("ItemPipes"))
                             {
-                                CustomToolItem customTool = (CustomToolItem)(obj.Value as Chest).items[i];
-                                Tool tempTool = customTool.Save();
+                                Axe tempTool = (Axe)(obj.Value as Chest).items[i];
+                                CustomToolItem customObj = ItemFactory.CreateTool(tempTool.modData["Type"]);
                                 (obj.Value as Chest).items.RemoveAt(i);
-                                (obj.Value as Chest).items.Insert(i, tempTool);
+                                (obj.Value as Chest).items.Insert(i, customObj);
                             }
                         }
                     }
@@ -383,7 +389,6 @@ namespace ItemPipes
                 {
                     if (Game1.player.Items[i] is Fence && Game1.player.Items[i].modData.ContainsKey("ItemPipes"))
                     {
-                        Printer.Info("FenceModData: "+Game1.player.Items[i].modData["Type"]);
                         CustomObjectItem customObj = ItemFactory.CreateItem(Game1.player.Items[i].modData["Type"]);
                         customObj.Load(Game1.player.Items[i].modData);
                         Game1.player.Items.RemoveAt(i);
@@ -418,11 +423,10 @@ namespace ItemPipes
                                 foreach (Network network in networks)
                                 {
                                     //Printer.Info(network.Print());
-                                    if (network.Outputs.Count > 0)
+                                    if (network != null && network.Outputs.Count > 0)
                                     {
                                         network.ProcessExchanges(1);
                                     }
-
                                 }
                             }
                         }
@@ -439,7 +443,7 @@ namespace ItemPipes
                                 foreach (Network network in networks)
                                 {
                                     //Printer.Info(network.Print());
-                                    if (network.Outputs.Count > 0)
+                                    if (network != null && network.Outputs.Count > 0)
                                     {
                                         network.ProcessExchanges(2);
                                     }
@@ -458,7 +462,7 @@ namespace ItemPipes
                             {
                                 foreach (Network network in networks)
                                 {
-                                    if (network.Outputs.Count > 0)
+                                    if (network != null && network.Outputs.Count > 0)
                                     {
                                         network.ProcessExchanges(3);
                                     }
@@ -511,11 +515,6 @@ namespace ItemPipes
             if (!Game1.player.hasItemInInventoryNamed("Wrench"))
             {
                 Game1.player.addItemToInventory(new WrenchItem());
-            }
-            List<Network> networkList = DataAccess.LocationNetworks[Game1.currentLocation];
-            foreach (Network network in networkList)
-            {
-                Printer.Info(network.Print());
             }
         }
     }

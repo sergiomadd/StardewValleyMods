@@ -98,7 +98,7 @@ namespace ItemPipes.Framework.Nodes
             }
         }
 
-        public void SendItem(Item item, InputPipeNode input)
+        public void SendItem(Item item, IOPipeNode input)
         {
             List<PipeNode> path = GetPath(input);
             /*
@@ -112,24 +112,61 @@ namespace ItemPipes.Framework.Nodes
             MoveItemRecursive(item, input, path, 0);
         }
 
-        public PipeNode MoveItemRecursive(Item item, InputPipeNode input, List<PipeNode> path, int index)
+        public PipeNode MoveItemRecursive(Item item, IOPipeNode input, List<PipeNode> path, int index)
         {
-            //Printer.Info($"Current node: {Print()}");
+            //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}]Current node: {Print()}");
             PipeNode node = null;
             if (this.Equals(input))
             {
                 StoredItem = item;
                 PassingItem = true;
-                while (!input.ConnectedContainer.InsertItem(item))
+                bool interrupted = false;
+                //Printer.Info((!input.ConnectedContainer.InsertItem(item)).ToString());
+                //Printer.Info(interrupted.ToString());
+                while (!input.ConnectedContainer.InsertItem(item) && !interrupted)
                 {
-                    StoredItem = item;
-                    PassingItem = true;
+                    try
+                    {
+                        StoredItem = item;
+                        PassingItem = true;
+                        System.Threading.Thread.Sleep(ItemTimer);
+                    }
+                    catch (ThreadInterruptedException exception)
+                    {
+                        if (Globals.Debug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}]Waiting for {Print()} clogged item to return to output..."); }
+                        int i = 0;
+                        bool sent = false;
+                        while (i < ParentNetwork.Outputs.Count && !sent)
+                        {
+                            if (ParentNetwork.Outputs[i].ConnectedContainer.InsertItem(StoredItem))
+                            {
+                                //Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}]ITEM RETURNED");
+                                sent = true;
+                                interrupted = true;
+                                try
+                                {
+                                    if (DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
+                                    {
+                                        //Printer.Info("Removing T" + Thread.CurrentThread.ManagedThreadId);
+                                        DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    DataAccess.GetDataAccess().Threads.Clear();
+                                }
+                            }
+                            i++;
+                        }
+                    }
                 }
                 try
                 {
                     System.Threading.Thread.Sleep(ItemTimer);
                 }
-                catch (ThreadInterruptedException exception) { }
+                catch (ThreadInterruptedException exception) 
+                {
+                }
                 StoredItem = null;
                 PassingItem = false;
                 return input;

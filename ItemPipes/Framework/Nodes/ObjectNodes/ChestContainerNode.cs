@@ -47,23 +47,55 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             }
             return canReceive;
         }
+        public override bool CanStackItems()
+        {
+            bool canStack = false;
+            NetObjectList<Item> itemList = GetItemList();
+            int index = itemList.Count - 1;
+            while (index >= 0 && !canStack)
+            {
+                if (itemList[index] != null)
+                {
+                    if (itemList[index].getRemainingStackSpace() > 0)
+                    {
+                        canStack = true;
+                    }
+                }
+                index--;
+            }
+            return canStack;
+        }
+        public override bool CanStackItem(Item item)
+        {
+            bool canStack = false;
+            NetObjectList<Item> itemList = GetItemList();
+            if (itemList.Any(i => i.ParentSheetIndex.Equals(item.ParentSheetIndex)))
+            {
+                foreach (Item i in itemList.ToList())
+                {
+                    if (i.ParentSheetIndex == item.ParentSheetIndex && i.canStackWith(item))
+                    {
+                        canStack = true;
+                    }
+                }
+            }
+            return canStack;
+        }
 
         public override bool CanRecieveItem(Item item)
         {
             bool canReceive = false;
-
+            if (CanRecieveItems() || CanStackItem(item))
+            {
+                canReceive = true;
+            }
             return canReceive;
         }
 
         public override bool InsertItem(Item item)
         {
             bool sent = false;
-            if (CanStackItem(item))
-            {
-                ReceiveStack(item);
-                sent = true;
-            }
-            else if (CanRecieveItems())
+            if (CanRecieveItem(item))
             {
                 RecieveItem(item);
                 sent = true;
@@ -71,18 +103,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             return sent;
         }
 
-        public override bool IsEmpty()
-        {
-            bool isEmpty = false;
-            NetObjectList<Item> itemList = GetItemList();
-            if (itemList.Count < 1)
-            {
-                isEmpty = true;
-            }
-            return isEmpty;
-        }
-
-        public override Item GetItemForInput(InputPipeNode input)
+        public override Item GetItemForInput(InputPipeNode input, int flux)
         {
             Item item = null;
             if (input != null)
@@ -99,13 +120,13 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
                             if (Globals.UltraDebug) { Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?] Input has filter" + input.Filter.Count.ToString()); }
                             if (input.Filter.Any(i => i.Name.Equals(itemList[index].Name)))
                             {
-                                item = TryExtractItem(input.ConnectedContainer, itemList, index);
+                                item = TryExtractItem(input.ConnectedContainer, itemList, index, flux);
                             }
                         }
                         else
                         {
 
-                            item = TryExtractItem(input.ConnectedContainer, itemList, index);
+                            item = TryExtractItem(input.ConnectedContainer, itemList, index, flux);
                         }
                     }
                     index--;
@@ -114,28 +135,28 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             return item;
         }
 
-        public Item TryExtractItem(ContainerNode input, NetObjectList<Item> itemList, int index)
+        public Item TryExtractItem(ContainerNode input, NetObjectList<Item> itemList, int index, int flux)
         {
             //Exception for multiple thread collisions
             Item source = itemList[index];
             Item tosend = null;
-            int removal = 20;
             if (source is SObject)
             {
                 SObject obj = (SObject)source;
                 SObject tosendObject = (SObject)tosend;
-                if (input.CanStackItem(source) || input.CanRecieveItems())
+                if (input.CanRecieveItem(source))
                 {
-                    if (obj.Stack <= removal)
+
+                    if (obj.Stack <= flux)
                     {
                         tosendObject = obj;
                         itemList.RemoveAt(index);
                     }
                     else
                     {
-                        obj.stack.Value -= removal;
+                        obj.stack.Value -= flux;
                         tosendObject = (SObject)obj.getOne();
-                        tosendObject.stack.Value = removal;
+                        tosendObject.stack.Value = flux;
                     }
                     Chest.clearNulls();
                     return tosendObject;
@@ -145,7 +166,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             {
                 Tool tool = (Tool)source;
                 Tool tosendTool = (Tool)tosend;
-                if (input.CanRecieveItems())
+                if (input.CanRecieveItem(tool))
                 {
                     tosendTool = tool;
                     itemList.RemoveAt(index);
@@ -154,21 +175,6 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
                 return tosendTool;
             }
             return null;
-        }
-
-        public override bool CanStackItem(Item item)
-        {
-            bool canStack = false;
-            NetObjectList<Item> itemList = GetItemList();
-            if (itemList.Contains(item))
-            {
-                int index = itemList.IndexOf(item);
-                if (index < itemList.Count && itemList[index].canStackWith(item))
-                {
-                    canStack = true;
-                }
-            }
-            return canStack;
         }
 
         public void ReceiveStack(Item item)
@@ -216,5 +222,16 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             }
             return itemList;
         }
+        public override bool IsEmpty()
+        {
+            bool isEmpty = false;
+            NetObjectList<Item> itemList = GetItemList();
+            if (itemList.Count < 1)
+            {
+                isEmpty = true;
+            }
+            return isEmpty;
+        }
+
     }
 }

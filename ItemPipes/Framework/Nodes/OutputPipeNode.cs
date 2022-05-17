@@ -141,12 +141,12 @@ namespace ItemPipes.Framework
                             }
                             else if(StoredItem != null)
                             {
-                                Printer.Info($"Output locked");
+                                //Printer.Info($"Output locked");
                                 //Output locked
                             }
                             else if(item == null)
                             {
-                                Printer.Info($"Item is null");
+                                //Printer.Info($"Item is null");
                                 //Item is null
                             }
                         }
@@ -206,6 +206,7 @@ namespace ItemPipes.Framework
 
         private void AnimateConnection(List<PipeNode> path)
         {
+            Printer.Info("ANIMATING");
             ConnectPipe(path.Last());
             try
             {
@@ -228,6 +229,21 @@ namespace ItemPipes.Framework
                 removed = true;
                 ConnectedInputs.Remove(input);
             }
+            return removed;
+        }
+
+        public override bool RemoveAllAdjacents()
+        {
+            bool removed = false;
+            foreach (KeyValuePair<Side, Node> adj in Adjacents.ToList())
+            {
+                if (adj.Value != null)
+                {
+                    removed = true;
+                    RemoveAdjacent(adj.Key, adj.Value);
+                }
+            }
+            ConnectedInputs.Clear();
             return removed;
         }
     }

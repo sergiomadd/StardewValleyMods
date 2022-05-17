@@ -60,15 +60,9 @@ namespace ItemPipes.Framework
 
 		public override SObject Save()
 		{
-			Printer.Info("SAVINGGGG");
-			if (!modData.ContainsKey("ItemPipes")) { modData.Add("ItemPipes", "true"); }
-			else { modData["ItemPipes"] = "true"; }
-			if (!modData.ContainsKey("Type")) { modData.Add("Type", IDName); }
-			else { modData["Type"] = IDName; }
-			if (!modData.ContainsKey("Stack")) { modData.Add("Stack", Stack.ToString()); }
-			else { modData["Type"] = IDName; }
-			if (!modData.ContainsKey("State")) { modData.Add("State", State); }
-			else { modData["State"] = State; }
+			base.Save();
+			/*
+			 * For 1.6
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
 			{
@@ -104,6 +98,7 @@ namespace ItemPipes.Framework
 					}
 				}
 			}
+			*/
 
 			Fence fence = new Fence(tileLocation, 1, false);
 			fence.modData = modData;
@@ -113,6 +108,8 @@ namespace ItemPipes.Framework
 
 		public override void Load(ModDataDictionary data)
 		{
+			base.Load(data);
+			/*
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			modData = data;
 			if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
@@ -143,6 +140,7 @@ namespace ItemPipes.Framework
 
 				}
 			}
+			*/
 		}
 
 

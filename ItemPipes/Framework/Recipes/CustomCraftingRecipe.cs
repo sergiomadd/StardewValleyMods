@@ -22,7 +22,9 @@ namespace ItemPipes.Framework.Recipes
         public string Product { get; set; }
         public CustomCraftingRecipe(string name) : base(name)
         {
+
         }
+
         public CustomCraftingRecipe(string name, bool isCookingRecipe) : base(name, isCookingRecipe)
         {
 			DataAccess DataAccess = DataAccess.GetDataAccess();
@@ -62,15 +64,6 @@ namespace ItemPipes.Framework.Recipes
 				{
 					this.itemType = infoSplit[3];
 				}
-			}
-			try
-			{
-				//Get from db
-				this.description = "TEST DESCRIPTION";
-			}
-			catch (Exception)
-			{
-				this.description = "";
 			}
 			this.timesCrafted = (Game1.player.craftingRecipes.ContainsKey(name) ? Game1.player.craftingRecipes[name] : 0);
 			if (LocalizedContentManager.CurrentLanguageCode != 0)
@@ -128,10 +121,11 @@ namespace ItemPipes.Framework.Recipes
 				}
 				string ingredient_name_text = this.getNameFromIndex(this.recipeList.Keys.ElementAt(i));
 				Color drawColor = ((required_count <= 0) ? Game1.textColor : Color.Red);
-				if (dataAccess.ItemIDNames.Contains(ingredient_name_text))
+				if (dataAccess.ItemIDNames.Contains(Utilities.GetIDName(ingredient_name_text)))
                 {
+					string idname = dataAccess.ItemIDNamesFromNames[ingredient_name_text];
 					Rectangle srcRect = new Rectangle(0, 0, 16, 16);
-					Texture2D IngredientTexture = dataAccess.Sprites[ingredient_name_text + "_Item"];
+					Texture2D IngredientTexture = dataAccess.Sprites[idname + "_Item"];
 					b.Draw(IngredientTexture, new Vector2(position.X, position.Y + 64f + (float)(i * 64 / 2) + (float)(i * 4)), srcRect, Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0.86f);
 				}
 				else

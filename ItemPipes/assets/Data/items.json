@@ -4,7 +4,7 @@
       "Name": "Iron Pipe",
       "IDName": "IronPipe",
       "ID": 222560,
-      "Description": "Type: Connector Pipe\nThe basic pipe for connecting inputs and outputs.",
+      "Description": "Type: Connector Pipe\nThe basic pipe for connecting inputs and outputs. It moves items once every second.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -36,7 +36,7 @@
       "Name": "Gold Pipe",
       "IDName": "GoldPipe",
       "ID": 222561,
-      "Description": "Type: Connector Pipe\nThe link between IO pipes. It moves items at 2 tiles-1 second.",
+      "Description": "Type: Connector Pipe\nA more advanced and shinier pipe for connecting inputs and outputs. It moves items every 0.5 seconds.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -68,7 +68,7 @@
       "Name": "Iridium Pipe",
       "IDName": "IridiumPipe",
       "ID": 222562,
-      "Description": "",
+      "Description": "Type: Connector Pipe\nThe top tier pipe for connecting inputs and outputs. It moves items every 0.2 seconds.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -100,7 +100,7 @@
       "Name": "Extractor Pipe",
       "IDName": "ExtractorPipe",
       "ID": 222563,
-      "Description": "",
+      "Description": "Type: Output Pipe\nExtracts 1 item from an adjacent container every 3 seconds, and sends them through the network.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -132,7 +132,7 @@
       "Name": "Gold Extractor Pipe",
       "IDName": "GoldExtractorPipe",
       "ID": 222564,
-      "Description": "",
+      "Description": "Type: Output Pipe\nExtracts 10 items from an adjacent container every second, and sends them through the network.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -164,7 +164,7 @@
       "Name": "Iridium Extractor Pipe",
       "IDName": "IridiumExtractorPipe",
       "ID": 222565,
-      "Description": "",
+      "Description": "Type: Output Pipe\nExtracts 20 items from an adjacent container every half second, and sends them through the network.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -196,7 +196,7 @@
       "Name": "Inserter Pipe",
       "IDName": "InserterPipe",
       "ID": 222566,
-      "Description": "",
+      "Description": "Type: Input Pipe\nInserts items into an adjacent container, it doesn't filter items.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -228,7 +228,7 @@
       "Name": "Polymorphic Pipe",
       "IDName": "PolymorphicPipe",
       "ID": 222567,
-      "Description": "",
+      "Description": "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the adjacent container.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -260,7 +260,7 @@
       "Name": "Filter Pipe",
       "IDName": "FilterPipe",
       "ID": 222568,
-      "Description": "",
+      "Description": "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -292,7 +292,7 @@
       "Name": "P.P.M.",
       "IDName": "PPM",
       "ID": 222660,
-      "Description": "",
+      "Description": "Type: Machine\nThe P.P.M. makes pipes of the attached network turn crossable.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",
@@ -324,7 +324,7 @@
       "Name": "Wrench",
       "IDName": "Wrench",
       "ID": 222661,
-      "Description": "",
+      "Description": "Type: Tool\nUsed for turning on/off IOPipes.",
       "NameLocalization": {
         "es": "Tuberia de hierro",
         "ko": "",

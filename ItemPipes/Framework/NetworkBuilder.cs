@@ -71,6 +71,8 @@ namespace ItemPipes.Framework
 
         public static Node BuildNetworkRecursive(Vector2 position, GameLocation location, Network inNetwork)
         {
+            Printer.Info("BUILDING");
+            
             DataAccess DataAccess = DataAccess.GetDataAccess();
             Node node = null;
             string inType = "";
@@ -91,6 +93,7 @@ namespace ItemPipes.Framework
                 {
                     if (inType.Equals("object"))
                     {
+                        Printer.Info("NEW NDOE ");
                         nodes.Add(NodeFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x, y)));
                     }
                     else if (inType.Equals("building"))
@@ -101,11 +104,14 @@ namespace ItemPipes.Framework
                 if (inType.Equals("object"))
                 {
                     node = nodes.Find(n => n.Position.Equals(position));
+                    Printer.Info("current "+node.Print());
+                    Printer.Info("Adjacents: "+ node.Adjacents.Values.Count(a => a != null));
                     if (node.ParentNetwork == null)
                     {
                         if (inNetwork == null)
                         {
                             node.ParentNetwork = NetworkManager.CreateLocationNetwork(location);
+                            Printer.Info($"Created network {node.ParentNetwork.ID} for {node.Print()}");
                         }
                         else
                         {
@@ -209,7 +215,12 @@ namespace ItemPipes.Framework
                             {
                                 if (!node.ParentNetwork.Nodes.Contains(nodes.Find(n => n.Position.Equals(east))))
                                 {
+                                    if(nodes.Find(n => n.Position.Equals(east)) != null)
+                                    {
+                                        Printer.Info($"Parent network no contine east {nodes.Find(n => n.Position.Equals(east)).Print()}");
+                                    }
                                     Node adj = BuildNetworkRecursive(east, location, node.ParentNetwork);
+                                    Printer.Info($"RETURN OF {node.Print()} for adj {adj.Print()}");
                                     node.AddAdjacent(SideStruct.GetSides().East, adj);
                                 }
                             }
@@ -249,11 +260,15 @@ namespace ItemPipes.Framework
                         Vector2 west = new Vector2(x - 1, y);
                         if (location.getObjectAtTile(x - 1, y) != null && x + 1 < location.map.DisplayWidth)
                         {
-
                             if (location.getObjectAtTile(x - 1, y) is PipeItem)
                             {
                                 if (!node.ParentNetwork.Nodes.Contains(nodes.Find(n => n.Position.Equals(west))))
                                 {
+                                    if (nodes.Find(n => n.Position.Equals(west)) != null)
+                                    {
+                                        Printer.Info($"Parent network no contine east {nodes.Find(n => n.Position.Equals(west)).Print()}");
+
+                                    }
                                     Node adj = BuildNetworkRecursive(west, location, node.ParentNetwork);
                                     node.AddAdjacent(SideStruct.GetSides().West, adj);
                                 }
@@ -293,6 +308,8 @@ namespace ItemPipes.Framework
                     }
                 }
             }
+            Printer.Info($"END RETURN OF {node.Print()}");
+
             return node;
         }
     }

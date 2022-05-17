@@ -59,8 +59,8 @@ namespace ItemPipes.Framework.Items
 			else { modData["ItemPipes"] = "true"; }
 			if (!modData.ContainsKey("Type")){ modData.Add("Type", IDName); }
 			else { modData["Type"] = IDName; }
-			if (!modData.ContainsKey("Stack")){ modData.Add("Stack", Stack.ToString()); }
-			else { modData["Type"] = IDName; }
+			if (!modData.ContainsKey("Stack")){ modData.Add("Stack", stack.Value.ToString()); }
+			else { modData["Stack"] = stack.Value.ToString(); }
 			if (!modData.ContainsKey("State")){ modData.Add("State", State); }
 			else { modData["State"] = State; }
 			Fence fence = new Fence(tileLocation, 1, false);
@@ -72,23 +72,20 @@ namespace ItemPipes.Framework.Items
 		public virtual void Load(ModDataDictionary data)
 		{
 			modData = data;
+			stack.Value = Int32.Parse(modData["Stack"]);
 		}
 
 		public override string getDescription()
 		{
-			return Description;
+			return Game1.parseText(Description, Game1.smallFont, getDescriptionWidth());
 		}
-
+		
 		protected override int getDescriptionWidth()
 		{
-			int minimum_size = 272;
-			if (LocalizedContentManager.CurrentLanguageCode == LocalizedContentManager.LanguageCode.fr)
-			{
-				minimum_size = 384;
-			}
+			int minimum_size = 400;
 			return Math.Max(minimum_size, (int)Game1.dialogueFont.MeasureString((Name == null) ? "" : Name).X);
 		}
-
+		
 		public override string getCategoryName()
 		{
 			return "Item Pipes";

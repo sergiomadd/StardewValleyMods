@@ -206,14 +206,16 @@ namespace ItemPipes
                 }
                 ConvertToVanillaMap();
                 ConvertToVanillaPlayer();
+                if (Globals.Debug) { Printer.Info("All modded items saved!"); }
+
             }
         }
 
         public void OnSaved(object sender, SavedEventArgs args)
         {
+            Reset();
             if (Context.IsMainPlayer) 
             {
-                Reset();
 
                 foreach (GameLocation location in Game1.locations)
                 {
@@ -233,7 +235,6 @@ namespace ItemPipes
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {    
             Reset();
-
             if (Context.IsMainPlayer)
             {
                 foreach (GameLocation location in Game1.locations)
@@ -267,11 +268,11 @@ namespace ItemPipes
                 {
                     if (obj.Value is CustomObjectItem)
                     {
+                        Printer.Info(location.name);
                         CustomObjectItem customObj = (CustomObjectItem)obj.Value;
                         SObject tempObj = customObj.Save();
                         location.objects.Remove(obj.Key);
                         location.objects.Add(obj.Key, tempObj);
-
                     }
                     if (obj.Value is Chest && (obj.Value as Chest).items.Any(i => i is CustomObjectItem || i is CustomToolItem))
                     {
@@ -328,6 +329,7 @@ namespace ItemPipes
                 {
                     if (obj.Value is Fence && obj.Value.modData.ContainsKey("ItemPipes"))
                     {
+                        Printer.Info(location.name);
                         if (obj.Value.modData["Type"] != null)
                         {
                             CustomObjectItem customObj = ItemFactory.CreateObject(obj.Key, obj.Value.modData["Type"]);
@@ -358,7 +360,7 @@ namespace ItemPipes
                     }
                     if(obj.Value is Chest)
                     {
-                        NetworkManager.AddObject(obj);
+                        NetworkManager.AddObject(obj, location);
                     }
                 }
             }
@@ -392,6 +394,13 @@ namespace ItemPipes
 
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
+            if(Context.IsWorldReady)
+            {
+                List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+                //Printer.Info(nodes.Count.ToString());
+            }
+
+
             if (Globals.DisableItemSending)
             {
                 if (Context.IsWorldReady)
@@ -399,6 +408,7 @@ namespace ItemPipes
                     //Tier 1 Extractors
                     if (e.IsMultipleOf(120))
                     {
+
                         foreach (GameLocation location in Game1.locations)
                         {
                             List<Network> networks = DataAccess.LocationNetworks[location];
@@ -461,15 +471,12 @@ namespace ItemPipes
 
         private void OnObjectListChanged(object sender, ObjectListChangedEventArgs e)
         {
-            //Printer.Info("CANTIDAD DE NETWORKS: " + DataAccess.LocationNetworks.Values.Count.ToString());
-
             List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in addedObjects)
             {
-                Printer.Info(obj.Value.Name);
                 if(DataAccess.ModItems.Contains(obj.Value.Name))
                 {
-                    NetworkManager.AddObject(obj);
+                    NetworkManager.AddObject(obj, e.Location);
                     NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
                 }
             }
@@ -477,9 +484,10 @@ namespace ItemPipes
             List<KeyValuePair<Vector2, StardewValley.Object>> removedObjects = e.Removed.ToList();
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in removedObjects)
             {
+
                 if (DataAccess.ModItems.Contains(obj.Value.Name))
                 {
-                    NetworkManager.RemoveObject(obj);
+                    NetworkManager.RemoveObject(obj, e.Location);
                     NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
                 }
             }

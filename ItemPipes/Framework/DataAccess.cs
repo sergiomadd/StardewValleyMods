@@ -221,6 +221,11 @@ namespace ItemPipes.Framework
                 Sprites.Add("PPM_on", ModEntry.helper.Content.Load<Texture2D>($"assets/Objects/PPM/PPM_on.png"));
                 Sprites.Add("PPM_off", ModEntry.helper.Content.Load<Texture2D>($"assets/Objects/PPM/PPM_off.png"));
                 Sprites.Add("Wrench_Item", ModEntry.helper.Content.Load<Texture2D>($"assets/Objects/Wrench/Wrench_Item.png"));
+
+                Sprites.Add("nochest_state", ModEntry.helper.Content.Load<Texture2D>($"assets/Misc/nochest_state.png"));
+                Sprites.Add("nochest1_state", ModEntry.helper.Content.Load<Texture2D>($"assets/Misc/nochest1_state.png"));
+                //Sprites.Add("unconnected_state", ModEntry.helper.Content.Load<Texture2D>($"assets/Misc/unconnected_state.png"));
+                Sprites.Add("unconnected1_state", ModEntry.helper.Content.Load<Texture2D>($"assets/Misc/unconnected1_state.png"));
             }
             catch (Exception e)
             {

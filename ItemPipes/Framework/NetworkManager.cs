@@ -45,19 +45,17 @@ namespace ItemPipes.Framework
         public static void AddNewElement(Node newNode, Network network)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
             newNode.ParentNetwork = network;
             LoadNodeToNetwork(newNode.Position, newNode.Location, network);
         }
 
-        public static void AddObject(KeyValuePair<Vector2, StardewValley.Object> obj)
+        public static void AddObject(KeyValuePair<Vector2, StardewValley.Object> obj, GameLocation location)
         {
-
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if (Globals.UltraDebug) { Printer.Info("Adding new object: " + obj.Key.ToString() + obj.Value.Name); }
 
-            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-            Node newNode = NodeFactory.CreateElement(obj.Key, Game1.currentLocation, obj.Value);
+            List<Node> nodes = DataAccess.LocationNodes[location];
+            Node newNode = NodeFactory.CreateElement(obj.Key, location, obj.Value);
             if (Globals.UltraDebug) { Printer.Info("New node created: " + newNode.Print()); }
             int x = (int)newNode.Position.X;
             int y = (int)newNode.Position.Y;
@@ -114,13 +112,13 @@ namespace ItemPipes.Framework
                     if (Globals.UltraDebug) { Printer.Info($"Biggest network = {orderedAdjNetworks[0].ID}"); }
                     foreach(Network network in orderedAdjNetworks)
                     {
-                        Printer.Info(network.Print());
+                        if (Globals.UltraDebug) { Printer.Info(network.Print()); }
                     }
                     newNode.ParentNetwork = orderedAdjNetworks[0];
                     AddNewElement(newNode, orderedAdjNetworks[0]);
-                    MergeNetworks(orderedAdjNetworks);
+                    MergeNetworks(orderedAdjNetworks, location);
                 }
-                Printer.Info($"Assigned network: [N{newNode.ParentNetwork.ID}]");
+                if (Globals.UltraDebug){Printer.Info($"Assigned network: [N{newNode.ParentNetwork.ID}]");}
                 //Another check for missmatching networks
                 north = new Vector2(x, y - 1);
                 northNode = nodes.Find(n => n.Position.Equals(north));
@@ -165,7 +163,7 @@ namespace ItemPipes.Framework
             }
         }
 
-        private static void MergeNetworks(List<Network> network)
+        private static void MergeNetworks(List<Network> network, GameLocation location)
         {
             if (Globals.UltraDebug) { Printer.Info("Merging networks... "); }
             DataAccess DataAccess = DataAccess.GetDataAccess();
@@ -175,17 +173,18 @@ namespace ItemPipes.Framework
                 foreach (Node elem in network[i].Nodes.ToList())
                 {
                     elem.ParentNetwork = network[0];
-                    LoadNodeToNetwork(elem.Position, Game1.currentLocation, network[0]);
+                    LoadNodeToNetwork(elem.Position, location, network[0]);
                 }
-                DataAccess.LocationNetworks[Game1.currentLocation].Remove(network[i]);
+                DataAccess.LocationNetworks[location].Remove(network[i]);
             }
         }
 
-        public static void RemoveObject(KeyValuePair<Vector2, StardewValley.Object> obj)
+        public static void RemoveObject(KeyValuePair<Vector2, StardewValley.Object> obj, GameLocation location)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if (Globals.UltraDebug) { Printer.Info("Removing object: " + obj.Key.ToString() + obj.Value.Name); }
-            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            Printer.Info("Removing object: " + obj.Key.ToString() + obj.Value.Name);
+            List<Node> nodes = DataAccess.LocationNodes[location];
             Node node = nodes.Find(n => n.Position.Equals(obj.Key));
             if(node != null)
             {
@@ -211,7 +210,7 @@ namespace ItemPipes.Framework
                         node.ParentNetwork.RemoveNode(node);
                         if (adjNetworks.Count > 0)
                         {
-                            RemakeNetwork(node);
+                            RemakeNetwork(node, location);
                         }
                     }
                 }
@@ -219,7 +218,7 @@ namespace ItemPipes.Framework
             }
         }
 
-        public static void RemakeNetwork(Node node)
+        public static void RemakeNetwork(Node node, GameLocation location)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if (Globals.UltraDebug) { Printer.Info("Remaking networks..."); }
@@ -227,7 +226,7 @@ namespace ItemPipes.Framework
             node.ParentNetwork.RemoveAllAdjacents();
             node.ParentNetwork.Delete();
 
-            if(DataAccess.LocationNetworks[Game1.currentLocation].Remove(node.ParentNetwork))
+            if(DataAccess.LocationNetworks[location].Remove(node.ParentNetwork))
             {
 
                 Printer.Info($"WELL REMOVED {node.ParentNetwork.ID}");
@@ -243,12 +242,12 @@ namespace ItemPipes.Framework
                 if (adj != null)
                 {
                     Printer.Info($"Removed adj = {adj.Print()}");
-                    DataAccess.LocationNodes[Game1.currentLocation].Remove(node);
+                    DataAccess.LocationNodes[location].Remove(node);
                     if (DataAccess.NetworkItems.Contains(adj.Name))
                     {
                         if (adj.ParentNetwork != null)
                         {
-                            if(DataAccess.LocationNetworks[Game1.currentLocation].Contains(adj.ParentNetwork))
+                            if(DataAccess.LocationNetworks[location].Contains(adj.ParentNetwork))
                             {
                                 Printer.Info($"Contains network {adj.ParentNetwork.ID}");
                                 /*Printer.Info($"{DataAccess.LocationNetworks[Game1.currentLocation].Count}");
@@ -265,16 +264,16 @@ namespace ItemPipes.Framework
                             }
 
                         }
-                        PrintLocationNetworks(Game1.currentLocation);
+                        PrintLocationNetworks(location);
                         Printer.Info("BEFORE");
-                        NetworkBuilder.BuildNetworkRecursive(adj.Position, Game1.currentLocation, null);
-                        PrintLocationNetworks(Game1.currentLocation);
+                        NetworkBuilder.BuildNetworkRecursive(adj.Position, location, null);
+                        PrintLocationNetworks(location);
                         Printer.Info("END OF PRINT INSIDE LOOP");
                     }
 
                 }
             }
-            PrintLocationNetworks(Game1.currentLocation);
+            PrintLocationNetworks(location);
         }
 
         public static Network CreateLocationNetwork(GameLocation location)

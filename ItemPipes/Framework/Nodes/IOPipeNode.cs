@@ -112,8 +112,6 @@ namespace ItemPipes.Framework
 
         public override bool AddAdjacent(Side side, Node node)
         {
-            Printer.Info($"ADDING ADJ: {node.Print()} to {Print()}");
-
             bool added = false;
             if (Adjacents[side] == null)
             {
@@ -131,19 +129,19 @@ namespace ItemPipes.Framework
                 Adjacents[side].ParentNetwork != null &&
                 Adjacents[side].Adjacents[Sides.GetInverse(side)].ParentNetwork != Adjacents[side].ParentNetwork)
             {
-                Printer.Info($"ADDING ADJ adj: {Adjacents[side].Adjacents[Sides.GetInverse(side)].Print()} of {Adjacents[side].Print()}");
-                Printer.Info($"in wrong network of {Adjacents[side].Print()}");
+                //Printer.Info($"ADDING ADJ adj: {Adjacents[side].Adjacents[Sides.GetInverse(side)].Print()} of {Adjacents[side].Print()}");
+                //Printer.Info($"in wrong network of {Adjacents[side].Print()}");
 
                 added = true;
                 Adjacents[side].Adjacents[Sides.GetInverse(side)] = this;
-                Printer.Info($"ADDING ADJ adj: {Adjacents[side].Adjacents[Sides.GetInverse(side)].Print()} of {Adjacents[side].Print()}");
+                //Printer.Info($"ADDING ADJ adj: {Adjacents[side].Adjacents[Sides.GetInverse(side)].Print()} of {Adjacents[side].Print()}");
             }
             return added;
         }
 
         public override bool RemoveAdjacent(Side side, Node node)
         {
-            Printer.Info($"removing ADJ: {node.Print()} from {Print()}");
+            //Printer.Info($"removing ADJ: {node.Print()} from {Print()}");
 
             bool removed = false;
             if (Adjacents[side] != null)

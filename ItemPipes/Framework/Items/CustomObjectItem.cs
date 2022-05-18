@@ -72,6 +72,7 @@ namespace ItemPipes.Framework.Items
 		public virtual void Load(ModDataDictionary data)
 		{
 			modData = data;
+			Printer.Info(Name + " " + modData["State"]);
 			stack.Value = Int32.Parse(modData["Stack"]);
 		}
 

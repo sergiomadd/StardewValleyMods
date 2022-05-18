@@ -25,11 +25,11 @@ namespace ItemPipes.Framework
 
         public override bool AddAdjacent(Side side, Node node)
         {
-            Printer.Info($"ADDING ADJ: {node.Print()} to {Print()}");
-            Printer.Info($"IS SIDE NULL?" + (Adjacents[side] == null).ToString());
+            //Printer.Info($"ADDING ADJ: {node.Print()} to {Print()}");
+            //Printer.Info($"IS SIDE NULL?" + (Adjacents[side] == null).ToString());
             if(Adjacents[side] != null)
             {
-                Printer.Info($"SIDE: {side.Name} is {Adjacents[side].Print()}");
+                //Printer.Info($"SIDE: {side.Name} is {Adjacents[side].Print()}");
             }
             bool added = false;
             if (Adjacents[side] == null)
@@ -47,12 +47,12 @@ namespace ItemPipes.Framework
                 Adjacents[side].ParentNetwork != null &&
                 Adjacents[side].Adjacents[Sides.GetInverse(side)].ParentNetwork != Adjacents[side].ParentNetwork)
             {
-                Printer.Info($"ADDING ADJ adj: {Adjacents[side].Adjacents[Sides.GetInverse(side)].Print()} of {Adjacents[side].Print()}");
-                Printer.Info($"in wrong network of {Adjacents[side].Print()}");
+                //Printer.Info($"ADDING ADJ adj: {Adjacents[side].Adjacents[Sides.GetInverse(side)].Print()} of {Adjacents[side].Print()}");
+                //Printer.Info($"in wrong network of {Adjacents[side].Print()}");
 
                 added = true;
                 Adjacents[side].Adjacents[Sides.GetInverse(side)] = this;
-                Printer.Info($"ADDING ADJ adj: {Adjacents[side].Adjacents[Sides.GetInverse(side)].Print()} of {Adjacents[side].Print()}");
+                //Printer.Info($"ADDING ADJ adj: {Adjacents[side].Adjacents[Sides.GetInverse(side)].Print()} of {Adjacents[side].Print()}");
             }
             return added;
         }

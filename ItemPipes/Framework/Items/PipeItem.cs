@@ -47,17 +47,17 @@ namespace ItemPipes.Framework
 			DrawGuide = new Dictionary<string, int>();
 			PopulateDrawGuide();
 			LoadTextures();
-		}
+        }
 
-		public virtual void LoadTextures()
-		{
-			DataAccess DataAccess = DataAccess.GetDataAccess();
-			DefaultSprite = DataAccess.Sprites[IDName + "_default_Sprite"];
-			ConnectingSprite = DataAccess.Sprites[IDName + "_connecting_Sprite"];
-			ItemMovingSprite = DataAccess.Sprites[IDName + "_item_Sprite"];
-			SpriteTexture = DefaultSprite;
-		}
-
+        public virtual void LoadTextures()
+        {
+            DataAccess DataAccess = DataAccess.GetDataAccess();
+            DefaultSprite = DataAccess.Sprites[IDName + "_default_Sprite"];
+            ConnectingSprite = DataAccess.Sprites[IDName + "_connecting_Sprite"];
+            ItemMovingSprite = DataAccess.Sprites[IDName + "_item_Sprite"];
+            SpriteTexture = DefaultSprite;
+        }
+		/* ESTO PARA GUARDAR OVERLOADED ITEMS
 		public override SObject Save()
 		{
 			base.Save();
@@ -98,7 +98,7 @@ namespace ItemPipes.Framework
 					}
 				}
 			}
-			*/
+			
 
 			Fence fence = new Fence(tileLocation, 1, false);
 			fence.modData = modData;
@@ -109,7 +109,7 @@ namespace ItemPipes.Framework
 		public override void Load(ModDataDictionary data)
 		{
 			base.Load(data);
-			/*
+			
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			modData = data;
 			if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
@@ -140,8 +140,8 @@ namespace ItemPipes.Framework
 
 				}
 			}
-			*/
-		}
+			
+		}*/
 
 
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
@@ -236,6 +236,7 @@ namespace ItemPipes.Framework
 			if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
 			{
 				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+				//Printer.Info(nodes.Count.ToString());
 				Node node = nodes.Find(n => n.Position.Equals(TileLocation));
 				if (node != null && node is PipeNode)
 				{
@@ -270,6 +271,7 @@ namespace ItemPipes.Framework
 					}
 					else
 					{
+
 						SpriteTexture = DefaultSprite;
 						spriteBatch.Draw(SpriteTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)),
 							new Rectangle(sourceRectPosition * 16 % SpriteTexture.Bounds.Width,

@@ -44,12 +44,12 @@ namespace ItemPipes.Framework.Items
 
 		public void Init()
 		{
-			IDName = GetType().Name.Substring(0, GetType().Name.Length - 4);
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			ItemTexture = DataAccess.Sprites[IDName + "_Item"];
+			IDName = GetType().Name.Substring(0, GetType().Name.Length - 4);
 			Name = DataAccess.ItemNames[IDName];
 			DisplayName = DataAccess.ItemNames[IDName];
 			Description = DataAccess.ItemDescriptions[IDName];
+			ItemTexture = DataAccess.Sprites[IDName + "_Item"];
 			parentSheetIndex.Value = DataAccess.ItemIDs[IDName];
 		}
 
@@ -72,7 +72,6 @@ namespace ItemPipes.Framework.Items
 		public virtual void Load(ModDataDictionary data)
 		{
 			modData = data;
-			Printer.Info(Name + " " + modData["State"]);
 			stack.Value = Int32.Parse(modData["Stack"]);
 		}
 

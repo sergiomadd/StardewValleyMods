@@ -85,6 +85,9 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
         public override bool CanRecieveItem(Item item)
         {
             bool canReceive = false;
+            //Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?]"+CanRecieveItems().ToString());
+            //Printer.Info($"T[{Thread.CurrentThread.ManagedThreadId}][?]"+CanStackItem(item).ToString());
+
             if (CanRecieveItems() || CanStackItem(item))
             {
                 canReceive = true;
@@ -144,9 +147,8 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             {
                 SObject obj = (SObject)source;
                 SObject tosendObject = (SObject)tosend;
-                if (input.CanRecieveItem(source))
+                if (input.CanRecieveItem(source) && !IsEmpty())
                 {
-
                     if (obj.Stack <= flux)
                     {
                         tosendObject = obj;

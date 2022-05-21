@@ -77,6 +77,7 @@ namespace ItemPipes.Framework.Items
             return ItemFactory.CreateItem(IDName);
         }
 
+        /*
         public override bool clicked(Farmer who)
         {
             if(who.CurrentTool == null)
@@ -99,6 +100,7 @@ namespace ItemPipes.Framework.Items
             }
             return false;
         }
+        */
 
         public void ChangeSignal()
         {
@@ -156,7 +158,7 @@ namespace ItemPipes.Framework.Items
                         Rectangle srcRect = new Rectangle(0, 0, 16, 16);
                         spriteBatch.Draw(SignalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
                     }
-                    if (IONode.Signal != null)
+                    if (Globals.IOPipeStatePopup && IONode.Signal != null)
                     {
                         if(IONode.Signal.Equals("nochest"))
                         {

@@ -57,12 +57,10 @@ namespace ItemPipes.Framework
             ItemMovingSprite = DataAccess.Sprites[IDName + "_item_Sprite"];
             SpriteTexture = DefaultSprite;
         }
-		/* ESTO PARA GUARDAR OVERLOADED ITEMS
+		//ESTO PARA GUARDAR OVERLOADED ITEMS
 		public override SObject Save()
 		{
-			base.Save();
-			/*
-			 * For 1.6
+			//For 1.6
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
 			{
@@ -73,15 +71,17 @@ namespace ItemPipes.Framework
 					PipeNode pipe = (PipeNode)node;
 					if (pipe.StoredItem != null)
 					{
-						Printer.Info("Pipe with item");
-
+						/*
 						if (!modData.ContainsKey("StoredItem")) { modData.Add("StoredItem", pipe.StoredItem.Name); }
 						else { modData["StoredItem"] = pipe.StoredItem.Name; }
 						if (!modData.ContainsKey("StoredItemStack")) { modData.Add("StoredItemStack", pipe.StoredItem.Stack.ToString()); }
 						else { modData["StoredItemStack"] = pipe.StoredItem.Stack.ToString(); }
+						*/
 						//Implement with 1.6
 						//Create item with utility method
+		
 						//Temp solution:
+		
 						//Return to extractor
 						if (Globals.Debug) { Printer.Info("Waiting for clogged pipes to return to output..."); }
 						int i = 0;
@@ -90,26 +90,31 @@ namespace ItemPipes.Framework
 						{
 							if (pipe.ParentNetwork.Outputs[i].ConnectedContainer.CanRecieveItem(pipe.StoredItem))
 							{
-								pipe.SendItem(pipe.StoredItem, pipe.ParentNetwork.Outputs[i]);
+								pipe.FlushPipe(pipe.StoredItem, pipe.ParentNetwork.Outputs[i]);
 								sent = true;
+								if (Globals.Debug) { Printer.Info("Pipe unclogged succesfully!"); }
 							}
 							i++;
+						}
+						if(!sent)
+                        {
+							Printer.Error("Clogged pipe couldn't be emptied at saving. These items will be lost: ");
+							Printer.Error($"In {Name} at {pipe.Position} at {pipe.Location.Name} holding {pipe.StoredItem.Stack} {pipe.StoredItem.Name} were lost.");
 						}
 					}
 				}
 			}
-			
+			//Fence fence = new Fence(tileLocation, 1, false);
+			//fence.modData = modData;
 
-			Fence fence = new Fence(tileLocation, 1, false);
-			fence.modData = modData;
-
-			return fence;
+			return base.Save();
 		}
 
 		public override void Load(ModDataDictionary data)
 		{
 			base.Load(data);
-			
+			/*
+			 * FOR 1.6
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			modData = data;
 			if (DataAccess.LocationNodes.ContainsKey(Game1.currentLocation))
@@ -140,8 +145,8 @@ namespace ItemPipes.Framework
 
 				}
 			}
-			
-		}*/
+			*/
+		}
 
 
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)

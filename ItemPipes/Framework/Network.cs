@@ -59,6 +59,7 @@ namespace ItemPipes.Framework
                     output.ProcessExchanges();
                 }
             }
+
         }
 
         public bool AddNode(Node node)
@@ -87,7 +88,7 @@ namespace ItemPipes.Framework
             }
             else if(node.ParentNetwork != this)
             {
-                Printer.Info($"Tried to add {node.Print()} to N{ID}, but they dont match.");
+                //Printer.Info($"Tried to add {node.Print()} to N{ID}, but they dont match.");
             }
             return added;
         }
@@ -203,7 +204,7 @@ namespace ItemPipes.Framework
                     if (output.IsInputConnected(input))
                     {
                         if (Globals.UltraDebug) { Printer.Info($"[N{ID}] {input.Print()} already connected"); }
-                        if (!output.CanConnectedWith(input))
+                        if (!output.CanConnectedWith(input) || input.ConnectedContainer == null)
                         {
                             canDisconnect = output.RemoveConnectedInput(input);
                             if (Globals.UltraDebug) { Printer.Info($"[N{ID}] Can disconnect with {input.Print()}? -> {canDisconnect}"); }

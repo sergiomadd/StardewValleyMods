@@ -95,6 +95,7 @@ namespace ItemPipes.Framework.Items.Objects
                 Stage = 3;
                 ItemTexture = ItemTexture3;
                 SpriteTexture = SpriteTexture3;
+                ItemMovingSprite = ItemMovingSprite3;
                 DefaultSprite = DefaultSprite3;
                 ConnectingSprite = ConnectingSprite3;
             }
@@ -103,6 +104,7 @@ namespace ItemPipes.Framework.Items.Objects
                 Stage = 2;
                 ItemTexture = ItemTexture2;
                 SpriteTexture = SpriteTexture2;
+                ItemMovingSprite = ItemMovingSprite2;
                 DefaultSprite = DefaultSprite2;
                 ConnectingSprite = ConnectingSprite2;
             }
@@ -111,6 +113,7 @@ namespace ItemPipes.Framework.Items.Objects
                 Stage = 1;
                 ItemTexture = ItemTexture1;
                 SpriteTexture = SpriteTexture1;
+                ItemMovingSprite = ItemMovingSprite1;
                 DefaultSprite = DefaultSprite1;
                 ConnectingSprite = ConnectingSprite1;
             }

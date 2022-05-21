@@ -44,20 +44,50 @@ namespace ItemPipes.Framework
                     }
                 }
             }
+            
             if(location.Objects.Count() > 0)
             {
                 foreach (KeyValuePair<Vector2, StardewValley.Object> obj in location.Objects.Pairs)
                 {
                     if (obj.Value != null)
                     {
-                        if (DataAccess.ModItems.Contains(obj.Value.Name))
+                        if (obj.Value is CustomObjectItem)
                         {
                             BuildNetworkRecursive(new Vector2(obj.Key.X, obj.Key.Y), location, null);
                         }
                     }
                 }
             }
+            
         }
+
+        public static void BuildLocationNetworksTEMP(GameLocation location)
+        {
+            DataAccess DataAccess = DataAccess.GetDataAccess();
+            if (location.Name.Equals(Game1.getFarm().Name))
+            {
+                if (Globals.UltraDebug) { Printer.Info("LOADING FARM BUILDINGS"); }
+                foreach (Building building in Game1.getFarm().buildings)
+                {
+                    if (building != null)
+                    {
+                        if (DataAccess.Buildings.Contains(building.buildingType.ToString()))
+                        {
+                            for (int i = 0; i < building.tilesWide.Value; i++)
+                            {
+                                for (int j = 0; j < building.tilesHigh.Value; j++)
+                                {
+                                    int x = building.tileX.Value + i;
+                                    int y = building.tileY.Value + j;
+                                    BuildBuildings(new Vector2(x, y), location, null);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
         public static void BuildBuildings(Vector2 position, GameLocation location, Network inNetwork)
         {
@@ -70,15 +100,13 @@ namespace ItemPipes.Framework
         }
 
         public static Node BuildNetworkRecursive(Vector2 position, GameLocation location, Network inNetwork)
-        {
-            Printer.Info("BUILDING");
-            
+        {            
             DataAccess DataAccess = DataAccess.GetDataAccess();
             Node node = null;
             string inType = "";
             int x = (int)position.X;
             int y = (int)position.Y;
-            if ((location.getObjectAtTile(x, y) != null) && DataAccess.ModItems.Contains(location.getObjectAtTile(x, y).Name))
+            if ((location.getObjectAtTile(x, y) != null) && DataAccess.ModItems.Contains(location.getObjectAtTile(x, y).ParentSheetIndex))
             {
                 inType = "object";
             }
@@ -93,7 +121,6 @@ namespace ItemPipes.Framework
                 {
                     if (inType.Equals("object"))
                     {
-                        Printer.Info("NEW NDOE ");
                         nodes.Add(NodeFactory.CreateElement(new Vector2(x, y), location, location.getObjectAtTile(x, y)));
                     }
                     else if (inType.Equals("building"))
@@ -104,14 +131,14 @@ namespace ItemPipes.Framework
                 if (inType.Equals("object"))
                 {
                     node = nodes.Find(n => n.Position.Equals(position));
-                    Printer.Info("current "+node.Print());
-                    Printer.Info("Adjacents: "+ node.Adjacents.Values.Count(a => a != null));
+                    //Printer.Info("current "+node.Print());
+                    //Printer.Info("Adjacents: "+ node.Adjacents.Values.Count(a => a != null));
                     if (node.ParentNetwork == null)
                     {
                         if (inNetwork == null)
                         {
                             node.ParentNetwork = NetworkManager.CreateLocationNetwork(location);
-                            Printer.Info($"Created network {node.ParentNetwork.ID} for {node.Print()}");
+                            //Printer.Info($"Created network {node.ParentNetwork.ID} for {node.Print()}");
                         }
                         else
                         {
@@ -217,10 +244,10 @@ namespace ItemPipes.Framework
                                 {
                                     if(nodes.Find(n => n.Position.Equals(east)) != null)
                                     {
-                                        Printer.Info($"Parent network no contine east {nodes.Find(n => n.Position.Equals(east)).Print()}");
+                                        //Printer.Info($"Parent network no contine east {nodes.Find(n => n.Position.Equals(east)).Print()}");
                                     }
                                     Node adj = BuildNetworkRecursive(east, location, node.ParentNetwork);
-                                    Printer.Info($"RETURN OF {node.Print()} for adj {adj.Print()}");
+                                    //Printer.Info($"RETURN OF {node.Print()} for adj {adj.Print()}");
                                     node.AddAdjacent(SideStruct.GetSides().East, adj);
                                 }
                             }
@@ -266,7 +293,7 @@ namespace ItemPipes.Framework
                                 {
                                     if (nodes.Find(n => n.Position.Equals(west)) != null)
                                     {
-                                        Printer.Info($"Parent network no contine east {nodes.Find(n => n.Position.Equals(west)).Print()}");
+                                        //Printer.Info($"Parent network no contine east {nodes.Find(n => n.Position.Equals(west)).Print()}");
 
                                     }
                                     Node adj = BuildNetworkRecursive(west, location, node.ParentNetwork);
@@ -308,8 +335,6 @@ namespace ItemPipes.Framework
                     }
                 }
             }
-            Printer.Info($"END RETURN OF {node.Print()}");
-
             return node;
         }
     }

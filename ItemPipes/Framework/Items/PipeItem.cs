@@ -194,15 +194,11 @@ namespace ItemPipes.Framework
 				DataAccess DataAccess = DataAccess.GetDataAccess();
 				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
 				Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-				if (node != null && node is ConnectorPipeNode)
+				if (node != null && node is PipeNode)
 				{
-					ConnectorPipeNode pipe = (ConnectorPipeNode)node;
+					PipeNode pipe = (PipeNode)node;
 					if (pipe.StoredItem != null)
 					{
-
-						//Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] GET OUT");
-						//Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}] " + pipe.StoredItem.Stack.ToString());
-						//pipe.Print();
 						Debris itemDebr = new Debris(pipe.StoredItem, who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
 						Game1.currentLocation.debris.Add(itemDebr);
 						pipe.Broken = true;

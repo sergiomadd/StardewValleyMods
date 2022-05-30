@@ -50,6 +50,12 @@ namespace ItemPipes
             helper.Events.GameLoop.DayStarted += this.OnDayStarted;
             helper.Events.World.ObjectListChanged += this.OnObjectListChanged;
             helper.Events.GameLoop.UpdateTicked += this.OnUpdateTicked;
+            helper.Events.World.BuildingListChanged += this.OnBuildingListChanged;
+        }
+
+        private void OnBuildingListChanged(object sender, BuildingListChangedEventArgs e)
+        {
+            NetworkBuilder.BuildLocationNetworksTEMP(e.Location);
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -157,6 +163,11 @@ namespace ItemPipes
 
                 ConvertFromVanillaMap();
                 ConvertFromVanillaPlayer();
+
+                foreach (GameLocation location in Game1.locations)
+                {
+                    NetworkManager.UpdateLocationNetworks(location);
+                }
             }
             if (Globals.Debug) { Printer.Debug("Location networks loaded!"); }
         }

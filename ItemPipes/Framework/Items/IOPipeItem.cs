@@ -7,12 +7,16 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Tools;
 using StardewValley.Objects;
+using StardewValley.Locations;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Factories;
 using ItemPipes.Framework.Items.Objects;
 using ItemPipes.Framework.Items.Tools;
+using ItemPipes.Framework.Nodes;
 using System.Xml.Serialization;
+using StardewValley.Buildings;
+
 
 namespace ItemPipes.Framework.Items
 {
@@ -56,6 +60,19 @@ namespace ItemPipes.Framework.Items
                 this.performRemoveAction(this.TileLocation, location);
                 Debris deb = new Debris(this.getOne(), who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
                 Game1.currentLocation.debris.Add(deb);
+                DataAccess DataAccess = DataAccess.GetDataAccess();
+                List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+                Node node = nodes.Find(n => n.Position.Equals(TileLocation));
+                if (node != null && node is PipeNode)
+                {
+                    PipeNode pipe = (PipeNode)node;
+                    if (pipe.StoredItem != null)
+                    {
+                        Debris itemDebr = new Debris(pipe.StoredItem, who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
+                        Game1.currentLocation.debris.Add(itemDebr);
+                        pipe.Broken = true;
+                    }
+                }
                 Game1.currentLocation.objects.Remove(this.TileLocation);
                 return false;
             }
@@ -187,7 +204,9 @@ namespace ItemPipes.Framework.Items
             {
                 key += "N";
             }
-            else if (location.objects.ContainsKey(position) && location.objects[position] is Chest)
+            else if (location.objects.ContainsKey(position) && location.objects[position] is Chest ||
+                (location is FarmHouse && (location as FarmHouse).fridgePosition.ToVector2().Equals(position)) ||
+                location is Farm && (location as Farm).getBuildingAt(position) != null && (location as Farm).getBuildingAt(position).GetType().Equals(typeof(ShippingBin)))
             {
                 CN = true;
             }
@@ -198,7 +217,9 @@ namespace ItemPipes.Framework.Items
             {
                 key += "S";
             }
-            else if (location.objects.ContainsKey(position) && location.objects[position] is Chest)
+            else if (location.objects.ContainsKey(position) && location.objects[position] is Chest ||
+                (location is FarmHouse && (location as FarmHouse).fridgePosition.ToVector2().Equals(position)) ||
+                location is Farm && (location as Farm).getBuildingAt(position) != null && (location as Farm).getBuildingAt(position).GetType().Equals(typeof(ShippingBin)))
             {
                 CS = true;
             }
@@ -209,7 +230,9 @@ namespace ItemPipes.Framework.Items
             {
                 key += "W";
             }
-            else if (location.objects.ContainsKey(position) && location.objects[position] is Chest)
+            else if (location.objects.ContainsKey(position) && location.objects[position] is Chest ||
+                (location is FarmHouse && (location as FarmHouse).fridgePosition.ToVector2().Equals(position)) ||
+                location is Farm && (location as Farm).getBuildingAt(position) != null && (location as Farm).getBuildingAt(position).GetType().Equals(typeof(ShippingBin)))
             {
                 CW = true;
             }
@@ -220,7 +243,9 @@ namespace ItemPipes.Framework.Items
             {
                 key += "E";
             }
-            else if (location.objects.ContainsKey(position) && location.objects[position] is Chest)
+            else if (location.objects.ContainsKey(position) && location.objects[position] is Chest ||
+                (location is FarmHouse && (location as FarmHouse).fridgePosition.ToVector2().Equals(position)) ||
+                location is Farm && (location as Farm).getBuildingAt(position) != null && (location as Farm).getBuildingAt(position).GetType().Equals(typeof(ShippingBin)))
             {
                 CE = true;
             }
@@ -230,8 +255,6 @@ namespace ItemPipes.Framework.Items
             }
             return key;
         }
-
-
 
         private static string GetAdjChestsKey(string drawSum, bool CN, bool CS, bool CW, bool CE)
         {

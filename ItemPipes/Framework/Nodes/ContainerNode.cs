@@ -54,7 +54,6 @@ namespace ItemPipes.Framework
             {
                 added = true;
                 IOPipes.Add(node as IOPipeNode);
-                if (Globals.UltraDebug) { Printer.Info($"[?] IOPipe ADDED"); }
             }
             return added;
         }
@@ -66,7 +65,6 @@ namespace ItemPipes.Framework
             {
                 removed = true;
                 IOPipes.Remove(node as IOPipeNode);
-                if (Globals.UltraDebug) { Printer.Info($"[?] IOPipe REMOVED"); }
             }
             if (removed)
             {
@@ -113,8 +111,6 @@ namespace ItemPipes.Framework
 
         public override bool AddAdjacent(Side side, Node node)
         {
-            //Printer.Info($"ADDING ADJ: {node.Print()} to {Print()}");
-
             bool added = false;
             if (Adjacents[side] == null)
             {
@@ -132,8 +128,6 @@ namespace ItemPipes.Framework
 
         public override bool RemoveAdjacent(Side side, Node node)
         {
-            //Printer.Info($"removing ADJ: {node.Print()} from {Print()}");
-
             bool removed = false;
             if (Adjacents[side] != null)
             {

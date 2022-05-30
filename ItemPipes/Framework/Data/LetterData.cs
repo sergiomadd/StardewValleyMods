@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ItemPipes.Framework.Data
 {
-    public class RecipeData
+    public class LetterData
     {
-        public Dictionary<string, string> recipesData { get; set; }
-        public Dictionary<string, string> fakeRecipesData { get; set; }
+        public Dictionary<string, string> letterDataDict { get; set; }
     }
 }

@@ -21,15 +21,13 @@ using ItemPipes.Framework.Nodes.ObjectNodes;
 namespace ItemPipes.Framework.Items.Objects
 {
 
-	public class PPMItem : CustomBigCraftableItem
+	public class PIPOItem : CustomBigCraftableItem
 	{
         public bool ToolCall { get; set; }
-		[XmlIgnore]
 		public Texture2D OnTexture { get; set; }
-		[XmlIgnore]
 		public Texture2D OffTexture { get; set; }
 
-		public PPMItem() : base()
+		public PIPOItem() : base()
 		{
 			State = "off";
 			DataAccess DataAccess = DataAccess.GetDataAccess();
@@ -39,7 +37,7 @@ namespace ItemPipes.Framework.Items.Objects
 			ToolCall = false;
 		}
 
-		public PPMItem(Vector2 position) : base(position)
+		public PIPOItem(Vector2 position) : base(position)
 		{
 			State = "off";
 			DataAccess DataAccess = DataAccess.GetDataAccess();
@@ -65,9 +63,9 @@ namespace ItemPipes.Framework.Items.Objects
                 {
 					List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
 					Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-					if (node != null && node is PPMNode)
+					if (node != null && node is PIPONode)
 					{
-						PPMNode invis = (PPMNode)node;
+						PIPONode invis = (PIPONode)node;
 						if (invis.ChangeState())
 						{
 							Passable = true;
@@ -145,9 +143,9 @@ namespace ItemPipes.Framework.Items.Objects
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
 			Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-			if (node != null && node is PPMNode)
+			if (node != null && node is PIPONode)
 			{
-				PPMNode invis = (PPMNode)node;
+				PIPONode invis = (PIPONode)node;
 				State = invis.State;
 				float transparency = 1f;
 				if (State.Equals("on"))

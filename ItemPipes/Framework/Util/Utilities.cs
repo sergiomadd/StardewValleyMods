@@ -10,9 +10,9 @@ namespace ItemPipes.Framework.Util
         public static string GetIDName(string name)
         {
             string trimmed = "";
-            if (name.Equals("P.P.M."))
+            if (name.Equals("PIPO"))
             {
-                trimmed = "PPM";
+                trimmed = name;
             }
             else
             {
@@ -20,6 +20,7 @@ namespace ItemPipes.Framework.Util
             }
             return trimmed;
         }
+		//Keep for 1.6
 		/*
         public static Item GetItemFromIndex(string type, int index)
         {

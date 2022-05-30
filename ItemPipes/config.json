@@ -1,4 +1,6 @@
 {
   "DebugMode": true,
-  "DisableItemSending": false
+  "UltraDebugMode": false,
+  "ItemSending": true,
+  "IOPipeStatePopup": true
 }

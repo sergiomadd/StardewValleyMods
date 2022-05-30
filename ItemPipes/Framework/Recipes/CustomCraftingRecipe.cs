@@ -175,8 +175,6 @@ namespace ItemPipes.Framework.Recipes
 			}
 			if(index >= DataAccess.GetDataAccess().ItemIDs["IronPipe"])
             {
-				/*string IDName = DataAccess.GetDataAccess().ItemIDs.FirstOrDefault(x => x.Value == index).Key;
-				retString = DataAccess.GetDataAccess().ItemNames[IDName];*/
 				retString = DataAccess.GetDataAccess().ItemIDs.FirstOrDefault(x => x.Value == index).Key;
 			}
 			return retString;

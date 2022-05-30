@@ -16,14 +16,13 @@ using ItemPipes.Framework.Nodes.ObjectNodes;
 using Microsoft.Xna.Framework;
 using System.Reflection.Emit;
 using System.Reflection;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Data;
 
 namespace ItemPipes.Framework.Patches
 {
     [HarmonyPatch(typeof(CraftingPage))]
-    public static class CraftingPatcher
+    public static class CraftingAndLetterPatcher
     {
         public static bool WrenchCrafted { get; set; }
         public static void Apply(Harmony harmony)
@@ -33,25 +32,18 @@ namespace ItemPipes.Framework.Patches
 			{
 				harmony.Patch(
 					original: AccessTools.Method(typeof(CraftingPage), "layoutRecipes"),
-					prefix: new HarmonyMethod(typeof(CraftingPatcher), nameof(CraftingPatcher.CraftingPage_layoutRecipes_Prefix))
+					prefix: new HarmonyMethod(typeof(CraftingAndLetterPatcher), nameof(CraftingAndLetterPatcher.CraftingPage_layoutRecipes_Prefix))
 				);
 
 				harmony.Patch(
 					original: typeof(LevelUpMenu).GetMethod(nameof(LevelUpMenu.draw), new Type[] { typeof(SpriteBatch) }),
-					prefix: new HarmonyMethod(typeof(CraftingPatcher), nameof(CraftingPatcher.LevelUpMenu_draw_Prefix))
+					prefix: new HarmonyMethod(typeof(CraftingAndLetterPatcher), nameof(CraftingAndLetterPatcher.LevelUpMenu_draw_Prefix))
 				);
-				/*
-				harmony.Patch(
-					original: typeof(LetterViewerMenu).GetMethod(nameof(LetterViewerMenu.OnPageChange)),
-					prefix: new HarmonyMethod(typeof(CraftingPatcher), nameof(CraftingPatcher.LetterViewerMenu_HasInteractable_Prefix))
-				);
-				*/
 				
 				harmony.Patch(
 					original: typeof(LetterViewerMenu).GetMethod(nameof(LetterViewerMenu.update), new Type[] { typeof(GameTime) }),
-					prefix: new HarmonyMethod(typeof(CraftingPatcher), nameof(CraftingPatcher.LetterViewerMenu_update_Prefix))
+					prefix: new HarmonyMethod(typeof(CraftingAndLetterPatcher), nameof(CraftingAndLetterPatcher.LetterViewerMenu_update_Prefix))
 				);
-				
 			}
 			catch (Exception ex)
 			{
@@ -70,12 +62,23 @@ namespace ItemPipes.Framework.Patches
 					WrenchCrafted = true;
 				}
 			}
+			else if (__instance.mailTitle.Equals("ItemPipes_ItemsLost"))
+			{
+				foreach (Item lostItem in DataAccess.GetDataAccess().LostItems.ToList())
+                {
+					if (!__instance.itemsToGrab.Any(c => c.item != null && c.item.Name.Equals(lostItem.Name)))
+					{
+						__instance.itemsToGrab.Add(new ClickableComponent(new Rectangle(__instance.xPositionOnScreen + __instance.width / 2 - 48, __instance.yPositionOnScreen + __instance.height - 32 - 96, 96, 96), lostItem));
+						DataAccess.GetDataAccess().LostItems.Remove(lostItem);
+					}
+				}
+			}
 			return true;
 		}
 
 		private static bool LevelUpMenu_draw_Prefix(LevelUpMenu __instance, SpriteBatch b)
 		{
-			List<CraftingRecipe> Recipes = Helper.GetHelper().Reflection.GetField<List<CraftingRecipe>>(__instance, "newCraftingRecipes").GetValue();
+			List<CraftingRecipe> Recipes = ModEntry.helper.Reflection.GetField<List<CraftingRecipe>>(__instance, "newCraftingRecipes").GetValue();
 			foreach(CraftingRecipe recipe in Recipes.ToList())
             {
 				if(IsModdedRecipe(recipe.name))
@@ -84,7 +87,7 @@ namespace ItemPipes.Framework.Patches
 					Recipes.Add(new CustomCraftingRecipe(recipe.name, false));
                 }
             }
-			Helper.GetHelper().Reflection.GetField<List<CraftingRecipe>>(__instance, "newCraftingRecipes").SetValue(Recipes);
+			ModEntry.helper.Reflection.GetField<List<CraftingRecipe>>(__instance, "newCraftingRecipes").SetValue(Recipes);
 			return true;
 		}
 
@@ -92,11 +95,11 @@ namespace ItemPipes.Framework.Patches
         {
 			int craftingPageX = __instance.xPositionOnScreen + IClickableMenu.spaceToClearSideBorder + IClickableMenu.borderWidth - 16;
 			int spaceBetweenCraftingIcons = 8;
-			Dictionary<ClickableTextureComponent, CraftingRecipe> currentPage = Helper.GetHelper().Reflection.GetMethod(__instance, "createNewPage").Invoke<Dictionary<ClickableTextureComponent, CraftingRecipe>>();
+			Dictionary<ClickableTextureComponent, CraftingRecipe> currentPage = ModEntry.helper.Reflection.GetMethod(__instance, "createNewPage").Invoke<Dictionary<ClickableTextureComponent, CraftingRecipe>>();
 			int x = 0;
 			int y = 0;
 			int i = 0;
-			ClickableTextureComponent[,] pageLayout = Helper.GetHelper().Reflection.GetMethod(__instance, "createNewPageLayout").Invoke<ClickableTextureComponent[,]>();
+			ClickableTextureComponent[,] pageLayout = ModEntry.helper.Reflection.GetMethod(__instance, "createNewPageLayout").Invoke<ClickableTextureComponent[,]>();
 			List<ClickableTextureComponent[,]> pageLayouts = new List<ClickableTextureComponent[,]>();
 			pageLayouts.Add(pageLayout);
 			foreach (string playerRecipe in playerRecipes)
@@ -109,9 +112,10 @@ namespace ItemPipes.Framework.Patches
 				}
 				else
                 {
-					recipe = new CraftingRecipe(playerRecipe, false);
+					bool cooking = (bool)Traverse.Create(__instance).Field("cooking").GetValue();
+					recipe = new CraftingRecipe(playerRecipe, cooking);
 				}
-				while (Helper.GetHelper().Reflection.GetMethod(__instance, "spaceOccupied").Invoke<bool>(pageLayout, x, y, recipe))
+				while (ModEntry.helper.Reflection.GetMethod(__instance, "spaceOccupied").Invoke<bool>(pageLayout, x, y, recipe))
 					{
 						x++;
 					if (x >= 10)
@@ -120,9 +124,9 @@ namespace ItemPipes.Framework.Patches
 						y++;
 						if (y >= 4)
 						{
-							currentPage = Helper.GetHelper().Reflection.GetMethod(__instance,
+							currentPage = ModEntry.helper.Reflection.GetMethod(__instance,
 								"createNewPage").Invoke<Dictionary<ClickableTextureComponent, CraftingRecipe>>();
-							pageLayout = Helper.GetHelper().Reflection.GetMethod(__instance,
+							pageLayout = ModEntry.helper.Reflection.GetMethod(__instance,
 								"createNewPageLayout").Invoke<ClickableTextureComponent[,]>();
 							pageLayouts.Add(pageLayout);
 							x = 0;
@@ -137,7 +141,7 @@ namespace ItemPipes.Framework.Patches
 					recipe = new CustomCraftingRecipe(playerRecipe, false);
 					component = new ClickableTextureComponent
 					("",
-					new Rectangle(craftingPageX + x * (64 + spaceBetweenCraftingIcons), Helper.GetHelper().Reflection.GetMethod(__instance, "craftingPageY").Invoke<int>() + y * 72, 64, recipe.bigCraftable ? 128 : 64),
+					new Rectangle(craftingPageX + x * (64 + spaceBetweenCraftingIcons), ModEntry.helper.Reflection.GetMethod(__instance, "craftingPageY").Invoke<int>() + y * 72, 64, recipe.bigCraftable ? 128 : 64),
 					null,
 					(false && !Game1.player.cookingRecipes.ContainsKey(recipe.name)) ? "ghosted" : "",
 					DataAccess.GetDataAccess().Sprites[Utilities.GetIDName(playerRecipe)+"_Item"],
@@ -157,7 +161,7 @@ namespace ItemPipes.Framework.Patches
 				{
 					component = new ClickableTextureComponent
 					("",
-					new Rectangle(craftingPageX + x * (64 + spaceBetweenCraftingIcons), Helper.GetHelper().Reflection.GetMethod(__instance, "craftingPageY").Invoke<int>() + y * 72, 64, recipe.bigCraftable ? 128 : 64),
+					new Rectangle(craftingPageX + x * (64 + spaceBetweenCraftingIcons), ModEntry.helper.Reflection.GetMethod(__instance, "craftingPageY").Invoke<int>() + y * 72, 64, recipe.bigCraftable ? 128 : 64),
 					null,
 					(false && !Game1.player.cookingRecipes.ContainsKey(recipe.name)) ? "ghosted" : "",
 					recipe.bigCraftable ? Game1.bigCraftableSpriteSheet : Game1.objectSpriteSheet,

@@ -7,16 +7,16 @@ using StardewModdingAPI;
 
 namespace ItemPipes.Framework.Util
 {
-    public static class Helper
+    public static class ModHelper
     {
-        private static IModHelper _helper;
+        private static IModContentHelper _helper;
 
-        public static void SetHelper(IModHelper helper)
+        public static void SetHelper(IModContentHelper helper)
         {
             _helper = helper;
         }
 
-        public static IModHelper GetHelper()
+        public static IModContentHelper GetHelper()
         {
             return _helper;
         }

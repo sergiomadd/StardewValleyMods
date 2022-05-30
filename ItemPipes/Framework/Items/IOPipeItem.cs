@@ -18,15 +18,10 @@ namespace ItemPipes.Framework.Items
 {
     public abstract class IOPipeItem : PipeItem
     {
-        [XmlIgnore]
         public Texture2D SignalTexture { get; set; }
-        [XmlIgnore]
         public Texture2D OnSignal { get; set; }
-        [XmlIgnore]
         public Texture2D OffSignal { get; set; }
-        [XmlIgnore]
         public Texture2D UnconnectedSignal { get; set; }
-        [XmlIgnore]
         public Texture2D NoChestSignal { get; set; }
         public bool Clicked { get; set; }
 
@@ -188,7 +183,7 @@ namespace ItemPipes.Framework.Items
             Vector2 position = this.TileLocation;
             position.Y -= 1f;
             if (location.objects.ContainsKey(position) && (location.objects[position] is PipeItem && ((PipeItem)location.objects[position]).countsForDrawing(this)
-                || location.objects[position] is PPMItem))
+                || location.objects[position] is PIPOItem))
             {
                 key += "N";
             }
@@ -199,7 +194,7 @@ namespace ItemPipes.Framework.Items
             position = this.TileLocation;
             position.Y += 1f;
             if (location.objects.ContainsKey(position) && (location.objects[position] is PipeItem && ((PipeItem)location.objects[position]).countsForDrawing(this)
-                || location.objects[position] is PPMItem))
+                || location.objects[position] is PIPOItem))
             {
                 key += "S";
             }
@@ -210,7 +205,7 @@ namespace ItemPipes.Framework.Items
             position = this.TileLocation;
             position.X += 1f;
             if (location.objects.ContainsKey(position) && (location.objects[position] is PipeItem && ((PipeItem)location.objects[position]).countsForDrawing(this)
-                || location.objects[position] is PPMItem))
+                || location.objects[position] is PIPOItem))
             {
                 key += "W";
             }
@@ -221,7 +216,7 @@ namespace ItemPipes.Framework.Items
             position = this.TileLocation;
             position.X -= 1f;
             if (location.objects.ContainsKey(position) && (location.objects[position] is PipeItem && ((PipeItem)location.objects[position]).countsForDrawing(this)
-                || location.objects[position] is PPMItem))
+                || location.objects[position] is PIPOItem))
             {
                 key += "E";
             }

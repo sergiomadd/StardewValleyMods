@@ -56,9 +56,9 @@ namespace ItemPipes.Framework.Factories
             {
                 return new IridiumPipeItem();
             }
-            else if (name.Equals("PPM"))
+            else if (name.Equals("PIPO"))
             {
-                return new PPMItem();
+                return new PIPOItem();
             }
             else
             {
@@ -118,9 +118,9 @@ namespace ItemPipes.Framework.Factories
             {
                 return new IridiumPipeItem(position);
             }
-            else if (name.Equals("PPM"))
+            else if (name.Equals("PIPO"))
             {
-                return new PPMItem(position);
+                return new PIPOItem(position);
             }
             else
             {

@@ -13,11 +13,11 @@ using StardewValley.Objects;
 
 namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
-    public class PPMNode : Node
+    public class PIPONode : Node
     {
         public List<Network> AdjNetworks { get; set; }
-        public PPMNode() { }
-        public PPMNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
+        public PIPONode() { }
+        public PIPONode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             State = "off";
             AdjNetworks = new List<Network>();

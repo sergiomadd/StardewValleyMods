@@ -10,7 +10,6 @@ using ItemPipes.Framework.Items;
 using System;
 using SObject = StardewValley.Object;
 
-
 namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
     public class ShippingBinContainerNode : ContainerNode
@@ -30,10 +29,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             Farm = Game1.getFarm();
             Filter = new NetObjectList<Item>();
             Type = "ShippingBin";
-
         }
-
-
 
         public bool ShipItem(Item item)
         {
@@ -213,18 +209,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             }
             else if (source is Tool)
             {
-                /*
-                Tool tool = (Tool)source;
-                Tool tosendTool = (Tool)tosend;
-                if (input.CanRecieveItems())
-                {
-                    tosendTool = tool;
-                    itemList.RemoveAt(index);
-                }
-                Chest.clearNulls();
-                */
                 return null;
-                
             }
             return null;
         }

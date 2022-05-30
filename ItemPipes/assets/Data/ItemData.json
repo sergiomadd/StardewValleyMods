@@ -1,5 +1,5 @@
 ﻿{
-  "itemsData": [
+  "itemsDataList": [
     {
       "Name": "Iron Pipe",
       "IDName": "IronPipe",
@@ -289,10 +289,10 @@
       }
     },
     {
-      "Name": "P.P.M.",
-      "IDName": "PPM",
+      "Name": "PIPO",
+      "IDName": "PIPO",
       "ID": 222660,
-      "Description": "Type: Machine\nThe P.P.M. makes pipes of the attached network turn crossable.",
+      "Description": "Type: Machine\nThe PIPO makes pipes of the attached network turn crossable.",
       "NameLocalization": {
         "es": "",
         "ko": "",

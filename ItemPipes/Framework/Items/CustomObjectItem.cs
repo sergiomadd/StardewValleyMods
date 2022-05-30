@@ -22,7 +22,6 @@ namespace ItemPipes.Framework.Items
 	{
 		public string IDName { get; set; }
 		public string Description { get; set; }
-		[XmlIgnore]
 		public Texture2D ItemTexture { get; set; }
 		public string State { get; set; }
 		public bool Passable { get; set; }

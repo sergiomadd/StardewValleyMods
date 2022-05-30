@@ -8,6 +8,6 @@ namespace ItemPipes.Framework.Data
 {
     public class ItemsData
     {
-        public List<ItemData> itemsData;
+        public List<ItemData> itemsDataList;
     }
 }

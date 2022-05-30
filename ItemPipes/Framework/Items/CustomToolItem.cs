@@ -15,10 +15,8 @@ namespace ItemPipes.Framework.Items
     {
         public string IDName { get; set; }
         public string Description { get; set; }
-        [XmlIgnore]
         public Texture2D SpriteTexture { get; set; }
         public string SpriteTexturePath { get; set; }
-        [XmlIgnore]
         public Texture2D ItemTexture { get; set; }
         public string ItemTexturePath { get; set; }
 

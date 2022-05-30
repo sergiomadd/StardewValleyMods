@@ -168,8 +168,6 @@ namespace ItemPipes.Framework
                 if (DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
                 {
                     DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
-                    //Printer.Info("Removing T" + Thread.CurrentThread.ManagedThreadId);
-
                 }
             }
             catch (Exception e)

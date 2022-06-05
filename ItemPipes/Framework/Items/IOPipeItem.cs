@@ -78,15 +78,10 @@ namespace ItemPipes.Framework.Items
             }
             if (t is WrenchItem)
             {
-                Printer.Info("WRENCH");
                 ChangeSignal();
                 return false;
             }
             return false;
-        }
-        public override Item getOne()
-        {
-            return ItemFactory.CreateItem(IDName);
         }
 
         /*

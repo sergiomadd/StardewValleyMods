@@ -25,14 +25,15 @@ namespace ItemPipes.Framework.Items
 		public Texture2D ItemTexture { get; set; }
 		public string State { get; set; }
 		public bool Passable { get; set; }
+        public CustomObjectItem Value { get; set; }
 
-
-		public CustomObjectItem()
+        public CustomObjectItem()
 		{
 			Init();
 			State = "default";
 			type.Value = "Crafting";
 			canBeSetDown.Value = true;
+			Value = this;
 		}
 
 		public CustomObjectItem(Vector2 position) : this()
@@ -44,11 +45,11 @@ namespace ItemPipes.Framework.Items
 		public void Init()
 		{
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			IDName = GetType().Name.Substring(0, GetType().Name.Length - 4);
+			IDName = Utilities.GetIDNameFromType(GetType());
 			Name = DataAccess.ItemNames[IDName];
 			DisplayName = DataAccess.ItemNames[IDName];
 			Description = DataAccess.ItemDescriptions[IDName];
-			ItemTexture = DataAccess.Sprites[IDName + "_Item"];
+			ItemTexture = DataAccess.Sprites[IDName + "_item"];
 			parentSheetIndex.Value = DataAccess.ItemIDs[IDName];
 		}
 

@@ -1,0 +1,22 @@
+{
+  //Pipes
+  //Iron Pipe
+  "item.ironpipe.name": "Tuberia de hierro",
+  "item.ironpipe.description": "Tipo: Tuberia de conexión\nLa tuberia basica para conectar entradas con salidas. Transporta 1 stack por segundo.",
+  //Gold Pipe
+  "item.goldpipe.name": "Tuberia de oro",
+  "item.goldpipe.description": "Tipo: Tuberia de conexión\nUna tuberia mas avanzada y brillante para conectar entradas con salidas. Transporta 1 stack cada 0.5 segundos.",
+
+  //-----------------------------------------------------------------------------------------------------------------
+
+  //Letters
+  "letter.itempipes_sendwrench": "¡Hola @! ¡A llegado a nuestra atención que has empezado a usar nuestros productos!^. Como regalo de bienvenida a nuestra empresa, te ofrecemos una herramienta para configurar tus tuberias. Por ahora solo puede encender o apagar IOPipes, pero el equipo de ingenieros esta trabajando duro para implementar nuevas funcionalidades^Gracias por confiar en Industrias Madd, el mejor proveedor de logística de la República Ferngill!",
+  "letter.itempipes_itemslost": "¡Buenos días @^!El equipo nocturno de limpieza de tuberias ha encontrado estos objetos dentro de tus tuberias!^Asegurate de vaciarlas por completo antes de irte a dormir la siguiente vez. Puedes recuperarlos haciendo click en los objetos de la carta.^Industrias Madd, el mejor proveedor de logística de la República Ferngill!",
+
+  //-----------------------------------------------------------------------------------------------------------------
+
+  //Warnings
+  "warning.cloggedItems_1": "[Item Pipes] Mira el correo para recuperar tus objetos, o lee el log de smapi",
+  "warning.cloggedItems_2": "[Item Pipes] Algunas tuberias tenian objetos cuando se guardo el juego y los objetos han sido eliminados"
+
+}

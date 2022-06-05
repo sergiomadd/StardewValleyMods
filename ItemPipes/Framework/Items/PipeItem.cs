@@ -49,9 +49,9 @@ namespace ItemPipes.Framework
         public virtual void LoadTextures()
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            DefaultSprite = DataAccess.Sprites[IDName + "_default_Sprite"];
-            ConnectingSprite = DataAccess.Sprites[IDName + "_connecting_Sprite"];
-            ItemMovingSprite = DataAccess.Sprites[IDName + "_item_Sprite"];
+            DefaultSprite = DataAccess.Sprites[IDName + "_default_sprite"];
+            ConnectingSprite = DataAccess.Sprites[IDName + "_connecting_sprite"];
+            ItemMovingSprite = DataAccess.Sprites[IDName + "_item_sprite"];
             SpriteTexture = DefaultSprite;
         }
 

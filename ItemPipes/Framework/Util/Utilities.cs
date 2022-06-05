@@ -12,16 +12,24 @@ namespace ItemPipes.Framework.Util
             string trimmed = "";
             if (name.Equals("PIPO"))
             {
-                trimmed = name;
+                trimmed = name.ToLower();
             }
             else
             {
-                trimmed = String.Concat(name.Where(c => !Char.IsWhiteSpace(c)));
+                trimmed = String.Concat(name.Where(c => !Char.IsWhiteSpace(c))).ToLower();
             }
             return trimmed;
         }
-		//Keep for 1.6
-		/*
+
+        public static string GetIDNameFromType(Type type)
+        {
+            string name = type.Name;
+            string trimmed = name.Substring(0, name.Length - 4).ToLower();
+            return trimmed;
+        }
+
+        //Keep for 1.6
+        /*
         public static Item GetItemFromIndex(string type, int index)
         {
 			switch(type)

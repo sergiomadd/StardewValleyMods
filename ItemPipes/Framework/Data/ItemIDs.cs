@@ -8,6 +8,7 @@ namespace ItemPipes.Framework.Data
 {
     public class ItemIDs
     {
+        public Dictionary<string, int> ModItemsIDs { get; set; }
         public List<int> ModItems { get; set; }
         public List<int> NetworkItems { get; set; }
         public List<string> Buildings { get; set; }

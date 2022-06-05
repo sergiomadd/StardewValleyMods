@@ -10,6 +10,7 @@ using StardewValley.Tools;
 using StardewValley.Objects;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewModdingAPI.Utilities;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework;
 using ItemPipes.Framework.Util;
@@ -39,9 +40,8 @@ namespace ItemPipes
             DataAccess.LoadConfig();
             ModHelper.SetHelper(helper.ModContent);
 
-            var harmony = new Harmony(ModManifest.UniqueID);
-            CraftingAndLetterPatcher.Apply(harmony);
-            
+            ApplyPatches();
+
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             helper.Events.GameLoop.Saving += this.OnSaving;
@@ -51,6 +51,31 @@ namespace ItemPipes
             helper.Events.World.ObjectListChanged += this.OnObjectListChanged;
             helper.Events.GameLoop.UpdateTicked += this.OnUpdateTicked;
             helper.Events.World.BuildingListChanged += this.OnBuildingListChanged;
+        }
+
+        private void ApplyPatches()
+        {
+            var harmony = new Harmony(ModManifest.UniqueID);
+            try
+            {
+                CraftingPatcher.Apply(harmony);
+                LetterPatcher.Apply(harmony);
+                if (this.Helper.ModRegistry.IsLoaded("CJBok.ItemSpawner"))
+                {
+                    IModInfo itemSpawner = helper.ModRegistry.Get("CJBok.ItemSpawner");
+                    if(itemSpawner != null)
+                    {
+                        Printer.Debug("CJB Item Spawner loaded");
+                        Printer.Debug($"Applying CJBItemSpawner integration patches...");
+                        CJBItemSpawnerIntegration.Apply(harmony);
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Printer.Error("Error while applying harmony patches");
+                Printer.Error(e.Message);
+            }
         }
 
         private void OnBuildingListChanged(object sender, BuildingListChangedEventArgs e)
@@ -152,6 +177,13 @@ namespace ItemPipes
                 DataAccess.LoadAssets();
                 Helper.GameContent.InvalidateCache("Data/CraftingRecipes");
                 Helper.GameContent.InvalidateCache($"Data/CraftingRecipes.{this.Helper.Translation.Locale}");
+
+                string label = helper.Translation.Get("item.ironpipe.description");
+                string label2 = helper.Translation.Get("item.goldpipe.description");
+
+                Printer.Info(label);
+                Printer.Info(label2);
+
                 foreach (GameLocation location in Game1.locations)
                 {
                     DataAccess.LocationNetworks.Add(location, new List<Network>());
@@ -266,13 +298,13 @@ namespace ItemPipes
             
             if (Game1.player.craftingRecipes.ContainsKey("IronPipe") && Game1.player.craftingRecipes["IronPipe"] > 0 && !Game1.player.mailReceived.Contains("ItemPipes_SendWrench"))
             {
-                Game1.player.mailbox.Add("ItemPipes_SendWrench");
+                Game1.player.mailbox.Add("itempipes_sendwrench");
             }
             if(DataAccess.LostItems.Count > 0)
             {
                 Game1.addHUDMessage(new HUDMessage(DataAccess.Warnings["cloggedItems_1"], 3));
                 Game1.addHUDMessage(new HUDMessage(DataAccess.Warnings["cloggedItems_2"], 3));
-                Game1.player.mailbox.Add("ItemPipes_ItemsLost");
+                Game1.player.mailbox.Add("itempipes_itemslost");
             }
         }
 

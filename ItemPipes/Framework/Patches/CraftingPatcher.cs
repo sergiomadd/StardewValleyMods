@@ -21,60 +21,28 @@ using System.Data;
 
 namespace ItemPipes.Framework.Patches
 {
-    [HarmonyPatch(typeof(CraftingPage))]
-    public static class CraftingAndLetterPatcher
+	public static class CraftingPatcher
     {
-        public static bool WrenchCrafted { get; set; }
         public static void Apply(Harmony harmony)
         {
-			WrenchCrafted = false;
 			try
 			{
 				harmony.Patch(
 					original: AccessTools.Method(typeof(CraftingPage), "layoutRecipes"),
-					prefix: new HarmonyMethod(typeof(CraftingAndLetterPatcher), nameof(CraftingAndLetterPatcher.CraftingPage_layoutRecipes_Prefix))
+					prefix: new HarmonyMethod(typeof(CraftingPatcher), nameof(CraftingPatcher.CraftingPage_layoutRecipes_Prefix))
 				);
 
 				harmony.Patch(
 					original: typeof(LevelUpMenu).GetMethod(nameof(LevelUpMenu.draw), new Type[] { typeof(SpriteBatch) }),
-					prefix: new HarmonyMethod(typeof(CraftingAndLetterPatcher), nameof(CraftingAndLetterPatcher.LevelUpMenu_draw_Prefix))
+					prefix: new HarmonyMethod(typeof(CraftingPatcher), nameof(CraftingPatcher.LevelUpMenu_draw_Prefix))
 				);
 				
-				harmony.Patch(
-					original: typeof(LetterViewerMenu).GetMethod(nameof(LetterViewerMenu.update), new Type[] { typeof(GameTime) }),
-					prefix: new HarmonyMethod(typeof(CraftingAndLetterPatcher), nameof(CraftingAndLetterPatcher.LetterViewerMenu_update_Prefix))
-				);
 			}
 			catch (Exception ex)
 			{
-				Printer.Info($"Failed to add crafting patches: {ex}");
+				Printer.Error($"Failed to add crafting patches: {ex}");
 			}
         }
-
-		private static bool LetterViewerMenu_update_Prefix(LetterViewerMenu __instance)
-		{
-			if(__instance.mailTitle.Equals("ItemPipes_SendWrench"))
-            {
-				Item wrench = Factories.ItemFactory.CreateTool("Wrench");
-				if(!__instance.itemsToGrab.Any(c => c != null && c.item != null && c.item.Name.Equals("Wrench")) && !WrenchCrafted)
-                {
-					__instance.itemsToGrab.Add(new ClickableComponent(new Rectangle(__instance.xPositionOnScreen + __instance.width / 2 - 48, __instance.yPositionOnScreen + __instance.height - 32 - 96, 96, 96), Factories.ItemFactory.CreateTool("Wrench")));
-					WrenchCrafted = true;
-				}
-			}
-			else if (__instance.mailTitle.Equals("ItemPipes_ItemsLost"))
-			{
-				foreach (Item lostItem in DataAccess.GetDataAccess().LostItems.ToList())
-                {
-					if (!__instance.itemsToGrab.Any(c => c.item != null && c.item.Name.Equals(lostItem.Name)))
-					{
-						__instance.itemsToGrab.Add(new ClickableComponent(new Rectangle(__instance.xPositionOnScreen + __instance.width / 2 - 48, __instance.yPositionOnScreen + __instance.height - 32 - 96, 96, 96), lostItem));
-						DataAccess.GetDataAccess().LostItems.Remove(lostItem);
-					}
-				}
-			}
-			return true;
-		}
 
 		private static bool LevelUpMenu_draw_Prefix(LevelUpMenu __instance, SpriteBatch b)
 		{
@@ -144,7 +112,7 @@ namespace ItemPipes.Framework.Patches
 					new Rectangle(craftingPageX + x * (64 + spaceBetweenCraftingIcons), ModEntry.helper.Reflection.GetMethod(__instance, "craftingPageY").Invoke<int>() + y * 72, 64, recipe.bigCraftable ? 128 : 64),
 					null,
 					(false && !Game1.player.cookingRecipes.ContainsKey(recipe.name)) ? "ghosted" : "",
-					DataAccess.GetDataAccess().Sprites[Utilities.GetIDName(playerRecipe)+"_Item"],
+					DataAccess.GetDataAccess().Sprites[Utilities.GetIDName(playerRecipe)+"_item"],
 					recipe.bigCraftable ? new Rectangle(0, 0, 16, 32) : new Rectangle(0, 0, 16, 16),
 					4f)
 					{

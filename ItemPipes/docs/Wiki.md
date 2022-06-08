@@ -110,3 +110,13 @@ Sorting example video (on YouTube):
 [Video Link](https://www.youtube.com/watch?v=fsE97re6drE&ab_channel=sergiomadd)  
 
 ---
+
+## Planned Features:
+**Short term:**
+- Extractor Filter Pipe
+- More filtering options (category, blacklist, whitelist)
+- Pipe connections between locations
+
+
+**Long Term:**
+- Storage Hub: A central storage chest. Like in AE from minecraft.

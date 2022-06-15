@@ -23,6 +23,7 @@ You can ping me on discord (@sergiomadd#5168) or on twitter (@) if you have one 
 | Korean | Not Translated |
 | Thai | Not Translated |
 | Italian | Not Translated |
+| Turkish | Not Translated |
 | Polish | Not Translated |
 | Hungarian | Not Translated |
 | Portuguese | Not Translated |

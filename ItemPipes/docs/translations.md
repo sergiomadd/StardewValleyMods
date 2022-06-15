@@ -8,7 +8,7 @@ If you have never translated a mod, read [Translation guide](https://stardewvall
 3. Do the trasnlation from the default.json file's text. Make sure to save it with UTF-8 encoding.
 4. Create a Pull Request on this github page with your modifications.
 5. Wait for the PR to be aproved.
-You can ping me on discord (@sergiomadd#5168) or on twitter (@) if you have one ready.
+You can ping me on discord (@sergiomadd#5168) or on twitter (@madded__) if you have one ready.
 
 
 ### Translation state:

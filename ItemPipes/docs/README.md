@@ -12,14 +12,10 @@ This mod is in PreRelease version. Backup your saves or create a new save before
 
 ---
 
-## Testing:
-- [Read for beta testing](https://github.com/sergiomadd/StardewValleyMods/blob/main/ItemPipes/docs/testing.md)
-- [Read for translations]()
-
----
-
 ## See also
 - [Wiki](https://github.com/sergiomadd/StardewValleyMods/blob/main/ItemPipes/docs/wiki.md)
+- [Read for beta testing](https://github.com/sergiomadd/StardewValleyMods/blob/main/ItemPipes/docs/testing.md)
+- [Read for translations]()
 - [Release Notes](https://github.com/sergiomadd/StardewValleyMods/blob/main/ItemPipes/docs/release-notes.md)
 - [Nexus Mod Page]
 - [Contact](https://twitter.com/sergio_madd)

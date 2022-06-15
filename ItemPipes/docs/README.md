@@ -4,7 +4,7 @@ Item Pipes is a mod that provides chest to chest item transportation and item so
 **Current Version = 1.0.0-PreRelease1**
 
 Download:
-- [Read for beta testing](https://github.com/sergiomadd/StardewValleyMods/blob/main/ItemPipes/docs/testing.md)
+- [Read for beta testing](testing.md)
 
 ---
 
@@ -15,8 +15,8 @@ Download:
 ---
 
 ## See also
-- [Wiki](https://github.com/sergiomadd/StardewValleyMods/blob/main/ItemPipes/docs/wiki.md)
+- [Wiki](wiki.md)
 - [Read for translations](translations.md)
-- [Release Notes](https://github.com/sergiomadd/StardewValleyMods/blob/main/ItemPipes/docs/release-notes.md)
+- [Release Notes](release-notes.md)
 - [Nexus Mod Page]
 - [Contact](https://twitter.com/sergio_madd)

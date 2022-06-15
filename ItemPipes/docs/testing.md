@@ -16,7 +16,7 @@ Also look for mod incompatibilities.
 You should try reporting your problem in this order.
 1) Create a new issue on this github page. Add the Item Pipes label, try explain the problem and a way to replicate it.
 2) If you are not familiar with github, ping me (@sergiomadd#5168) on the Stardew Valley discord with you issue.
-3) If I don't answer in a few days I might be offline of discord. Then you can send a DM to this twitter account (@) and I will read the issue when I have free time.
+3) If I don't answer in a few days I might be offline of discord. Then you can send a DM to this twitter account (@madded__) and I will read the issue when I have free time.
 
 ---
 

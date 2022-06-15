@@ -16,7 +16,7 @@ Download:
 
 ## See also
 - [Wiki](https://github.com/sergiomadd/StardewValleyMods/blob/main/ItemPipes/docs/wiki.md)
-- [Read for translations]()
+- [Read for translations](translations.md)
 - [Release Notes](https://github.com/sergiomadd/StardewValleyMods/blob/main/ItemPipes/docs/release-notes.md)
 - [Nexus Mod Page]
 - [Contact](https://twitter.com/sergio_madd)

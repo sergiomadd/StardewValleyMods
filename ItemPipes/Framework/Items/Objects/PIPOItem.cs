@@ -24,16 +24,24 @@ namespace ItemPipes.Framework.Items.Objects
 	public class PIPOItem : CustomBigCraftableItem
 	{
         public bool ToolCall { get; set; }
-		public Texture2D OnTexture { get; set; }
-		public Texture2D OffTexture { get; set; }
+		public Texture2D OnTextureR { get; set; }
+		public Texture2D OnTextureL { get; set; }
+		public Texture2D OnTextureC { get; set; }
+		public Texture2D OffTextureR { get; set; }
+		public Texture2D OffTextureL { get; set; }
+		public Texture2D OffTextureC { get; set; }
 
 		public PIPOItem() : base()
 		{
 			State = "off";
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			OnTexture = DataAccess.Sprites[IDName + "_on"];
-			OffTexture = DataAccess.Sprites[IDName + "_off"];
-			ItemTexture = OffTexture;
+			OnTextureR = DataAccess.Sprites[IDName + "_onR"];
+			OnTextureL = DataAccess.Sprites[IDName + "_onL"];
+			OnTextureC = DataAccess.Sprites[IDName + "_onC"];
+			OffTextureR = DataAccess.Sprites[IDName + "_offR"];
+			OffTextureL = DataAccess.Sprites[IDName + "_offL"];
+			OffTextureC = DataAccess.Sprites[IDName + "_offC"];
+			ItemTexture = OffTextureC;
 			ToolCall = false;
 		}
 
@@ -41,9 +49,13 @@ namespace ItemPipes.Framework.Items.Objects
 		{
 			State = "off";
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			OnTexture = DataAccess.Sprites[IDName + "_on"];
-			OffTexture = DataAccess.Sprites[IDName + "_off"];
-			ItemTexture = OffTexture;
+			OnTextureR = DataAccess.Sprites[IDName + "_onR"];
+			OnTextureL = DataAccess.Sprites[IDName + "_onL"];
+			OnTextureC = DataAccess.Sprites[IDName + "_onC"];
+			OffTextureR = DataAccess.Sprites[IDName + "_offR"];
+			OffTextureL = DataAccess.Sprites[IDName + "_offL"];
+			OffTextureC = DataAccess.Sprites[IDName + "_offC"];
+			ItemTexture = OffTextureC;
 			ToolCall = false;
 		}
 
@@ -136,9 +148,7 @@ namespace ItemPipes.Framework.Items.Objects
 
 		public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
 		{
-			//Misc asigment for refresh
 			ToolCall = false;
-			//Printer.Info("TO FALSE");
 
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
@@ -148,16 +158,46 @@ namespace ItemPipes.Framework.Items.Objects
 				PIPONode invis = (PIPONode)node;
 				State = invis.State;
 				float transparency = 1f;
+				//Printer.Info($"PIPO: {TileLocation.X} |  Player: {Game1.player.Position.X} ");
+
 				if (State.Equals("on"))
                 {
-					ItemTexture = OnTexture;
+					//Look right
+					if (TileLocation.X < Game1.player.getTileLocation().X)
+					{
+						ItemTexture = OnTextureR;
+					}
+					//look left
+					else if (TileLocation.X > Game1.player.getTileLocation().X)
+					{
+						ItemTexture = OnTextureL;
+					}
+					//center
+					else if (TileLocation.X == Game1.player.getTileLocation().X)
+					{
+						ItemTexture = OnTextureC;
+					}
 					transparency = 0.5f;
 					Rectangle srcRect = new Rectangle(0, 0, 16, 32);
 					spriteBatch.Draw(ItemTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);
 				}
 				else if(State.Equals("off"))
                 {
-					ItemTexture = OffTexture;
+					//Look right
+					if (TileLocation.X < Game1.player.getTileLocation().X)
+					{
+						ItemTexture = OffTextureR;
+					}
+					//look left
+					else if (TileLocation.X > Game1.player.getTileLocation().X)
+					{
+						ItemTexture = OffTextureL;
+					}
+					//center
+					else if (TileLocation.X == Game1.player.getTileLocation().X)
+					{
+						ItemTexture = OffTextureC;
+					}
 					transparency = 1f;
 					Rectangle srcRect = new Rectangle(0, 0, 16, 32);
 					spriteBatch.Draw(ItemTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.001f);

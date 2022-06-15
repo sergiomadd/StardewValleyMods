@@ -29,12 +29,16 @@ namespace ItemPipes.Framework.Recipes
         {
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			IDName = Utilities.GetIDName(name);
+			if(IDName.Equals("pipo"))
+            {
+				this.bigCraftable = true;
+            }
 			this.DisplayName = DataAccess.ItemNames[IDName];
 			ItemTexture = DataAccess.Sprites[IDName+"_item"];
 			description = DataAccess.ItemDescriptions[IDName];
 			this.isCookingRecipe = isCookingRecipe;
 			this.name = name;
-			string info = DataAccess.Recipes[name];
+			string info = DataAccess.Recipes[IDName];
 			string[] infoSplit = info.Split('/');
 			string[] ingredientsSplit = infoSplit[0].Split(' ');
 			this.recipeList.Clear();
@@ -93,7 +97,7 @@ namespace ItemPipes.Framework.Recipes
 				Utility.drawWithShadow(b, ItemTexture, new Vector2(x, y), srcRect, Color.White, 0f, Vector2.Zero, 4f, flipped: false, layerDepth);
 			}
 		}
-
+		
 		public override Item createItem()
 		{
 			SObject createdItem = ItemFactory.CreateItem(IDName);

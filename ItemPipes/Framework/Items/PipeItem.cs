@@ -429,7 +429,7 @@ namespace ItemPipes.Framework
 						((float)(y * 64 + 32) / 10000f) + 0.002f);
 				}
 			}
-			else
+			else if(item != null)
 			{
 				SpriteSheet = Game1.objectSpriteSheet;
 				srcRect = Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, item.ParentSheetIndex, 16, 16);

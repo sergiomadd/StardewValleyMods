@@ -189,8 +189,8 @@ namespace ItemPipes.Framework
         public bool AddConnectedInput(InputPipeNode input)
         {
             bool added = false;
-            if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Does {Print()} have a valid adjacent container? " + (ConnectedContainer != null).ToString()); }
-            if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Does {input.Print()} have a valid adjacent container? " + (input.ConnectedContainer != null).ToString()); }
+            if (Globals.UltraDebug) { Printer.Debug($"[N{ParentNetwork.ID}] Does {Print()} have a valid adjacent container? " + (ConnectedContainer != null).ToString()); }
+            if (Globals.UltraDebug) { Printer.Debug($"[N{ParentNetwork.ID}] Does {input.Print()} have a valid adjacent container? " + (input.ConnectedContainer != null).ToString()); }
             if (ConnectedContainer != null && input.ConnectedContainer != null)
             {
                 List<PipeNode> path;

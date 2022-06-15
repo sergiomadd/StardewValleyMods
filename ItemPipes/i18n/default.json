@@ -2,43 +2,43 @@
   //Pipes
   //Iron Pipe
   "item.ironpipe.name": "Iron Pipe",
-  "item.ironpipe.description": "Type: Connector Pipe\nThe basic pipe for connecting inputs and outputs. It moves items once every second.",
+  "item.ironpipe.description": "Type: Connector Pipe\nThe basic pipe for connecting inputs and outputs.\nRate: 1 stack/1 second.",
   //Gold Pipe
   "item.goldpipe.name": "Gold Pipe",
-  "item.goldpipe.description": "Type: Connector Pipe\nA more advanced and shinier pipe for connecting inputs and outputs. It moves items every 0.5 seconds.",
+  "item.goldpipe.description": "Type: Connector Pipe\nA shinier pipe for connecting inputs and outputs.\nRate: 1 stack/0.5 seconds.",
   //Iridium Pipe
   "item.iridiumpipe.name": "Iridium Pipe",
-  "item.iridiumpipe.description": "Type: Connector Pipe\nThe top tier pipe for connecting inputs and outputs. It moves items every 0.2 seconds.",
+  "item.iridiumpipe.description": "Type: Connector Pipe\nForged with iridium, is able to slide items at speeds unknown to mankind.\nRate: 1 stack/0.25 seconds.",
   //Extractor Pipe
   "item.extractorpipe.name": "Extractor Pipe",
-  "item.extractorpipe.description": "Type: Output Pipe\nExtracts 1 item from an adjacent container every 3 seconds, and sends them through the network.",
+  "item.extractorpipe.description": "Type: Output Pipe\nExtracts items from an adjacent container, and sends them through the network.\nRate: 1 item/1 second.",
   //Gold Extractor Pipe
   "item.goldextractorpipe.name": "Gold Extractor Pipe",
-  "item.goldextractorpipe.description": "Type: Output Pipe\nExtracts 10 items from an adjacent container every second, and sends them through the network.",
+  "item.goldextractorpipe.description": "Type: Output Pipe\nExtracts items, and lets you brag about your new shiny extractor.\nRate: 10 items/0.5 seconds",
   //Iridium Extractor Pipe
   "item.iridiumextractorpipe.name": "Iridium Extractor Pipe",
-  "item.iridiumextractorpipe.description": "Type: Output Pipe\nExtracts 20 items from an adjacent container every half second, and sends them through the network.",
+  "item.iridiumextractorpipe.description": "Type: Output Pipe\nThanks to the iridium essense it extracts items at an alarming rate.\nRate: 20 items/0.25 seconds",
   //Inserter Pipe
   "item.inserterpipe.name": "Inserter Pipe",
-  "item.inserterpipe.description": "Type: Input Pipe\nInserts items into an adjacent container, it doesn't filter items.",
+  "item.inserterpipe.description": "Type: Input Pipe\nInserts items into an adjacent container. Doesn't filter any items.",
   //Polymorphic Pipe
   "item.polymorphicpipe.name": "Polymorphic Pipe",
-  "item.polymorphicpipe.description": "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the adjacent container.",
+  "item.polymorphicpipe.description": "Type: Input Pipe\nInserts items into an adjacent container. Inserts only the items already on the adjacent container.",
   //Filter Pipe
   "item.filterpipe.name": "Filter Pipe",
-  "item.filterpipe.description": "Type: Input Pipe\nInserts items into an adjacent container, it filters only the items already on the Filter Pipe Inventory. Right click the Filter Pipe to open the Inventory.",
+  "item.filterpipe.description": "Type: Input Pipe\nInserts items into an adjacent container. Inserts only the items already on the filter pipe inventory. Right click the Filter Pipe to open the Inventory.",
   //PIPO
   "item.pipo.name": "PIPO",
-  "item.pipo.description": "Type: Machine\nThe PIPO makes pipes of the attached network turn crossable.",
+  "item.pipo.description": "Type: Machine\nPIPO makes pipes of the attached network turn crossable.\n~Is a good dog~",
   //Wrench
   "item.wrench.name": "Wrench",
-  "item.wrench.description": "Type: Tool\nUsed for turning on/off IOPipes.",
+  "item.wrench.description": "Type: Tool\nUsed for turning on/off Input/Output pipes.",
 
   //-----------------------------------------------------------------------------------------------------------------
 
   //Letters
-  "letter.itempipes_sendwrench": "Hello @! It has come to Madd Industries knowledge that you have started to use our products!^As a welcome gift, we are pleased to give you a tool to configure item pipes. For now it can only turn on and off IOPipes, but the engineering team is working hard on implementing further manipulations.^Thanks for putting your trust in Madd Industries, the best logistics provider of the Ferngill Republic!",
-  "letter.itempipes_itemslost": "Good morning @!^Madd Industries overnight pipe cleaning crew has found these items inside your item pipes!^Make sure to empty them before you go to bed next time. You can claim them clicking on the item on the letter.^Madd Industries, the best logistics provider of the Ferngill Republic!",
+  "letter.itempipes_sendwrench": "Hello @! It has come to Madded Industries knowledge that you have started to use our products!^As a welcome gift, we are pleased to give you a tool to configure item pipes. For now it can only turn on and off IOPipes, but the engineering team is working hard on implementing further manipulations.^Thanks for putting your trust in Madded Industries, the best logistics provider of the Ferngill Republic!",
+  "letter.itempipes_itemslost": "Good morning @!^Madded Industries overnight pipe cleaning crew has found these items inside your item pipes!^Make sure to empty them before you go to bed next time. You can claim them clicking on the item on the letter.^Madded Industries, the best logistics provider of the Ferngill Republic!",
 
   //-----------------------------------------------------------------------------------------------------------------
 

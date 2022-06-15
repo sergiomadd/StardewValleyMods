@@ -178,12 +178,6 @@ namespace ItemPipes
                 Helper.GameContent.InvalidateCache("Data/CraftingRecipes");
                 Helper.GameContent.InvalidateCache($"Data/CraftingRecipes.{this.Helper.Translation.Locale}");
 
-                string label = helper.Translation.Get("item.ironpipe.description");
-                string label2 = helper.Translation.Get("item.goldpipe.description");
-
-                Printer.Info(label);
-                Printer.Info(label2);
-
                 foreach (GameLocation location in Game1.locations)
                 {
                     DataAccess.LocationNetworks.Add(location, new List<Network>());
@@ -195,7 +189,7 @@ namespace ItemPipes
 
                 ConvertFromVanillaMap();
                 ConvertFromVanillaPlayer();
-
+                
                 foreach (GameLocation location in Game1.locations)
                 {
                     NetworkManager.UpdateLocationNetworks(location);
@@ -211,7 +205,7 @@ namespace ItemPipes
                 if (Context.IsWorldReady)
                 {
                     //Tier 1 Extractors
-                    if (e.IsMultipleOf(120))
+                    if (e.IsMultipleOf(60))
                     {
                         foreach (GameLocation location in Game1.locations)
                         {
@@ -229,7 +223,7 @@ namespace ItemPipes
                         }
                     }
                     //Tier 2 Extractors
-                    if (e.IsMultipleOf(60))
+                    if (e.IsMultipleOf(30))
                     {
                         foreach (GameLocation location in Game1.locations)
                         {
@@ -248,7 +242,7 @@ namespace ItemPipes
                         }
                     }
                     //Tier 3 Extractors
-                    if (e.IsMultipleOf(30))
+                    if (e.IsMultipleOf(15))
                     {
                         foreach (GameLocation location in Game1.locations)
                         {

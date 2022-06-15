@@ -72,7 +72,7 @@ namespace ItemPipes.Framework.Items
                             Texture2D sprite;
                             if (((int)Game1.currentGameTime.TotalGameTime.TotalSeconds) % 2 == 0)
                             {
-                                sprite = DataAccess.Sprites["InserterPipe_Item"];
+                                sprite = DataAccess.Sprites["inserterpipe_item"];
                             }
                             else
                             {

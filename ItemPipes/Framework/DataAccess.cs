@@ -1,6 +1,8 @@
 ﻿using ItemPipes.Framework.Data;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
+using ItemPipes.Framework.Recipes
+    ;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
@@ -187,6 +189,8 @@ namespace ItemPipes.Framework
         {
             LoadIDs();
             LoadRecipes();
+            ItemNames.Clear();
+            ItemDescriptions.Clear();
             IEnumerable<Translation> translations = Translate.GetTranslations();
             foreach(Translation translation in translations)
             {
@@ -259,6 +263,25 @@ namespace ItemPipes.Framework
             }
             Recipes = recipes.recipesData;
             FakeRecipes = recipes.fakeRecipesData;
+            foreach (KeyValuePair<string, string> pair in FakeRecipes)
+            {
+                if (!Game1.player.knowsRecipe(pair.Key) && CanLearnRecipe(pair.Value))
+                {
+                    Game1.player.craftingRecipes.Add(pair.Key, 0);
+                }
+            }
+        }
+
+        private bool CanLearnRecipe(string recipe)
+        {
+            bool can = false;
+            int neededLvl = Int32.Parse(recipe.Split("/")[4].Split(" ")[1]);
+            if(Game1.player.miningLevel.Value >= neededLvl)
+            {
+                can = true;
+            }
+            
+            return can;
         }
 
         public void LoadSprites()
@@ -304,9 +327,14 @@ namespace ItemPipes.Framework
                 Sprites.Add("signal_unconnected", helper.Load<Texture2D>($"assets/Pipes/unconnected.png"));
                 Sprites.Add("signal_nochest", helper.Load<Texture2D>($"assets/Pipes/nochest.png"));
 
-                Sprites.Add("pipo_item", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_off.png"));
-                Sprites.Add("pipo_on", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_on.png"));
-                Sprites.Add("pipo_off", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_off.png"));
+                Sprites.Add("pipo_item", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_offC.png"));
+                Sprites.Add("pipo_onR", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_onR.png"));
+                Sprites.Add("pipo_onL", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_onL.png"));
+                Sprites.Add("pipo_onC", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_onC.png"));
+                Sprites.Add("pipo_offR", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_offR.png"));
+                Sprites.Add("pipo_offL", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_offL.png"));
+                Sprites.Add("pipo_offC", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_offC.png"));
+
                 Sprites.Add("wrench_item", helper.Load<Texture2D>($"assets/Objects/Wrench/wrench_item.png"));
 
                 Sprites.Add("nochest_state", helper.Load<Texture2D>($"assets/Misc/nochest_state.png"));

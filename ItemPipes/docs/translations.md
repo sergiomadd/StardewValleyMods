@@ -15,5 +15,16 @@ You can ping me on discord (@sergiomadd#5168) or on twitter (@) if you have one 
 
 | Language  | State |
 | ------------- | ------------- |
-| Spanish  | Translated |
-| French  | Not Translated  |
+| Spanish | Translated |
+| French | Not Translated |
+| German | Not Translated |
+| Chinese | Not Translated |
+| Japanese | Not Translated |
+| Korean | Not Translated |
+| Thai | Not Translated |
+| Italian | Not Translated |
+| Polish | Not Translated |
+| Hungarian | Not Translated |
+| Portuguese | Not Translated |
+| Ukranian | Not Translated |
+| Russian | Not Translated |

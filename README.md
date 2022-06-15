@@ -14,4 +14,4 @@ This is a repository for all my Stardew Valley Mods
 - [Connected Fences](https://github.com/sergiomadd/StardewValleyMods/edit/main/ConnectedFences)
 
 ## See also:
-- [Contact](https://twitter.com/sergio_madd)
+- [Contact](https://twitter.com/madded__)

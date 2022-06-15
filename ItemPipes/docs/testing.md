@@ -21,7 +21,7 @@ You should try reporting your problem in this order.
 ---
 
 ### Current debates: 
-- Put issue with poll on pumping rates
+- [Pumpping rates discussion](https://github.com/sergiomadd/StardewValleyMods/issues/3#issue-1272491737)
 
 ---
 

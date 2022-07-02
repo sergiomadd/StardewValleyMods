@@ -15,13 +15,11 @@ using ItemPipes.Framework.Util;
 
 namespace ItemPipes.Framework.Items.Tools
 {
-    [XmlType("Mods_sergiomadd.ItemPipes_WrenchItem")]
 
     public class WrenchItem : CustomToolItem
     {
         public WrenchItem() : base()
         {
-            DataAccess DataAccess = DataAccess.GetDataAccess();
             this.BaseName = Name;
         }
 
@@ -44,6 +42,18 @@ namespace ItemPipes.Framework.Items.Tools
             int tileX = x / 64;
             int tileY = y / 64;
             StardewValley.Object obj = location.getObjectAtTile(tileX, tileY);
+            if(Game1.didPlayerJustRightClick())
+            {
+                Printer.Info("RIGHT CLICK");
+                if(obj is OutputPipeItem)
+                {
+                    Printer.Info("IS OUTPUT");
+
+                    OutputPipeItem pipe = (OutputPipeItem)obj;
+                    pipe.ChangeMode();
+                }
+                    
+            }
             if(obj != null)
             {
                 if(obj is IOPipeItem)

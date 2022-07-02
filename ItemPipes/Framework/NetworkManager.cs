@@ -84,7 +84,6 @@ namespace ItemPipes.Framework
                 newNode.AddAdjacent(SideStruct.GetSides().West, westNode);
             }
             if (Globals.UltraDebug) { newNode.Print(); }
-
             if (obj.Value is CustomObjectItem)
             {
                 if (Globals.UltraDebug) { Printer.Debug("Assigning network to new node"); }
@@ -170,13 +169,12 @@ namespace ItemPipes.Framework
         public static void RemoveObject(KeyValuePair<Vector2, StardewValley.Object> obj, GameLocation location)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
-            if (Globals.UltraDebug) { Printer.Trace("Removing object: " + obj.Key.ToString() + obj.Value.Name); }
+            if (Globals.UltraDebug) { Printer.Debug("Removing object: " + obj.Key.ToString() + obj.Value.Name); }
             List<Node> nodes = DataAccess.LocationNodes[location];
             Node node = nodes.Find(n => n.Position.Equals(obj.Key));
             if(node != null)
             {
                 nodes.Remove(node);
-
                 if (node is IOPipeNode)
                 {
                     IOPipeNode IOPipeNode = (IOPipeNode)node;
@@ -187,6 +185,9 @@ namespace ItemPipes.Framework
                 }
                 if (obj.Value is CustomObjectItem)
                 {
+                    Printer.Info("REMOVING OITEM "+node.Print());
+                    Printer.Info((node.ParentNetwork == null).ToString());
+
                     if (node.ParentNetwork != null)
                     {
                         List<Network> adjNetworks = node.Scan();
@@ -208,6 +209,7 @@ namespace ItemPipes.Framework
             List<Node> dict = node.Adjacents.Values.ToList();
             node.ParentNetwork.RemoveAllAdjacents();
             node.ParentNetwork.Delete();
+            DataAccess.LocationNetworks[location].Remove(node.ParentNetwork);
             node.ParentNetwork = null;
             foreach (Node adj in dict)
             {
@@ -246,7 +248,16 @@ namespace ItemPipes.Framework
                 if(network != null)
                 {
                     if (Globals.UltraDebug) {Printer.Debug(network.Print());}
+                    Printer.Debug(network.Print());
                 }
+                else
+                {
+                    Printer.Info("NETWORK NUll");
+                }
+            }
+            if(networkList.Count == 0)
+            {
+                Printer.Info($"No networks to display for {location.Name}");
             }
         }
     }

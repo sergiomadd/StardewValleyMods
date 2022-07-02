@@ -20,14 +20,31 @@ namespace ItemPipes.Framework
         public int Tier { get; set; }
         public int Flux { get; set; }
         public Dictionary<InputPipeNode, List<PipeNode>> ConnectedInputs { get; set; }
+        public List<InputPipeNode> SavedState { get; set; }
         public bool RoundRobin { get; set; }
+        public int RotateIndex { get; set; }
         public OutputPipeNode() : base()
         {
-            RoundRobin = false;
+            RoundRobin = true;
+            RotateIndex = 0;
         }
         public OutputPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedInputs = new Dictionary<InputPipeNode, List<PipeNode>>();
+            RoundRobin = true;
+            RotateIndex = 0;
+        }
+
+        public void ChangeMode()
+        {
+            if(RoundRobin)
+            {
+                RoundRobin = false;
+            }
+            else
+            {
+                RoundRobin = true;
+            }
         }
 
         public override void UpdateSignal()
@@ -74,18 +91,16 @@ namespace ItemPipes.Framework
 
         public void ProcessExchanges()
         {
-            if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Procesing Exchanges..."); }
-            if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Are there connected input? " + (ConnectedInputs.Count > 0).ToString()); }
+            //if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Procesing Exchanges..."); }
+            //if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Are there connected input? " + (ConnectedInputs.Count > 0).ToString()); }
             if (ConnectedContainer != null && !ConnectedContainer.IsEmpty()
                 && ConnectedInputs.Count > 0 && Signal.Equals("on"))
             {
                 if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Is output ({Print()}) empty? " + ConnectedContainer.IsEmpty().ToString()); }
                 try
                 {
-                    Thread thread = new Thread(new ThreadStart(StartExchage));
-                    if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] CREATED NEW THREAD WITH ID [{thread.ManagedThreadId}]"); }
-                    DataAccess.GetDataAccess().Threads.Add(thread);
-                    thread.Start();
+                    ParentNetwork.Update();
+                    StartExchage();
                 }
                 catch (ThreadInterruptedException exception)
                 {
@@ -96,7 +111,7 @@ namespace ItemPipes.Framework
         public bool CanSendItems(InputPipeNode input)
         {
             bool canSend = false;
-            if(ConnectedContainer != null && ConnectedContainer.CanSendItems() 
+            if (ConnectedContainer != null && ConnectedContainer.CanSendItems()
                 && (input.CanRecieveItems() || input.ConnectedContainer.CanStackItems())
                 && StoredItem == null)
             {
@@ -114,7 +129,7 @@ namespace ItemPipes.Framework
 
         public void StartExchage()
         {
-            if (Globals.UltraDebug) { Printer.Info($"[T{Thread.CurrentThread.ManagedThreadId}][N{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
+            if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
             Item item = null;
             int index = 0;
             Dictionary<InputPipeNode, List<PipeNode>> priorityInputs = ConnectedInputs;
@@ -122,7 +137,6 @@ namespace ItemPipes.Framework
                 OrderByDescending(pair => pair.Key.Priority).
                 ThenBy(pair => pair.Value.Count).
                 ToDictionary(x => x.Key, x => x.Value);
-            //Mirar para hacer round robin
             if (!RoundRobin)
             {
                 while (index < priorityInputs.Count && item == null)
@@ -137,19 +151,14 @@ namespace ItemPipes.Framework
                             item = GetItemFor(input);
                             if (item != null && StoredItem == null)
                             {
-                                //Printer.Info($"Item to send: {item.Name}({item.Stack})");
-                                Node ret = SendItem(item, input);
-                                if(ret == null)
-                                {
-                                    input.SendItem(item, this);
-                                }
+                                Animator.AnimateItemMovement(path, input, this, item);
                             }
-                            else if(StoredItem != null)
+                            else if (StoredItem != null)
                             {
                                 //Printer.Info($"Output locked");
                                 //Output locked
                             }
-                            else if(item == null)
+                            else if (item == null)
                             {
                                 //Printer.Info($"Item is null");
                                 //Item is null
@@ -161,19 +170,67 @@ namespace ItemPipes.Framework
             }
             else
             {
-                //RoundRobin
-            }
-            try
-            {
-                if (DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
+                List<InputPipeNode> rotatedInputs;
+                if (SavedState != null)
                 {
-                    DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
+                    rotatedInputs = SavedState;
+                }
+                else
+                {
+                    rotatedInputs = RotateLeft(priorityInputs.Keys.ToList(), RotateIndex);
+                }
+                while (index < rotatedInputs.Count && item == null)
+                {
+                    InputPipeNode input = rotatedInputs[index];
+                    if (input.Signal.Equals("on"))
+                    {
+                        List<PipeNode> path = priorityInputs[rotatedInputs[index]];
+                        input.UpdateFilter();
+                        if (CanSendItems(input))
+                        {
+                            item = GetItemFor(input);
+                            if (item != null && StoredItem == null)
+                            {
+                                Animator.AnimateItemMovement(path, input, this, item);
+                            }
+                            else if (StoredItem != null)
+                            {
+                                //Printer.Info($"Output locked");
+                                //Output locked
+                            }
+                            else if (item == null)
+                            {
+                                //Printer.Info($"Item is null");
+                                //Item is null
+                            }
+                        }
+                    }
+                    index++;
+                }
+                if(item == null)
+                {
+                    SavedState = rotatedInputs;
+                }
+                else
+                {
+                    SavedState = null;
                 }
             }
-            catch (Exception e)
+        }
+
+        public List<InputPipeNode> RotateLeft(List<InputPipeNode> items, int places)
+        {
+            if(places >= items.Count)
             {
-                DataAccess.GetDataAccess().Threads.Clear();
+                places = 0;
+                RotateIndex = 0;
             }
+            InputPipeNode[] range = new InputPipeNode[places];
+            items.CopyTo(items.Count - places, range, 0, places);
+            items.RemoveRange(items.Count - places, places);
+            items.InsertRange(0, range);
+            RotateIndex++;
+            return items;
         }
 
         public bool IsInputConnected(InputPipeNode input)
@@ -199,28 +256,11 @@ namespace ItemPipes.Framework
                 {
                     added = true;
                     ConnectedInputs.Add(input, path);
-                    var t = new Thread(() => AnimateConnection(path));
-                    t.Start();
-                    DataAccess.GetDataAccess().Threads.Add(t);
+                    RotateIndex = 0;
+                    Animator.AnimatePipeConnection(path);
                 }
             }
             return added;
-        }
-
-        private void AnimateConnection(List<PipeNode> path)
-        {
-            ConnectPipe(path.Last());
-            try
-            {
-                if (DataAccess.GetDataAccess().Threads.Contains(Thread.CurrentThread))
-                {
-                    DataAccess.GetDataAccess().Threads.Remove(Thread.CurrentThread);
-                }
-            }
-            catch (Exception e)
-            {
-                DataAccess.GetDataAccess().Threads.Clear();
-            }
         }
 
         public bool RemoveConnectedInput(InputPipeNode input)
@@ -230,6 +270,7 @@ namespace ItemPipes.Framework
             {
                 removed = true;
                 ConnectedInputs.Remove(input);
+                RotateIndex = 0;
             }
             return removed;
         }

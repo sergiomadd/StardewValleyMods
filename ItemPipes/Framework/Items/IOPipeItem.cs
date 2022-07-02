@@ -16,12 +16,14 @@ using ItemPipes.Framework.Items.Tools;
 using ItemPipes.Framework.Nodes;
 using System.Xml.Serialization;
 using StardewValley.Buildings;
+using SObject = StardewValley.Object;
 
 
 namespace ItemPipes.Framework.Items
 {
     public abstract class IOPipeItem : PipeItem
     {
+        public string Signal { get; set; }
         public Texture2D SignalTexture { get; set; }
         public Texture2D OnSignal { get; set; }
         public Texture2D OffSignal { get; set; }
@@ -42,6 +44,23 @@ namespace ItemPipes.Framework.Items
             PopulateDrawGuide();
         }
 
+        public override SObject Save()
+        {    
+            Fence fence = (Fence)base.Save();
+            if (!fence.modData.ContainsKey("signal")) { fence.modData.Add("signal", Signal); }
+            else { fence.modData["signal"] = Signal; }
+            return fence;
+        }
+
+        public override void Load(ModDataDictionary data)
+        {
+            modData = data;
+            stack.Value = Int32.Parse(modData["Stack"]);
+            Signal = modData["signal"];
+            //Signal loaded to node on node contruction
+            //Here nodes arent made still
+        }
+
         public void LoadSignals()
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
@@ -50,7 +69,38 @@ namespace ItemPipes.Framework.Items
             UnconnectedSignal = DataAccess.Sprites["signal_unconnected"];
             NoChestSignal = DataAccess.Sprites["signal_nochest"];
             SignalTexture = UnconnectedSignal;
+            Signal = "unconnected";
         }
+
+        public void ChangeSignal()
+        {
+            DataAccess DataAccess = DataAccess.GetDataAccess();
+            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+            IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
+            pipe.ChangeSignal();
+            UpdateSignal(pipe.Signal);
+        }
+
+        public void UpdateSignal(string signal)
+        {
+            Signal = signal;
+            switch (signal)
+            {
+                case "on":
+                    SignalTexture = OnSignal;
+                    break;
+                case "off":
+                    SignalTexture = OffSignal;
+                    break;
+                case "unconnected":
+                    SignalTexture = UnconnectedSignal;
+                    break;
+                case "nochest":
+                    SignalTexture = NoChestSignal;
+                    break;
+            }
+        }
+
 
         public override bool performToolAction(Tool t, GameLocation location)
         {
@@ -84,59 +134,6 @@ namespace ItemPipes.Framework.Items
             return false;
         }
 
-        /*
-        public override bool clicked(Farmer who)
-        {
-            if(who.CurrentTool == null)
-            {
-                DataAccess DataAccess = DataAccess.GetDataAccess();
-                if (DataAccess.IOPipeNames.Contains(this.Name))
-                {
-                    List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-                    Node node = nodes.Find(n => n.Position.Equals(this.TileLocation));
-                    if(node is IOPipeNode)
-                    {
-                        IOPipeNode pipe = (IOPipeNode)node;
-                        if (pipe != null)
-                        {
-                            Printer.Info($"{Name} is {pipe.Signal}");
-
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-        */
-
-        public void ChangeSignal()
-        {
-            DataAccess DataAccess = DataAccess.GetDataAccess();
-            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-            IOPipeNode pipe = (IOPipeNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
-            pipe.ChangeSignal();
-            UpdateSignal(pipe.Signal);
-        }
-
-        public void UpdateSignal(string signal)
-        {
-            switch (signal)
-            {
-                case "on":
-                    SignalTexture = OnSignal;
-                    break;
-                case "off":
-                    SignalTexture = OffSignal;
-                    break;
-                case "unconnected":
-                    SignalTexture = UnconnectedSignal;
-                    break;
-                case "nochest":
-                    SignalTexture = NoChestSignal;
-                    break;
-            }
-        }
-
         public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
         {
             base.draw(spriteBatch, x, y);
@@ -165,6 +162,7 @@ namespace ItemPipes.Framework.Items
                         Rectangle srcRect = new Rectangle(0, 0, 16, 16);
                         spriteBatch.Draw(SignalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
                     }
+
                     if (Globals.IOPipeStatePopup && IONode.Signal != null)
                     {
                         if(IONode.Signal.Equals("nochest"))

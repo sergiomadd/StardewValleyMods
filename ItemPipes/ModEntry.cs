@@ -18,6 +18,7 @@ using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Patches;
 using ItemPipes.Framework.Factories;
 using ItemPipes.Framework.Items;
+using ItemPipes.Framework.Nodes;
 using ItemPipes.Framework.Data;
 using ItemPipes.Framework.Items.Tools;
 using HarmonyLib;
@@ -132,13 +133,23 @@ namespace ItemPipes
         {
             if (Context.IsMainPlayer)
             {
-                DataAccess.LostItems.Clear();
+                //DataAccess.LostItems.Clear();
                 if (Globals.Debug) { Printer.Debug("Waiting for all items to arrive at inputs..."); }
-                foreach (Thread thread in DataAccess.Threads.ToList())
+                foreach (GameLocation location in Game1.locations)
                 {
-                    if (thread != null && thread.IsAlive)
+                    foreach(KeyValuePair<Vector2, SObject> pair in location.objects.Pairs)
                     {
-                        thread.Interrupt();
+                        if(pair.Value is PipeItem)
+                        {
+                            DataAccess DataAccess = DataAccess.GetDataAccess();
+                            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+                            Node node = nodes.Find(n => n.Position.Equals(pair.Value.TileLocation));
+                            if (node != null && node is PipeNode)
+                            {
+                                PipeNode pipe = (PipeNode)node;
+                                pipe.FlushPipe();
+                            }
+                        }
                     }
                 }
                 if (Globals.Debug) { Printer.Debug("Saving modded items...!"); }
@@ -163,7 +174,7 @@ namespace ItemPipes
                 }
 
                 ConvertFromVanillaMap();
-                ConvertFromVanillaPlayer(); 
+                ConvertFromVanillaPlayer();
                 
                 if (Globals.Debug) { Printer.Debug("Location networks loaded!"); }
             }
@@ -217,6 +228,7 @@ namespace ItemPipes
                                     if (network != null && network.Outputs.Count > 0)
                                     {
                                         network.ProcessExchanges(1);
+                                        
                                     }
                                 }
                             }
@@ -289,16 +301,9 @@ namespace ItemPipes
 
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            
             if (Game1.player.craftingRecipes.ContainsKey("IronPipe") && Game1.player.craftingRecipes["IronPipe"] > 0 && !Game1.player.mailReceived.Contains("ItemPipes_SendWrench"))
             {
                 Game1.player.mailbox.Add("itempipes_sendwrench");
-            }
-            if(DataAccess.LostItems.Count > 0)
-            {
-                Game1.addHUDMessage(new HUDMessage(DataAccess.Warnings["cloggedItems_1"], 3));
-                Game1.addHUDMessage(new HUDMessage(DataAccess.Warnings["cloggedItems_2"], 3));
-                Game1.player.mailbox.Add("itempipes_itemslost");
             }
         }
 

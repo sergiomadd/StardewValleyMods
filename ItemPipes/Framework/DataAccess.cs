@@ -28,7 +28,6 @@ namespace ItemPipes.Framework
         public List<string> Buildings { get; set; }
 
         public Dictionary<GameLocation, List<long>>  UsedNetworkIDs { get; set; }
-        public List<Thread> Threads { get; set; }
 
         public Dictionary<string, Texture2D> Sprites { get; set; }
         public Dictionary<string, string> Recipes { get; set; }
@@ -37,7 +36,7 @@ namespace ItemPipes.Framework
         public Dictionary<string, string> ItemNames { get; set; }
         public Dictionary<string, int> ItemIDs { get; set; }
         public Dictionary<string, string> ItemDescriptions { get; set; }
-        public List<Item> LostItems { get; set; }
+        //public List<Item> LostItems { get; set; }
         public Dictionary<string, string> Letters { get; set; }
         public Dictionary<string, string> Warnings { get; set; }
 
@@ -52,7 +51,6 @@ namespace ItemPipes.Framework
             ModItems = new List<int>();
             NetworkItems = new List<int>();
             Buildings = new List<string>();
-            Threads = new List<Thread>();
             UsedNetworkIDs = new Dictionary<GameLocation, List<long>>();
             Sprites = new Dictionary<string, Texture2D>();
             Recipes = new Dictionary<string, string>();
@@ -61,7 +59,7 @@ namespace ItemPipes.Framework
             ItemNames = new Dictionary<string, string>();
             ItemIDs = new Dictionary<string, int>();
             ItemDescriptions = new Dictionary<string, string>();
-            LostItems = new List<Item>();
+            //LostItems = new List<Item>();
 
             Letters = new Dictionary<string, string>();
             Warnings = new Dictionary<string, string>();
@@ -74,25 +72,6 @@ namespace ItemPipes.Framework
                 myDataAccess = new DataAccess(ModEntry.helper);
             }
             return myDataAccess;
-        }
-
-        public bool RemoveThread(Thread thread)
-        {
-            try
-            {
-                if (DataAccess.GetDataAccess().Threads.Contains(thread))
-                {
-                    DataAccess.GetDataAccess().Threads.Remove(thread);
-                    thread.Abort();
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception e)
-            {
-                DataAccess.GetDataAccess().Threads.Clear();
-                return true;
-            }
         }
 
         public long GetNewNetworkID(GameLocation location)
@@ -213,7 +192,7 @@ namespace ItemPipes.Framework
                 {
                     if(!Letters.ContainsKey(key.Split(".")[1])) { Letters.Add(key.Split(".")[1], Translate.Get(key)); }
                 }
-                else if (key.Contains("warnings"))
+                else if (key.Contains("warning"))
                 {
                     if(!Warnings.ContainsKey(key.Split(".")[1])) { Warnings.Add(key.Split(".")[1], Translate.Get(key)); }
                 }
@@ -292,7 +271,7 @@ namespace ItemPipes.Framework
             {
                 List<string> pipes = new List<string>
                 {"ironpipe", "goldpipe", "iridiumpipe", "extractorpipe", "goldextractorpipe",
-                 "iridiumextractorpipe", "inserterpipe", "polymorphicpipe", "filterpipe"};
+                 "iridiumextractorpipe", "inserterpipe", "polymorphicpipe", "filterpipe", "pipo"};
                 foreach (string name in pipes)
                 {
                     if (!name.Contains("iridium"))
@@ -322,18 +301,21 @@ namespace ItemPipes.Framework
                         Sprites.Add($"{name}_item_sprite3", helper.Load<Texture2D>($"assets/Pipes/{name}/3/{name}_item_sprite.png"));
                     }
                 }
+
                 Sprites.Add("signal_on", helper.Load<Texture2D>($"assets/Pipes/on.png"));
                 Sprites.Add("signal_off", helper.Load<Texture2D>($"assets/Pipes/off.png"));
                 Sprites.Add("signal_unconnected", helper.Load<Texture2D>($"assets/Pipes/unconnected.png"));
                 Sprites.Add("signal_nochest", helper.Load<Texture2D>($"assets/Pipes/nochest.png"));
 
-                Sprites.Add("pipo_item", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_offC.png"));
-                Sprites.Add("pipo_onR", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_onR.png"));
-                Sprites.Add("pipo_onL", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_onL.png"));
-                Sprites.Add("pipo_onC", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_onC.png"));
-                Sprites.Add("pipo_offR", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_offR.png"));
-                Sprites.Add("pipo_offL", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_offL.png"));
-                Sprites.Add("pipo_offC", helper.Load<Texture2D>($"assets/Objects/PIPO/pipo_offC.png"));
+                Sprites.Add("rroff", helper.Load<Texture2D>($"assets/Pipes/rroff.png"));
+                Sprites.Add("rron", helper.Load<Texture2D>($"assets/Pipes/rron.png"));
+
+                Sprites.Add("pipo_signal_offC", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_offC.png"));
+                Sprites.Add("pipo_signal_offL", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_offL.png"));
+                Sprites.Add("pipo_signal_offR", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_offR.png"));
+                Sprites.Add("pipo_signal_onC", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_onC.png"));
+                Sprites.Add("pipo_signal_onL", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_onL.png"));
+                Sprites.Add("pipo_signal_onR", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_onR.png"));
 
                 Sprites.Add("wrench_item", helper.Load<Texture2D>($"assets/Objects/Wrench/wrench_item.png"));
 
@@ -355,7 +337,6 @@ namespace ItemPipes.Framework
             LocationNodes.Clear();
             LocationNetworks.Clear();
             UsedNetworkIDs.Clear();
-            Threads.Clear();
         }
     }
 }

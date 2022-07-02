@@ -9,6 +9,9 @@ using ItemPipes.Framework.Nodes;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Objects;
+using SObject = StardewValley.Object;
+using ItemPipes.Framework.Items;
+
 
 namespace ItemPipes.Framework
 {
@@ -20,16 +23,25 @@ namespace ItemPipes.Framework
         public IOPipeNode() : base()
         {
             ConnectedContainer = null;
-            Signal = "unconnected";
             Connecting = false;
+            LoadSignal();
         }
-        
+
         public IOPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            Signal = "nochest";
             Connecting = false;
+            LoadSignal();
+        }
 
+        public void LoadSignal()
+        {
+            SObject item;
+            if(Location.objects.TryGetValue(Position, out item))
+            {
+                IOPipeItem pipe = (IOPipeItem)item;
+                Signal = pipe.Signal;
+            }
         }
 
         public virtual void UpdateSignal()

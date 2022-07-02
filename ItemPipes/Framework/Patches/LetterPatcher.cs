@@ -51,6 +51,7 @@ namespace ItemPipes.Framework.Patches
 					WrenchCrafted = true;
 				}
 			}
+			/*
 			else if (__instance.mailTitle.Equals("ItemPipes_ItemsLost"))
 			{
 				foreach (Item lostItem in DataAccess.GetDataAccess().LostItems.ToList())
@@ -62,6 +63,7 @@ namespace ItemPipes.Framework.Patches
 					}
 				}
 			}
+			*/
 			return true;
 		}
 	}

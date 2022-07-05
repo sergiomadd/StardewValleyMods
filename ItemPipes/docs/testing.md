@@ -1,6 +1,8 @@
 This page is for people that want to help testing the mod while it is in beta stage.  
 You can download it from here -> [Download](https://github.com/sergiomadd/StardewValleyMods/releases/tag/Beta)  
 
+![Alt Text](gifs/simpleItemSending.gif)
+
 ## WARNING:
 This mod is in PreRelease version. Backup your saves or create a new save before playing with it. You might lose items and get crashes.
 

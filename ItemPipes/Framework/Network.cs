@@ -168,7 +168,6 @@ namespace ItemPipes.Framework
                             if (path.Count > 0 && path.Last().Equals(input))
                             {
                                 output.ConnectedInputs[input] = path;
-                                if (ModEntry.config.DebugMode) { Printer.Debug($"[N{ID}] Path succesfully updated!"); }
                             }
                             else
                             {

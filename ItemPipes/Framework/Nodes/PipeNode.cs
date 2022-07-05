@@ -149,11 +149,13 @@ namespace ItemPipes.Framework.Nodes
                         {
                             if(inout.Item1.ConnectedContainer.InsertItem(item))
                             {
+                                if (ModEntry.config.DebugMode) { Printer.Debug($"[N{ID}] Inserted {item.Name}({item.Stack}) to {inout.Item1.Print()}"); }
                                 StoredItem = null;
                             }
                             else
                             {
-                                if(this is OutputPipeNode)
+                                Printer.Warn($"[N{ID}] Coudn't insert {item.Name}({item.Stack}) to {inout.Item1.Print()}");
+                                if (this is OutputPipeNode)
                                 {
                                     Utilities.DropItem(item, Position, Location);
                                     Game1.addHUDMessage(new HUDMessage($"Dropped {item.Stack} {item.Name} at {Position} {Location.Name}", 3));

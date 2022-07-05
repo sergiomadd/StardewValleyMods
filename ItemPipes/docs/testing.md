@@ -7,8 +7,8 @@ This mod is in PreRelease version. Backup your saves or create a new save before
 ---
 
 ### What to look for?
-When testing the mod, try play like you normally would, come from mining and try sorting your items. See if any are missing or missplaced.
-Also look for mod incompatibilities.
+- Items missing or missplaced
+- Mod incompatibilities
 
 ---
 

@@ -1,4 +1,7 @@
 This page is for people that want to help testing the mod while it is in beta stage.  
+
+**Current Version = 0.1.2**  
+
 You can download it from here -> [Download](https://github.com/sergiomadd/StardewValleyMods/releases/tag/Beta)  
 
 ![Alt Text](gifs/simpleItemSending.gif)

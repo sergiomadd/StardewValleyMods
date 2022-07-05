@@ -3,7 +3,7 @@ Item Pipes is a mod that provides chest to chest item transportation and item so
 
 ![Alt Text](gifs/simpleItemSending.gif)
 
-**Current Version = 1.0.0-PreRelease1**
+**Current Version = 0.1.0**
 
 Download:
 - [Read for beta testing](testing.md)
@@ -11,8 +11,8 @@ Download:
 ---
 
 ## Requirements:
-- Stardew Valley 1.5.7
-- [SMAPI](https://smapi.io/)
+- Stardew Valley 1.5.6
+- [SMAPI](https://smapi.io/) 3.15.0
 
 ---
 

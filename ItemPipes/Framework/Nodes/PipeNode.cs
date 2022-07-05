@@ -61,7 +61,6 @@ namespace ItemPipes.Framework.Nodes
 
         public List<PipeNode> GetPath(PipeNode target)
         {
-            if (Globals.UltraDebug) { Printer.Debug($"Getting path for {target.Print()}"); }
             List<PipeNode> path = new List<PipeNode>();
             path = GetPathRecursive(target, path);
             return path;
@@ -69,7 +68,6 @@ namespace ItemPipes.Framework.Nodes
 
         public List<PipeNode> GetPathRecursive(PipeNode target, List<PipeNode> path)
         {
-            //if (Globals.UltraDebug) { Printer.Info(Print()); }
             Node adj;
             if (path.Contains(target))
             {

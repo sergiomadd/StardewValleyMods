@@ -112,12 +112,10 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
                 int index = itemList.Count - 1;
                 while (index >= 0 && item == null)
                 {
-                    if (Globals.UltraDebug) { Printer.Info($"[?] Trying to send: {itemList[index].Name}"); }
                     if (itemList[index] != null)
                     {
                         if (input.HasFilter())
                         {
-                            if (Globals.UltraDebug) { Printer.Info($"[?] Input has filter {input.Filter.Count}"); }
                             if (input.Filter.Any(i => i.Name.Equals(itemList[index].Name)))
                             {
                                 item = TryExtractItem(input.ConnectedContainer, itemList, index, flux);
@@ -211,7 +209,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             NetObjectList<Item> itemList;
             if (Chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || Chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
             {
-                itemList = Chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
+                itemList = Chest.GetItemsForPlayer(Game1.MasterPlayer.UniqueMultiplayerID);
             }
             else
             {

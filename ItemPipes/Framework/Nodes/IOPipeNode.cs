@@ -81,26 +81,20 @@ namespace ItemPipes.Framework
         public bool AddConnectedContainer(Node node)
         {
             bool added = false;
-            if (Globals.UltraDebug) { Printer.Info($"[?] Adding {node.Name} container to {Print()} "); }
-            if (Globals.UltraDebug) { Printer.Info($"[?] Already has a container? {ConnectedContainer != null}"); }
             if (ConnectedContainer == null && node is ContainerNode)
             {
-                if (Globals.UltraDebug) { Printer.Info($"[?] Connecting adjacent container.."); }
                 ContainerNode container = (ContainerNode)node;
                 if (container.IOPipes.Count < 4)
                 {
                     ConnectedContainer = (ContainerNode)node;
                     ConnectedContainer.AddIOPipe(this);
-                    if (Globals.UltraDebug) { Printer.Info($"[?] CONNECTED CONTAINER ADDED"); }
                 }
                 else
                 {
-                    if (Globals.UltraDebug) { Printer.Info($"[?] Didnt add adj container"); }
                 }
             }
             else
             {
-                if (Globals.UltraDebug) { Printer.Info($"[?] Didnt add adj container"); }
             }
             UpdateSignal();
             added = true;
@@ -110,12 +104,12 @@ namespace ItemPipes.Framework
         public bool RemoveConnectedContainer(Node node)
         {
             bool removed = false;
-            if (Globals.UltraDebug) { Printer.Info($"[?] Removing {node.Name} container "); }
+            if (ModEntry.config.DebugMode) { Printer.Info($"[?] Removing {node.Name} container "); }
             if (ConnectedContainer != null && node is ContainerNode)
             {
                 ConnectedContainer.RemoveIOPipe(this);
                 ConnectedContainer = null;
-                if (Globals.UltraDebug) { Printer.Info($"[?] CONNECTED CONTAINER REMOVED"); }
+                if (ModEntry.config.DebugMode) { Printer.Info($"[?] CONNECTED CONTAINER REMOVED"); }
                 removed = true;
             }
             UpdateSignal();

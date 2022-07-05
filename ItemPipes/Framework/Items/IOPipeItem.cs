@@ -104,34 +104,12 @@ namespace ItemPipes.Framework.Items
 
         public override bool performToolAction(Tool t, GameLocation location)
         {
-            if (t is Pickaxe)
-            {
-                var who = t.getLastFarmerToUse();
-                this.performRemoveAction(this.TileLocation, location);
-                Debris deb = new Debris(this.getOne(), who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
-                Game1.currentLocation.debris.Add(deb);
-                DataAccess DataAccess = DataAccess.GetDataAccess();
-                List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-                Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-                if (node != null && node is PipeNode)
-                {
-                    PipeNode pipe = (PipeNode)node;
-                    if (pipe.StoredItem != null)
-                    {
-                        Debris itemDebr = new Debris(pipe.StoredItem, who.GetToolLocation(), new Vector2(who.GetBoundingBox().Center.X, who.GetBoundingBox().Center.Y));
-                        Game1.currentLocation.debris.Add(itemDebr);
-                        pipe.Broken = true;
-                    }
-                }
-                Game1.currentLocation.objects.Remove(this.TileLocation);
-                return false;
-            }
             if (t is WrenchItem)
             {
                 ChangeSignal();
                 return false;
             }
-            return false;
+            return base.performToolAction(t, location);
         }
 
         public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1)
@@ -145,25 +123,25 @@ namespace ItemPipes.Framework.Items
                 if (node != null && node is IOPipeNode)
                 {
                     IOPipeNode IONode = (IOPipeNode)node;
-                    if (IONode.Signal != null && !IONode.PassingItem)
+                    float transparency = 1f;
+                    if (IONode.Passable)
+                    {
+                        Passable = true;
+                        transparency = 0.5f;
+                    }
+                    else
+                    {
+                        Passable = false;
+                        transparency = 1f;
+                    }
+                    if (ModEntry.config.IOPipeStateSignals && IONode.Signal != null && !IONode.PassingItem)
                     {
                         UpdateSignal(IONode.Signal);
-                        float transparency = 1f;
-                        if (IONode.Passable)
-                        {
-                            Passable = true;
-                            transparency = 0.5f;
-                        }
-                        else
-                        {
-                            Passable = false;
-                            transparency = 1f;
-                        }
                         Rectangle srcRect = new Rectangle(0, 0, 16, 16);
                         spriteBatch.Draw(SignalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
                     }
 
-                    if (Globals.IOPipeStatePopup && IONode.Signal != null)
+                    if (ModEntry.config.IOPipeStatePopup && IONode.Signal != null)
                     {
                         if(IONode.Signal.Equals("nochest"))
                         {

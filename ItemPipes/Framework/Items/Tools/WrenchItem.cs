@@ -9,7 +9,7 @@ using SObject = StardewValley.Objects;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ItemPipes.Framework.Model;
+using ItemPipes.Framework.Items.Objects;
 using ItemPipes.Framework.Util;
 
 
@@ -44,25 +44,34 @@ namespace ItemPipes.Framework.Items.Tools
             StardewValley.Object obj = location.getObjectAtTile(tileX, tileY);
             if(Game1.didPlayerJustRightClick())
             {
-                Printer.Info("RIGHT CLICK");
-                if(obj is OutputPipeItem)
+                if(obj != null)
                 {
-                    Printer.Info("IS OUTPUT");
-
-                    OutputPipeItem pipe = (OutputPipeItem)obj;
-                    pipe.ChangeMode();
+                    if (obj is OutputPipeItem)
+                    {
+                        OutputPipeItem pipe = (OutputPipeItem)obj;
+                        pipe.ChangeMode();
+                    }
                 }
-                    
             }
-            if(obj != null)
+            else
             {
-                if(obj is IOPipeItem)
+                if(obj != null)
                 {
-                    IOPipeItem pipe = (IOPipeItem)obj;
-                    pipe.ChangeSignal();
-                    location.playSound("smallSelect");
+                    if(obj is IOPipeItem)
+                    {
+                        IOPipeItem pipe = (IOPipeItem)obj;
+                        pipe.ChangeSignal();
+                        location.playSound("smallSelect");
+                    }
+                    else if (obj is PIPOItem)
+                    {
+                        PIPOItem pipo = (PIPOItem)obj;
+                        pipo.ChangeSignal();
+                        location.playSound("smallSelect");
+                    }
                 }
             }
+
         }
         
         public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)

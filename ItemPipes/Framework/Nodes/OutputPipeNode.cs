@@ -25,13 +25,13 @@ namespace ItemPipes.Framework
         public int RotateIndex { get; set; }
         public OutputPipeNode() : base()
         {
-            RoundRobin = true;
+            RoundRobin = false;
             RotateIndex = 0;
         }
         public OutputPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedInputs = new Dictionary<InputPipeNode, List<PipeNode>>();
-            RoundRobin = true;
+            RoundRobin = false;
             RotateIndex = 0;
         }
 
@@ -91,12 +91,9 @@ namespace ItemPipes.Framework
 
         public void ProcessExchanges()
         {
-            //if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Procesing Exchanges..."); }
-            //if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Are there connected input? " + (ConnectedInputs.Count > 0).ToString()); }
             if (ConnectedContainer != null && !ConnectedContainer.IsEmpty()
                 && ConnectedInputs.Count > 0 && Signal.Equals("on"))
             {
-                if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Is output ({Print()}) empty? " + ConnectedContainer.IsEmpty().ToString()); }
                 try
                 {
                     ParentNetwork.Update();
@@ -129,7 +126,6 @@ namespace ItemPipes.Framework
 
         public void StartExchage()
         {
-            if (Globals.UltraDebug) { Printer.Info($"[N{ParentNetwork.ID}] Number of inputs: " + ConnectedInputs.Count.ToString()); }
             Item item = null;
             int index = 0;
             Dictionary<InputPipeNode, List<PipeNode>> priorityInputs = ConnectedInputs;
@@ -246,8 +242,6 @@ namespace ItemPipes.Framework
         public bool AddConnectedInput(InputPipeNode input)
         {
             bool added = false;
-            if (Globals.UltraDebug) { Printer.Debug($"[N{ParentNetwork.ID}] Does {Print()} have a valid adjacent container? " + (ConnectedContainer != null).ToString()); }
-            if (Globals.UltraDebug) { Printer.Debug($"[N{ParentNetwork.ID}] Does {input.Print()} have a valid adjacent container? " + (input.ConnectedContainer != null).ToString()); }
             if (ConnectedContainer != null && input.ConnectedContainer != null)
             {
                 List<PipeNode> path;

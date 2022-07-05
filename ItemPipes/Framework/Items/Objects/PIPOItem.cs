@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Nodes;
-using ItemPipes.Framework.Util;
+using ItemPipes.Framework.Items.Tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -16,6 +16,7 @@ using StardewValley.Network;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework.Factories;
 using ItemPipes.Framework.Nodes.ObjectNodes;
+using ItemPipes.Framework.Util;
 
 
 namespace ItemPipes.Framework.Items.Objects
@@ -71,32 +72,19 @@ namespace ItemPipes.Framework.Items.Objects
 			}
 		}
 
-		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
-		{			
-			if (justCheckingForActivity)
-			{
-				return true;
-			}
+		public void ChangeSignal()
+        {
 			DataAccess DataAccess = DataAccess.GetDataAccess();
-			if (Game1.didPlayerJustRightClick(ignoreNonMouseHeldInput: true))
+			List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+			PIPONode pipo = (PIPONode)nodes.Find(n => n.Position.Equals(this.TileLocation));
+			if (pipo.ChangeState())
 			{
-				List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-				Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-				if (node != null && node is PIPONode)
-				{
-					PIPONode invis = (PIPONode)node;
-					if (invis.ChangeState())
-					{
-						Passable = true;
-					}
-					else
-					{
-						Passable = false;
-					}
-					return true;
-				}
+				Passable = true;
 			}
-			return true;
+			else
+			{
+				Passable = false;
+			}
 		}
 
 		public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)

@@ -159,7 +159,7 @@ namespace ItemPipes.Framework
                             if (output.CanConnectedWith(input))
                             {
                                 canConnect = output.AddConnectedInput(input);
-                                if (Globals.UltraDebug) { Printer.Debug($"[N{ID}] {input.Print()} connected with {output.Print()}"); }
+                                if (ModEntry.config.DebugMode) { Printer.Debug($"[N{ID}] {input.Print()} connected with {output.Print()}"); }
                             }
                         }
                         else
@@ -168,11 +168,11 @@ namespace ItemPipes.Framework
                             if (path.Count > 0 && path.Last().Equals(input))
                             {
                                 output.ConnectedInputs[input] = path;
-                                if (Globals.UltraDebug) { Printer.Debug($"[N{ID}] Path succesfully updated!"); }
+                                if (ModEntry.config.DebugMode) { Printer.Debug($"[N{ID}] Path succesfully updated!"); }
                             }
                             else
                             {
-                                if (Globals.UltraDebug) { Printer.Warn($"[N{ID}] Error updating path from {output.Print()} to {input.Print()}"); }
+                                if (ModEntry.config.DebugMode) { Printer.Warn($"[N{ID}] Error updating path from {output.Print()} to {input.Print()}"); }
                             }
                         }
                         input.UpdateSignal();
@@ -195,7 +195,7 @@ namespace ItemPipes.Framework
                         if (!output.CanConnectedWith(input) || input.ConnectedContainer == null)
                         {
                             canDisconnect = output.RemoveConnectedInput(input);
-                            if (Globals.Debug) { Printer.Debug($"[N{ID}] {input.Print()} disconnected"); }
+                            if (ModEntry.config.DebugMode) { Printer.Debug($"[N{ID}] {input.Print()} disconnected"); }
                         }
                     }
                     output.UpdateSignal();
@@ -311,6 +311,57 @@ namespace ItemPipes.Framework
             else
             {
                 graph.Append($"Network {ID} is only chests.");
+            }
+            return graph.ToString();
+        }
+
+        public string PrintGraph()
+        {
+            int minWidth = (int)Math.Round(Nodes.Min(n => n.Position.X))-1;
+            int minHeight = (int)Math.Round(Nodes.Min(n => n.Position.Y))-1;
+            int maxWidth = (int)Math.Round(Nodes.Max(n => n.Position.X))+2;
+            int maxHeight = (int)Math.Round(Nodes.Max(n => n.Position.Y))+2;
+
+            PipeNode[,] matrix = new PipeNode[maxWidth, maxHeight];
+
+            StringBuilder graph = new StringBuilder();
+            graph.AppendLine($"Network {ID} graph: ");
+            graph.Append($"   ");
+            for (int j = minWidth; j < maxWidth; j++)
+            {
+                graph.Append($" {j} ");
+            }
+            for (int i = minHeight; i < maxHeight; i++)
+            {
+                graph.Append("\n");
+                graph.Append($" {i} ");
+                for (int j = minWidth; j < maxWidth; j++)
+                {
+                    Node node = Nodes.Find(n => n.Position.X == j && n.Position.Y == i);
+                    if (node != null)
+                    {
+                        if(node is ConnectorPipeNode)
+                        {
+                            graph.Append($" C ");
+                        }
+                        else if(node is OutputPipeNode)
+                        {
+                            graph.Append($" O ");
+                        }
+                        else if (node is InputPipeNode)
+                        {
+                            graph.Append($" I ");
+                        }
+                        else
+                        {
+                            graph.Append($" X ");
+                        }
+                    }
+                    else
+                    {
+                        graph.Append($"   ");
+                    }
+                }
             }
             return graph.ToString();
         }

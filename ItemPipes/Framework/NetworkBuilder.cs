@@ -25,7 +25,6 @@ namespace ItemPipes.Framework
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if(location.Name.Equals(Game1.getFarm().Name))
             {
-                if (Globals.UltraDebug) { Printer.Info("LOADING FARM BUILDINGS"); }
                 foreach (Building building in Game1.getFarm().buildings)
                 {
                     if (building != null)
@@ -67,7 +66,6 @@ namespace ItemPipes.Framework
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if (location.Name.Equals(Game1.getFarm().Name))
             {
-                if (Globals.UltraDebug) { Printer.Info("LOADING FARM BUILDINGS"); }
                 foreach (Building building in Game1.getFarm().buildings)
                 {
                     if (building != null)

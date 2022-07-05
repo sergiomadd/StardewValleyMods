@@ -103,7 +103,7 @@ namespace ItemPipes.Framework
             return networkList;
         }
 
-        public void LoadConfig()
+        public ModConfig LoadConfig()
         {
             ModConfig config = null;
             try
@@ -119,49 +119,44 @@ namespace ItemPipes.Framework
                 Printer.Error($"The config file seems to be missing or invalid.\n{ex}");
             }
 
-
-            //Normal debug = only errors
             if (config.DebugMode)
             {
-                Globals.Debug = true;
                 Printer.Debug("Debug mode ENABLED");
             }
             else
             {
-                Globals.Debug = false;
                 Printer.Debug("Debug mode DISABLED");
-            }
-            //Ultra debug = all the prints like step by step
-            if (config.UltraDebugMode)
-            {
-                Globals.UltraDebug = true;
-                Printer.Debug("UltraDebug mode ENABLED");
-            }
-            else
-            {
-                Globals.UltraDebug = false;
-                Printer.Debug("UltraDebug mode DISABLED");
             }
             if (config.ItemSending)
             {
-                Globals.ItemSending = true;
                 Printer.Debug("Item sending ENABLED");
             }
             else
             {
-                Globals.ItemSending = false;
                 Printer.Debug("Item sending DISABLED");
             }
             if (config.IOPipeStatePopup)
             {
-                Globals.IOPipeStatePopup = true;
                 Printer.Debug("IOPipe state bubble popup ENABLED");
             }
             else
             {
-                Globals.IOPipeStatePopup = false;
                 Printer.Debug("IOPipe state bubble popup DISABLED");
             }
+            if (config.IOPipeStateSignals)
+            {
+                Printer.Debug("IOPipe signals ENABLED");
+            }
+            else
+            {
+                Printer.Debug("IOPipe signals DISABLED");
+            }
+            if(config == null)
+            {
+                throw new Exception("Error loading ModConfig from file");
+            }
+
+            return config;
         }
 
         public void LoadAssets()

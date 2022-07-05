@@ -58,24 +58,24 @@ namespace ItemPipes.Framework.Items
                 if (node != null && node is OutputPipeNode)
                 {
                     OutputPipeNode outputPipeNode = (OutputPipeNode)node;
-                    if (outputPipeNode.Signal != null && !outputPipeNode.PassingItem)
+                    float transparency = 1f;
+                    if (outputPipeNode.Passable)
+                    {
+                        Passable = true;
+                        transparency = 0.5f;
+                    }
+                    else
+                    {
+                        Passable = false;
+                        transparency = 1f;
+                    }
+                    if (ModEntry.config.IOPipeStateSignals && outputPipeNode.Signal != null && !outputPipeNode.PassingItem)
                     {
                         UpdateSignal(outputPipeNode.Signal);
-                        float transparency = 1f;
-                        if (outputPipeNode.Passable)
-                        {
-                            Passable = true;
-                            transparency = 0.5f;
-                        }
-                        else
-                        {
-                            Passable = false;
-                            transparency = 1f;
-                        }
                         Rectangle srcRect = new Rectangle(0, 0, 16, 16);
                         spriteBatch.Draw(SignalTexture, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
                     }
-                    if (Globals.IOPipeStatePopup && outputPipeNode.Signal != null)
+                    if (ModEntry.config.IOPipeStatePopup && outputPipeNode.Signal != null)
                     {
                         if (outputPipeNode.Signal.Equals("nochest"))
                         {
@@ -106,35 +106,20 @@ namespace ItemPipes.Framework.Items
                     }
                     if(!outputPipeNode.PassingItem)
                     {
-                        float transparency = 1f;
-                        if (outputPipeNode.Passable)
-                        {
-                            Passable = true;
-                            transparency = 0.5f;
-                        }
-                        else
-                        {
-                            Passable = false;
-                            transparency = 1f;
-                        }
+                        Texture2D rrSignal;
                         if (outputPipeNode.RoundRobin)
                         {
-                            Texture2D newSignal = DataAccess.Sprites["rron"];
-                            string drawSum = this.GetSpriteKey(Game1.currentLocation);
-                            int sourceRectPosition = DrawGuide[drawSum];
-                            Rectangle srcRect = new Rectangle(sourceRectPosition * 16 % SpriteTexture.Bounds.Width,
-                            sourceRectPosition * 16 / SpriteTexture.Bounds.Width * 16, 16, 16);
-                            spriteBatch.Draw(newSignal, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
+                            rrSignal = DataAccess.Sprites["rron"];
                         }
                         else
                         {
-                            Texture2D newSignal = DataAccess.Sprites["rroff"];
-                            string drawSum = this.GetSpriteKey(Game1.currentLocation);
-                            int sourceRectPosition = DrawGuide[drawSum];
-                            Rectangle srcRect = new Rectangle(sourceRectPosition * 16 % SpriteTexture.Bounds.Width,
-                            sourceRectPosition * 16 / SpriteTexture.Bounds.Width * 16, 16, 16);
-                            spriteBatch.Draw(newSignal, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);
+                            rrSignal = DataAccess.Sprites["rroff"];
                         }
+                        string drawSum = this.GetSpriteKey(Game1.currentLocation);
+                        int sourceRectPosition = DrawGuide[drawSum];
+                        Rectangle srcRect = new Rectangle(sourceRectPosition * 16 % SpriteTexture.Bounds.Width,
+                        sourceRectPosition * 16 / SpriteTexture.Bounds.Width * 16, 16, 16);
+                        spriteBatch.Draw(rrSignal, Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64)), srcRect, Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, ((float)(y * 64 + 32) / 10000f) + 0.002f);      
                     }
                 }
             }

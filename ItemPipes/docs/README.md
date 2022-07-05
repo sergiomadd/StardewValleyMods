@@ -3,7 +3,7 @@ Item Pipes is a mod that provides chest to chest item transportation and item so
 
 ![Alt Text](gifs/simpleItemSending.gif)
 
-**Current Version = 0.1.0**
+**Current Version = 0.1.2**
 
 Download:
 - [Read for beta testing](testing.md)

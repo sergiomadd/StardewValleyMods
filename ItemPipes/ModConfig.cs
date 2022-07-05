@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using StardewModdingAPI;
 using ItemPipes.Framework.APIs;
 
-namespace ItemPipes.Framework
+namespace ItemPipes
 {
     public class ModConfig
     {

@@ -19,4 +19,4 @@ Download:
 - [Read for translations](translations.md)
 - [Release Notes](release-notes.md)
 - [Nexus Mod Page]
-- [Contact](https://twitter.com/sergio_madd)
+- [Contact](https://twitter.com/madded__)

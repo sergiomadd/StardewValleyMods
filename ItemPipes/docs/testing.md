@@ -1,14 +1,16 @@
 This page is for people that want to help testing the mod while it is in beta stage.  
 You can download it from here -> [Download](https://github.com/sergiomadd/StardewValleyMods/releases/tag/Beta)  
 
+![Alt Text](gifs/simpleItemSending.gif)
+
 ## WARNING:
 This mod is in PreRelease version. Backup your saves or create a new save before playing with it. You might lose items and get crashes.
 
 ---
 
 ### What to look for?
-When testing the mod, try play like you normally would, come from mining and try sorting your items. See if any are missing or missplaced.
-Also look for mod incompatibilities.
+- Items missing or missplaced
+- Mod incompatibilities
 
 ---
 
@@ -31,5 +33,5 @@ You should try reporting your problem in this order.
 ---
 
 ### Known incompatible mods:
-- 
+- SaveAnywhere
 

@@ -25,7 +25,6 @@ namespace ItemPipes.Framework.Items
 		public Texture2D ItemTexture { get; set; }
 		public string State { get; set; }
 		public bool Passable { get; set; }
-        public CustomObjectItem Value { get; set; }
 
         public CustomObjectItem()
 		{
@@ -33,7 +32,6 @@ namespace ItemPipes.Framework.Items
 			State = "default";
 			type.Value = "Crafting";
 			canBeSetDown.Value = true;
-			Value = this;
 		}
 
 		public CustomObjectItem(Vector2 position) : this()

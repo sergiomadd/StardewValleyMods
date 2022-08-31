@@ -25,30 +25,27 @@ using HarmonyLib;
 using System.Diagnostics;
 using System.Threading;
 using ItemPipes.Framework.APIs;
+using ItemPipes.Framework.Items.Objects;
 
-namespace ItemPipes
+namespace ItemPipes.Framework
 {
     class ModEntry : Mod
     {
         public static IModHelper helper;
         public static ModConfig config;
         public DataAccess DataAccess { get; set; }
-        public bool NetworksInitialized { get; set; }
 
         public override void Entry(IModHelper helper)
         {
             ModEntry.helper = helper;
             Printer.SetMonitor(this.Monitor);
-            ModHelper.SetHelper(helper.ModContent);
+            Helpers.SetModHelper(helper);
+            Helpers.SetContentHelper(helper.Content);
+            Helpers.SetModContentHelper(helper.ModContent);
             DataAccess = DataAccess.GetDataAccess();
-            config = DataAccess.LoadConfig();
 
-            ApplyPatches();
-            CheckImcompatibilities();
-
-            NetworksInitialized = false;
-
-            helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
+            
             helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             helper.Events.GameLoop.Saving += this.OnSaving;
             helper.Events.GameLoop.Saved += this.OnSaved;
@@ -58,7 +55,6 @@ namespace ItemPipes
             helper.Events.GameLoop.UpdateTicked += this.OnUpdateTicked;
             helper.Events.World.BuildingListChanged += this.OnBuildingListChanged;
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
-            helper.Events.GameLoop.TimeChanged += this.OnTimeChanged;
 
         }
 
@@ -115,8 +111,12 @@ namespace ItemPipes
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
+            config = DataAccess.LoadConfig();
             config.RegisterModConfigMenu(helper, this.ModManifest);
+            ApplyPatches();
+            CheckImcompatibilities();
         }
+
 
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
@@ -299,11 +299,6 @@ namespace ItemPipes
             }
         }
 
-        private void OnTimeChanged(object sender, TimeChangedEventArgs e)
-        {
-
-        }
-
         private void OnObjectListChanged(object sender, ObjectListChangedEventArgs e)
         {
             List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();
@@ -346,10 +341,12 @@ namespace ItemPipes
             SButton graphKey = SButton.L;
             if (e.Button == graphKey)
             {
+                Printer.Info($"Networks of {Game1.currentLocation.Name}:");
                 foreach (Network network in DataAccess.LocationNetworks[Game1.currentLocation])
                 {
                     Printer.Info(network.PrintGraph());
                 }
+                Printer.Info(Utilities.GetNetworkLegend());
             }
         }
 

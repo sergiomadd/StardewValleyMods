@@ -11,6 +11,7 @@ using ItemPipes.Framework.Items;
 using StardewValley.Menus;
 using Netcode;
 using ItemPipes.Framework.Items.Objects;
+using SObject = StardewValley.Object;
 
 
 
@@ -24,20 +25,32 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
         }
         public FilterPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
+            Filter = new FilterNode(true);
             ConnectedContainer = null;
             Priority = 3;
             if(obj != null && obj is FilterPipeItem)
             {
-                Filter = (obj as FilterPipeItem).Filter.items;
+                Filter.Items = (obj as FilterPipeItem).Filter.items;
             }
             ItemTimer = 1000;
         }
 
         public override void UpdateFilter()
         {
-            if (ConnectedContainer != null)
+            /*
+            Printer.Info("IN FILTER NODE");
+            foreach (Item tem in Filter.Items)
             {
-                ConnectedContainer.UpdateFilter(Filter);
+                Printer.Info(tem.Name);
+            }
+            */
+            SObject item;
+            if(Location.objects.TryGetValue(Position, out item))
+            {
+                if(item is FilterPipeItem)
+                {
+                    Filter.Items = (item as FilterPipeItem).Filter.items;
+                }
             }
         }
     }

@@ -17,14 +17,12 @@ namespace ItemPipes.Framework
     {
         public string Type { get; set; }
         public List<IOPipeNode> IOPipes { get; set; }
-        public NetObjectList<Item> Filter { get; set; }
 
         public ContainerNode() { }
         public ContainerNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             Type = "";
             IOPipes = new List<IOPipeNode>();
-            Filter = new NetObjectList<Item>();
         }
         public abstract bool CanSendItems();
         public abstract bool CanRecieveItems();
@@ -34,17 +32,6 @@ namespace ItemPipes.Framework
         public abstract bool InsertItem(Item item);
         public abstract bool IsEmpty();
         public abstract Item GetItemForInput(InputPipeNode input, int flux);
-
-        public bool HasFilter()
-        {
-            bool hasFilter = false;
-            if (Filter.Count > 0)
-            {
-                hasFilter = true;
-            }
-
-            return hasFilter;
-        }
 
         public bool AddIOPipe(Node node)
         {
@@ -156,13 +143,6 @@ namespace ItemPipes.Framework
                 }
             }
             return removed;
-        }
-
-
-
-        public virtual NetObjectList<Item> UpdateFilter(NetObjectList<Item> filteredItems)
-        {
-            return null;
         }
     }
 }

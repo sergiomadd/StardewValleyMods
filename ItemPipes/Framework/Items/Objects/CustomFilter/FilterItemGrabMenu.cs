@@ -16,6 +16,8 @@ using StardewValley.Locations;
 using StardewValley.Objects;
 using Microsoft.Xna.Framework.Input;
 using Object = StardewValley.Object;
+using ItemPipes.Framework.Util;
+using ItemPipes.Framework.Items.Objects.CustomFilter;
 
 
 namespace ItemPipes.Framework.Items.CustomFilter
@@ -145,8 +147,10 @@ namespace ItemPipes.Framework.Items.CustomFilter
 		public ClickableTextureComponent junimoNoteIcon;
 
 		private int junimoNotePulser;
+		//custom
+        public FilterCheckBox QualityCheck { get; set; }
 
-		public FilterItemGrabMenu(IList<Item> inventory, object context = null)
+        public FilterItemGrabMenu(IList<Item> inventory, object context = null)
 			: base(null, okButton: true, trashCan: true)
 		{
 			this.context = context;
@@ -232,6 +236,7 @@ namespace ItemPipes.Framework.Items.CustomFilter
 		public FilterItemGrabMenu(Filter filter, IList<Item> inventory, int Capacity, bool reverseGrab, bool showReceivingMenu, InventoryMenu.highlightThisItem highlightFunction, behaviorOnItemSelect behaviorOnItemSelectFunction, string message, behaviorOnItemSelect behaviorOnItemGrab = null, bool snapToBottom = false, bool canBeExitedWithKey = false, bool playRightClickSound = true, bool allowRightClick = true, bool showOrganizeButton = false, int source = 0, Item sourceItem = null, int whichSpecialButton = -1, object context = null)
 			: base(highlightFunction, okButton: true, trashCan: true, 0, 0, 64)
 		{
+			//Vanilla
 			this.source = source;
 			this.message = message;
 			this.reverseGrab = reverseGrab;
@@ -406,7 +411,14 @@ namespace ItemPipes.Framework.Items.CustomFilter
 					this.junimoNoteIcon.leftNeighborID = top_right.myID;
 				}
 			}
+			//string lab = DataAccess.GetDataAccess().Labels()
+			int xPoint = ItemsToGrabMenu.xPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearSideBorder + 50;
+			int yPoint = ItemsToGrabMenu.yPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearTopBorder + 50;
+			this.QualityCheck = new FilterCheckBox("Quality ★", 87, filter, xPoint, yPoint);
+			filter.Options.Add(QualityCheck, "quality");
+			ClickableComponent qualityclick = new ClickableComponent(QualityCheck.bounds, "quality");
 			base.populateClickableComponentList();
+			base.allClickableComponents.Add(qualityclick);
 			if (Game1.options.SnappyMenus)
 			{
 				this.snapToDefaultClickableComponent();
@@ -791,6 +803,10 @@ namespace ItemPipes.Framework.Items.CustomFilter
 
 		public override void receiveLeftClick(int x, int y, bool playSound = true)
 		{
+			if (QualityCheck.bounds.Contains(x, y))
+            {
+				QualityCheck.receiveLeftClick(x, y);
+            }
 			base.receiveLeftClick(x, y, (!this.destroyItemOnClick) ? true : false);
 			if (base.heldItem == null && this.showReceivingMenu)
 			{
@@ -1221,14 +1237,22 @@ namespace ItemPipes.Framework.Items.CustomFilter
 					b.Draw(Game1.mouseCursors, new Vector2(base.xPositionOnScreen - 52, base.yPositionOnScreen + 64 - 44), sourceRect, Color.White, 0f, Vector2.Zero, 4f, SpriteEffects.None, 1f);
 				}
 				*/
-				Game1.drawDialogueBox(this.ItemsToGrabMenu.xPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearSideBorder, this.ItemsToGrabMenu.yPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearTopBorder, this.ItemsToGrabMenu.width + IClickableMenu.borderWidth * 2 + IClickableMenu.spaceToClearSideBorder * 2, this.ItemsToGrabMenu.height + IClickableMenu.spaceToClearTopBorder + IClickableMenu.borderWidth * 2, speaker: false, drawOnlyBox: true);
-				
+
+				Game1.drawDialogueBox(this.ItemsToGrabMenu.xPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearSideBorder, 
+					this.ItemsToGrabMenu.yPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearTopBorder - this.ItemsToGrabMenu.height, 
+					this.ItemsToGrabMenu.width + IClickableMenu.borderWidth * 2 + IClickableMenu.spaceToClearSideBorder * 2, 
+					this.ItemsToGrabMenu.height + IClickableMenu.spaceToClearTopBorder + IClickableMenu.borderWidth * 2 + this.ItemsToGrabMenu.height, 
+					speaker: false, drawOnlyBox: true);
+
+				QualityCheck.draw(b, 0, 0, this);
+
 				this.ItemsToGrabMenu.draw(b);
 			}
 			else if (this.message != null)
 			{
 				Game1.drawDialogueBox(Game1.uiViewport.Width / 2, this.ItemsToGrabMenu.yPositionOnScreen + this.ItemsToGrabMenu.height / 2, speaker: false, drawOnlyBox: false, this.message);
 			}
+
 			if (this.poof != null)
 			{
 				this.poof.draw(b, localPosition: true);

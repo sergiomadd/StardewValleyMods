@@ -9,6 +9,7 @@ using StardewValley;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Items.Tools;
+using System.Xml.Serialization;
 
 namespace ItemPipes.Framework.Items
 {

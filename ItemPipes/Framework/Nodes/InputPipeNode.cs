@@ -13,7 +13,7 @@ namespace ItemPipes.Framework
 {
     public abstract class InputPipeNode : IOPipeNode
     {
-        public NetObjectList<Item> Filter { get; set; }
+        public FilterNode Filter { get; set; }
         public int Priority { get; set; }
 
         public InputPipeNode() : base()
@@ -24,7 +24,6 @@ namespace ItemPipes.Framework
         public InputPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ConnectedContainer = null;
-            Filter = new NetObjectList<Item>();
         }
 
         public bool CanRecieveItems()
@@ -40,7 +39,7 @@ namespace ItemPipes.Framework
         public bool HasFilter()
         {
             bool hasFilter = false;
-            if (Filter.Count > 0)
+            if (Filter.Active)
             {
                 hasFilter = true;
             }

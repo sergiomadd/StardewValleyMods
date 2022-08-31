@@ -158,8 +158,8 @@ namespace ItemPipes.Framework.Nodes
                                 if (this is OutputPipeNode)
                                 {
                                     Utilities.DropItem(item, Position, Location);
-                                    Game1.addHUDMessage(new HUDMessage($"Dropped {item.Stack} {item.Name} at {Position} {Location.Name}", 3));
-                                    Game1.addHUDMessage(new HUDMessage(DataAccess.GetDataAccess().Warnings["outputFull"], 3));
+                                    Utilities.ShowInGameMessage($"Dropped {item.Stack} {item.Name} at {Position} {Location.Name}", "error");
+                                    Utilities.ShowInGameMessage(DataAccess.GetDataAccess().Warnings["outputFull"], "error");
                                     Printer.Error($"{DataAccess.GetDataAccess().Warnings["outputFull"]} at: {Position} {Location.Name} dropped {item.Stack} {item.Name}");
 
                                 }
@@ -167,8 +167,8 @@ namespace ItemPipes.Framework.Nodes
                                 {
                                     List<PipeNode> reversePath = GetPath(inout.Item2);
                                     Animator.AnimateItemMovement(reversePath, inout.Item2, null, item);
-                                    Game1.addHUDMessage(new HUDMessage($" At: {Position} {Location.Name}", 3));
-                                    Game1.addHUDMessage(new HUDMessage(DataAccess.GetDataAccess().Warnings["inputFull"], 3));
+                                    Utilities.ShowInGameMessage($" At: {Position} {Location.Name}", "error");
+                                    Utilities.ShowInGameMessage(DataAccess.GetDataAccess().Warnings["inputFull"], "error");
                                     Printer.Warn($"{DataAccess.GetDataAccess().Warnings["inputFull"]} at: {Position} {Location.Name}");
                                 }
                             }
@@ -213,8 +213,8 @@ namespace ItemPipes.Framework.Nodes
                                 if (this is OutputPipeNode)
                                 {
                                     Utilities.DropItem(item, Position, Location);
-                                    Game1.addHUDMessage(new HUDMessage($"Dropped {item.Stack} {item.Name} at {Position} {Location.Name}", 3));
-                                    Game1.addHUDMessage(new HUDMessage(DataAccess.GetDataAccess().Warnings["outputFull"], 3));
+                                    Utilities.ShowInGameMessage($"Dropped {item.Stack} {item.Name} at {Position} {Location.Name}", "error");
+                                    Utilities.ShowInGameMessage(DataAccess.GetDataAccess().Warnings["outputFull"], "error");
                                     Printer.Error($"{DataAccess.GetDataAccess().Warnings["outputFull"]} at: {Position} {Location.Name} dropped {item.Stack} {item.Name}");
 
                                 }

@@ -326,6 +326,24 @@ namespace ItemPipes.Framework
             StringBuilder graph = new StringBuilder();
             graph.AppendLine($"Network {ID} graph: ");
             graph.Append($"   ");
+            string sB = "";
+            string sA = "";
+            if(maxWidth > 100)
+            {
+                //numeros que sean 016
+                sB = "  ";
+                sA = "  ";
+            }
+            else if(maxWidth < 100 && maxWidth >= 10)
+            {
+                sB = "  ";
+                sA = " ";
+            }
+            else
+            {
+                sB = " ";
+                sA = " ";
+            }
             for (int j = minWidth; j < maxWidth; j++)
             {
                 graph.Append($" {j} ");
@@ -333,7 +351,7 @@ namespace ItemPipes.Framework
             for (int i = minHeight; i < maxHeight; i++)
             {
                 graph.Append("\n");
-                graph.Append($" {i} ");
+                graph.Append($" {i}");
                 for (int j = minWidth; j < maxWidth; j++)
                 {
                     Node node = Nodes.Find(n => n.Position.X == j && n.Position.Y == i);
@@ -341,24 +359,28 @@ namespace ItemPipes.Framework
                     {
                         if(node is ConnectorPipeNode)
                         {
-                            graph.Append($" C ");
+                            graph.Append($"{sB}C{sA}");
                         }
                         else if(node is OutputPipeNode)
                         {
-                            graph.Append($" O ");
+                            graph.Append($"{sB}O{sA}");
                         }
                         else if (node is InputPipeNode)
                         {
-                            graph.Append($" I ");
+                            graph.Append($"{sB}I{sA}");
+                        }
+                        else if (node is PIPONode)
+                        {
+                            graph.Append($"{sB}P{sA}");
                         }
                         else
                         {
-                            graph.Append($" X ");
+                            graph.Append($"{sB}X{sA}");
                         }
                     }
                     else
                     {
-                        graph.Append($"   ");
+                        graph.Append($"{sB} {sA}");
                     }
                 }
             }

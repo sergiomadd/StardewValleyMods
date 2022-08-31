@@ -21,7 +21,6 @@ using ItemPipes.Framework.Util;
 
 namespace ItemPipes.Framework.Items.Objects
 {
-
 	public class PIPOItem : PipeBigCraftableItem
 	{
 		public Texture2D SignalTexture { get; set; }

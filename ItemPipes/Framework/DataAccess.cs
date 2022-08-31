@@ -1,8 +1,7 @@
 ﻿using ItemPipes.Framework.Data;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
-using ItemPipes.Framework.Recipes
-    ;
+using ItemPipes.Framework.Recipes;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
@@ -10,6 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using ItemPipes.Framework.APIs;
+using ItemPipes.Framework.Items.Objects;
+using ItemPipes.Framework.Items.Tools;
+
 
 namespace ItemPipes.Framework
 {
@@ -40,6 +43,16 @@ namespace ItemPipes.Framework
         public Dictionary<string, string> Letters { get; set; }
         public Dictionary<string, string> Warnings { get; set; }
 
+        //Vanilla items
+        public List<int> VanillaObjects { get; set; }
+        public List<int> VanillaBigCraftables { get; set; }
+        public List<int> VanillaBoots { get; set; }
+        public List<int> VanillaClothing { get; set; }
+        public List<int> VanillaFurniture { get; set; }
+        public List<int> VanillaHats { get; set; }
+        public List<int> VanillaWeapons { get; set; }
+        public List<int> VanillaTools { get; set; }
+
 
         public DataAccess(IModHelper helper)
         {
@@ -63,6 +76,15 @@ namespace ItemPipes.Framework
 
             Letters = new Dictionary<string, string>();
             Warnings = new Dictionary<string, string>();
+
+            VanillaObjects = new List<int>();
+            VanillaBigCraftables = new List<int>();
+            VanillaBoots = new List<int>();
+            VanillaClothing = new List<int>();
+            VanillaFurniture = new List<int>();
+            VanillaHats = new List<int>();
+            VanillaWeapons = new List<int>();
+            VanillaTools = new List<int>();
         }
 
         public static DataAccess GetDataAccess()
@@ -161,6 +183,7 @@ namespace ItemPipes.Framework
 
         public void LoadAssets()
         {
+            LoadVanillaData();
             LoadIDs();
             LoadRecipes();
             ItemNames.Clear();
@@ -261,7 +284,7 @@ namespace ItemPipes.Framework
         public void LoadSprites()
         {
             Sprites.Clear();
-            IModContentHelper helper = ModHelper.GetHelper();
+            IModContentHelper helper = Helpers.GetModContentHelper();
             try
             {
                 List<string> pipes = new List<string>
@@ -332,6 +355,25 @@ namespace ItemPipes.Framework
             LocationNodes.Clear();
             LocationNetworks.Clear();
             UsedNetworkIDs.Clear();
+        }
+
+        public void LoadVanillaData()
+        {
+            LocalizedContentManager manager = new LocalizedContentManager
+                (Game1.game1.Content.ServiceProvider, Game1.game1.Content.RootDirectory);
+            VanillaObjects = manager.Load<Dictionary<int, string>>("Data\\ObjectInformation").Keys.ToList();
+            VanillaBigCraftables = manager.Load<Dictionary<int, string>>("Data\\BigCraftablesInformation").Keys.ToList();
+            VanillaBoots = manager.Load<Dictionary<int, string>>("Data\\Boots").Keys.ToList();
+            VanillaClothing = manager.Load<Dictionary<int, string>>("Data\\ClothingInformation").Keys.ToList();
+            VanillaFurniture = manager.Load<Dictionary<int, string>>("Data\\Furniture").Keys.ToList();
+            VanillaHats = manager.Load<Dictionary<int, string>>("Data\\hats").Keys.ToList();
+            VanillaWeapons = manager.Load<Dictionary<int, string>>("Data\\weapons").Keys.ToList();
+            //Load hardcoded tools
+            VanillaTools.Add(189);//Axe
+            VanillaTools.Add(105);//Pickaxe
+            VanillaTools.Add(21);//Hoe
+            VanillaTools.Add(273);//Watering can
+            //VanillaTools.Add(189);//Fishing rod (same que axe?)
         }
     }
 }

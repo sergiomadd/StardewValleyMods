@@ -19,6 +19,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
         }
         public PolymorphicPipeNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
+            Filter = new FilterNode(true);
             ConnectedContainer = null;
             Priority = 2;
             ItemTimer = 1000;
@@ -26,9 +27,9 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
 
         public override void UpdateFilter()
         {
-            if(ConnectedContainer != null)
+            if(ConnectedContainer != null && ConnectedContainer is ChestContainerNode)
             {
-                Filter = ConnectedContainer.UpdateFilter(null);
+                Filter.Items = (ConnectedContainer as ChestContainerNode).Chest.items;
             }
         }
     }

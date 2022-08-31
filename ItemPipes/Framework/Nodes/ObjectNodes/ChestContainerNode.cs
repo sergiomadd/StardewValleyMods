@@ -65,18 +65,16 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             }
             return canStack;
         }
+
         public override bool CanStackItem(Item item)
         {
             bool canStack = false;
             NetObjectList<Item> itemList = GetItemList();
-            if (itemList.Any(i => i.ParentSheetIndex.Equals(item.ParentSheetIndex)))
+            foreach (Item i in itemList.ToList())
             {
-                foreach (Item i in itemList.ToList())
+                if (i.canStackWith(item))
                 {
-                    if (i.ParentSheetIndex == item.ParentSheetIndex && i.canStackWith(item))
-                    {
-                        canStack = true;
-                    }
+                    canStack = true;
                 }
             }
             return canStack;
@@ -116,7 +114,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
                     {
                         if (input.HasFilter())
                         {
-                            if (input.Filter.Any(i => i.Name.Equals(itemList[index].Name)))
+                            if (input.Filter.IsItemOnFilter(itemList[index]))
                             {
                                 item = TryExtractItem(input.ConnectedContainer, itemList, index, flux);
                             }
@@ -180,28 +178,6 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
         public void RecieveItem(Item item)
         {
             Chest.addItem(item);
-        }
-
-        public override NetObjectList<Item> UpdateFilter(NetObjectList<Item> filteredItems)
-        {
-            Filter = new NetObjectList<Item>();
-            if (filteredItems == null)
-            {
-                NetObjectList<Item> itemList = GetItemList();
-                foreach (Item item in itemList.ToList())
-                {
-                    Filter.Add(item);
-                }
-            }
-            else
-            {
-                foreach (Item item in filteredItems.ToList())
-                {
-                    Filter.Add(item);
-                }
-            }
-            return Filter;
-
         }
 
         public NetObjectList<Item> GetItemList()

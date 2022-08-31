@@ -11,7 +11,9 @@ using ItemPipes.Framework.Nodes;
 using StardewValley.Menus;
 using Netcode;
 using ItemPipes.Framework.Items.CustomFilter;
-
+using SObject = StardewValley.Object;
+using ItemPipes.Framework.Util;
+using ItemPipes.Framework.Nodes.ObjectNodes;
 
 
 namespace ItemPipes.Framework.Items.Objects
@@ -26,9 +28,49 @@ namespace ItemPipes.Framework.Items.Objects
 
         public FilterPipeItem(Vector2 position) : base(position)
         {
-			Filter = new Filter(9);
+			Filter = new Filter(9, this);
 		}
 
+		public override SObject Save()
+		{
+			Fence fence = (Fence)base.Save();
+			string filterItems = "";
+			if(Filter != null)
+            {
+				foreach (Item item in Filter.items)
+				{
+					if (item != null)
+					{
+						filterItems += "," + Utilities.GetIndexFromItem(item);
+					}
+				}
+				if (!fence.modData.ContainsKey("filter")) { fence.modData.Add("filter", filterItems); }
+				else { fence.modData["filter"] = filterItems; }
+			}
+			return fence;
+		}
+
+		public override void Load(ModDataDictionary data)
+		{
+			modData = data;
+			if(modData.ContainsKey("filter"))
+            {
+				List<string> filterStrings = modData["filter"].Split(",").Skip(1).ToList();
+				foreach (string index in filterStrings)
+				{
+					Item item = Utilities.GetItemFromIndex(index);
+					if (item != null)
+					{
+						Filter.addItem(item);
+					}
+					else
+					{
+						Printer.Warn($"Error loading item with index {index}");
+					}
+				}
+			}
+		}
+	
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
 		{
 			if (justCheckingForActivity)

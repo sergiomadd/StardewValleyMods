@@ -18,7 +18,7 @@ using ItemPipes.Framework.Factories;
 using ItemPipes.Framework.Items;
 using ItemPipes.Framework.Items.Objects;
 using System.Threading;
-
+using ItemPipes.Framework.Nodes.ObjectNodes;
 
 
 
@@ -54,6 +54,18 @@ namespace ItemPipes.Framework
             ItemMovingSprite = DataAccess.Sprites[IDName + "_item_sprite"];
             SpriteTexture = DefaultSprite;
         }
+
+		public Node GetNode()
+		{
+			DataAccess DataAccess = DataAccess.GetDataAccess();
+			List<Node> nodes;
+			if (DataAccess.LocationNodes.TryGetValue(Game1.currentLocation, out nodes))
+			{
+				FilterPipeNode pipe = (FilterPipeNode)nodes.Find(n => n.Position.Equals(TileLocation));
+				return pipe;
+			}
+			return null;
+		}
 
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)
 		{

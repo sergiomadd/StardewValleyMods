@@ -9,6 +9,7 @@ using StardewValley;
 
 namespace ItemPipes.Framework.Items.Objects
 {
+    [XmlType("Mods_sergiomadd_inserterpipe")]
 
     public class InserterPipeItem : InputPipeItem
     {

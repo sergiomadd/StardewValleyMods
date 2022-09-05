@@ -46,5 +46,13 @@
   "warning.cloggedItems_1": "[Item Pipes] Mira el correo para recuperar tus objetos, o lee el log de smapi",
   "warning.cloggedItems_2": "[Item Pipes] Algunas tuberias tenian objetos cuando se guardo el juego y los objetos han sido eliminados",
   "warning.inputFull": "[Item Pipes] Una tubería de entrada no puedo meter un objecto en su contenedor por que esta lleno. El objecto se ha enviado de vuelta a su origen.",
-  "warning.outputFull": "[Item Pipes] Una tubería de salida no puedo meter un objecto en su contenedor por que esta lleno. Objeto soltado."
+  "warning.outputFull": "[Item Pipes] Una tubería de salida no puedo meter un objecto en su contenedor por que esta lleno. Objeto soltado.",
+
+  "warning.filterError1": "[ItemPipes] itemName ya esta en el filtro!.",
+  "warning.filterError2": "[ItemPipes] itemName de esa calidad ya esta en el filtro!.",
+  "warning.filterError3": "[ItemPipes] Los objectos de mods (itemName) no estan permitidos en los filtros!",
+  "warning.filterError4": "[ItemPipes] itemType (itemName) no estan permitidos en los filtros!.",
+
+  //UI
+  "ui.filterQuality": "Filtrar por calidad"
 }

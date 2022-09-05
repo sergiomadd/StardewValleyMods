@@ -50,8 +50,21 @@ namespace ItemPipes.Framework.Items
 			ItemTexture = DataAccess.Sprites[IDName + "_item"];
 			parentSheetIndex.Value = DataAccess.ItemIDs[IDName];
 		}
+		public virtual Item SaveItem()
+		{
+			if (!modData.ContainsKey("ItemPipes")) { modData.Add("ItemPipes", "true"); }
+			else { modData["ItemPipes"] = "true"; }
+			if (!modData.ContainsKey("Type")) { modData.Add("Type", IDName); }
+			else { modData["Type"] = IDName; }
+			if (!modData.ContainsKey("Stack")) { modData.Add("Stack", stack.Value.ToString()); }
+			else { modData["Stack"] = stack.Value.ToString(); }
+			Fence fence = new Fence(tileLocation, 1, false);
+			fence.modData = modData;
 
-		public virtual SObject Save()
+			return fence;
+		}
+
+		public virtual SObject SaveObject()
 		{
 			if (!modData.ContainsKey("ItemPipes")){ modData.Add("ItemPipes", "true"); }
 			else { modData["ItemPipes"] = "true"; }
@@ -67,9 +80,17 @@ namespace ItemPipes.Framework.Items
 			return fence;
 		}
 
-		public virtual void Load(ModDataDictionary data)
+		public virtual void LoadItem(Item item)
 		{
-			modData = data;
+			modData = item.modData;
+			stack.Value = Int32.Parse(modData["Stack"]);
+		}
+
+
+
+		public virtual void LoadObject(Item item)
+		{
+			modData = item.modData;
 			stack.Value = Int32.Parse(modData["Stack"]);
 		}
 

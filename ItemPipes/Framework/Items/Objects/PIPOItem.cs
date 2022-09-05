@@ -57,9 +57,9 @@ namespace ItemPipes.Framework.Items.Objects
 			SignalTexture = OffTextureC;
 		}
 
-		public override void Load(ModDataDictionary data)
+		public override void LoadObject(Item item)
 		{
-			base.Load(data);
+			base.LoadObject(item);
 			State = modData["State"];
 			if (State.Equals("on"))
 			{

@@ -13,6 +13,7 @@ using Netcode;
 using ItemPipes.Framework.Items.CustomFilter;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework.Util;
+using StardewValley.Objects;
 using ItemPipes.Framework.Nodes.ObjectNodes;
 
 
@@ -31,44 +32,41 @@ namespace ItemPipes.Framework.Items.Objects
 			Filter = new Filter(9, this);
 		}
 
-		public override SObject Save()
+		public override SObject SaveObject()
 		{
-			Fence fence = (Fence)base.Save();
-			string filterItems = "";
-			if(Filter != null)
+			if (!modData.ContainsKey("ItemPipes")) { modData.Add("ItemPipes", "true"); }
+			else { modData["ItemPipes"] = "true"; }
+			if (!modData.ContainsKey("Type")) { modData.Add("Type", IDName); }
+			else { modData["Type"] = IDName; }
+			if (!modData.ContainsKey("Stack")) { modData.Add("Stack", stack.Value.ToString()); }
+			else { modData["Stack"] = stack.Value.ToString(); }
+			if (!modData.ContainsKey("State")) { modData.Add("State", State); }
+			else { modData["State"] = State; }
+			if (!modData.ContainsKey("signal")) { modData.Add("signal", Signal); }
+			else { modData["signal"] = Signal; }
+			Chest filterChest = null;
+			if (Filter != null)
             {
-				foreach (Item item in Filter.items)
-				{
-					if (item != null)
-					{
-						filterItems += "," + Utilities.GetIndexFromItem(item);
-					}
-				}
-				if (!fence.modData.ContainsKey("filter")) { fence.modData.Add("filter", filterItems); }
-				else { fence.modData["filter"] = filterItems; }
+				filterChest = new Chest(true, TileLocation);
+				foreach(Item item in Filter.items)
+                {
+					filterChest.addItem(item);
+                }
 			}
-			return fence;
+			
+			filterChest.modData = modData;
+			return filterChest;
 		}
 
-		public override void Load(ModDataDictionary data)
+		public override void LoadObject(Item item)
 		{
-			modData = data;
-			if(modData.ContainsKey("filter"))
+			modData = item.modData;
+			stack.Value = Int32.Parse(modData["Stack"]);
+			Signal = modData["signal"];
+			if(item is Chest)
             {
-				List<string> filterStrings = modData["filter"].Split(",").Skip(1).ToList();
-				foreach (string index in filterStrings)
-				{
-					Item item = Utilities.GetItemFromIndex(index);
-					if (item != null)
-					{
-						Filter.addItem(item);
-					}
-					else
-					{
-						Printer.Warn($"Error loading item with index {index}");
-					}
-				}
-			}
+				Filter.items = (item as Chest).items;
+            }
 		}
 	
 		public override bool checkForAction(Farmer who, bool justCheckingForActivity = false)

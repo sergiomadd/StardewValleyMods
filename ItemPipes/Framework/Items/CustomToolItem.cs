@@ -41,7 +41,7 @@ namespace ItemPipes.Framework.Items
             parentSheetIndex.Value = DataAccess.ItemIDs[IDName];
         }
 
-        public virtual Tool Save()
+        public virtual Tool SaveItem()
         {
             if (!modData.ContainsKey("ItemPipes"))
             {
@@ -64,7 +64,7 @@ namespace ItemPipes.Framework.Items
             return axe;
         }
 
-        public virtual void Load(ModDataDictionary data)
+        public virtual void LoadItem(ModDataDictionary data)
         {
             modData = data;
         }

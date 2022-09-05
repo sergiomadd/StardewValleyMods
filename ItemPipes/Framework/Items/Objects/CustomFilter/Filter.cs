@@ -50,7 +50,6 @@ namespace ItemPipes.Framework.Items.CustomFilter
         {
             string changed = Options[elem];
             (FilterPipe.GetNode() as FilterPipeNode).Filter.UpdateOption(changed);
-            Printer.Info(changed);
         }
 
         public void ShowMenu()
@@ -71,30 +70,31 @@ namespace ItemPipes.Framework.Items.CustomFilter
 
         public bool CanAddItem(Item item)
         {
+            DataAccess dataAccess = DataAccess.GetDataAccess();
             bool can = true;
-            string category = item.getCategoryName();
-            if (item is not PipeItem && !Utilities.IsVanillaItem(item))
+            string category = Utilities.GetItemCategoryTag(item);
+            if (category.Equals("tool"))
             {
                 can = false;
-                Utilities.ShowInGameMessage($"Non vanilla items [{item.Name}] are not allowed in filter pipes!", "error");
-                Printer.Debug($"Attempted to place a non vanilla item [{item.Name}] in a filter pipe. Non vanilla items are not allowed in filter pipes!");
-            }
-            else if (category.Equals("Tool"))
-            {
-                can = false;
-                Utilities.ShowInGameMessage($"Tools [{item.Name}] are not allowed in filter pipes!", "error");
+                Utilities.ShowInGameMessage(dataAccess.Warnings["filterError4"].Replace("itemName", item.DisplayName).Replace("itemType", item.getCategoryName()), "error");
                 Printer.Debug($"Attempted to place a tool [{item.Name}] in a filter pipe. Tools are not allowed in filter pipes!");
             }
-            else if(category.Equals("Weapon"))
+            else if (!Utilities.IsVanillaItem(item))
             {
                 can = false;
-                Utilities.ShowInGameMessage($"Weapons [{item.Name}] are not allowed in filter pipes!", "error");
+                Utilities.ShowInGameMessage(dataAccess.Warnings["filterError3"].Replace("itemName", item.DisplayName), "error");
+                Printer.Debug($"Attempted to place a non vanilla item [{item.Name}] in a filter pipe. Non vanilla items are not allowed in filter pipes!");
+            }
+            else if(category.Equals("weapon"))
+            {
+                can = false;
+                Utilities.ShowInGameMessage(dataAccess.Warnings["filterError4"].Replace("itemName", item.DisplayName).Replace("itemType", item.getCategoryName()), "error");
                 Printer.Debug($"Attempted to place a weapon [{item.Name}] in a filter pipe. Weapons are not allowed in filter pipes!");
             }
-            else if(category.Equals("Cooking") || category.Equals("Crafting"))
+            else if(category.Equals("cooking") || category.Equals("crafting"))
             {
                 can = false;
-                Utilities.ShowInGameMessage($"Recipes [{item.Name}] are not allowed in filter pipes!", "error");
+                Utilities.ShowInGameMessage(dataAccess.Warnings["filterError4"].Replace("itemName", item.DisplayName).Replace("itemType", item.getCategoryName()), "error");
                 Printer.Debug($"Attempted to place a recipe [{item.Name}] in a filter pipe. Recipes are not allowed in filter pipes!");
             }
             else
@@ -114,12 +114,12 @@ namespace ItemPipes.Framework.Items.CustomFilter
                             {
                                 if((item as SObject).Quality > 0)
                                 {
-                                    Utilities.ShowInGameMessage($"{item.Name} of that quality is already in the filter!", "error");
+                                    Utilities.ShowInGameMessage(dataAccess.Warnings["filterError2"].Replace("itemName", item.DisplayName), "error");
                                     Printer.Debug($"Attempted to place {item.Name} in a filter pipe. {item.Name} of that quality is already in the filter!!");
                                 }
                                 else
                                 {
-                                    Utilities.ShowInGameMessage($"{item.Name} is already in the filter!", "error");
+                                    Utilities.ShowInGameMessage(dataAccess.Warnings["filterError1"].Replace("itemName", item.DisplayName), "error");
                                     Printer.Debug($"Attempted to place {item.Name} in a filter pipe. {item.Name} of that quality is already in the filter!!");
                                 }
                             }
@@ -133,7 +133,7 @@ namespace ItemPipes.Framework.Items.CustomFilter
                         }
                         else
                         {
-                            Utilities.ShowInGameMessage($"{item.Name} is already in the filter!", "error");
+                            Utilities.ShowInGameMessage(dataAccess.Warnings["filterError1"].Replace("itemName", item.DisplayName), "error");
                             Printer.Debug($"Attempted to place {item.Name} in a filter pipe. {item.Name} is already in the filter!!");
                         }
                     }

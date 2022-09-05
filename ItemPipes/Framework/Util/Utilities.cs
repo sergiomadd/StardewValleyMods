@@ -56,7 +56,19 @@ namespace ItemPipes.Framework.Util
             return trimmed;
         }
 
-        
+        public static string GetItemCategoryTag(Item item)
+        {
+            foreach (string tag in item.GetContextTags())
+            {
+                if (tag.Contains("category"))
+                {
+                    return tag.Split("_")[1];
+                }
+            }
+            return "";
+        }
+
+        /*
         public static string GetIndexFromItem(Item item)
         {
             string index = "";
@@ -72,11 +84,22 @@ namespace ItemPipes.Framework.Util
             if(item is SObject)
             {
                 index += type + "-" + tileSheetId+"-"+(item as SObject).Quality.ToString();
+                if((item as SObject).preservedParentSheetIndex != null)
+                {
+                    index += "-" + (item as SObject).preservedParentSheetIndex.ToString();
+                }
             }
             else
             {
                 index += type + "-" + tileSheetId;
             }
+            Printer.Info("saving");
+            Printer.Info((item as SObject).preserve.ToString());
+            foreach (string tag in item.GetContextTagList())
+            {
+                Printer.Info(tag);
+            }
+            Printer.Info("saved");
             return index;
         }
         
@@ -94,10 +117,6 @@ namespace ItemPipes.Framework.Util
 				case "b"://boots
                     item = new Boots(tileSheetId);
 					break;
-                case "bbl"://big craftable recipe TODO
-                    break;
-                case "bl"://object recipe TODO
-                    break;
                 case "bo"://big craftable
                     item = new SObject(Vector2.Zero, tileSheetId, false);
                     break;
@@ -116,6 +135,16 @@ namespace ItemPipes.Framework.Util
                     {
                         (item as SObject).Quality = Int32.Parse(index.Split("-")[2]);
                     }
+                    if(index.Split("-").Length >= 4)
+                    {
+                        item = test(item, index.Split("-")[3]);
+                    }
+                    /*
+                    foreach (string tag in item.GetContextTagList())
+                    {
+                        Printer.Info(tag);
+                    }
+                    
                     break;
                 case "r"://ring
                     item = new Ring(tileSheetId);
@@ -132,7 +161,7 @@ namespace ItemPipes.Framework.Util
             }
             return item;
 		}
-
+        */
         public static void ShowInGameMessage(string message, string type)
         {
             int numType = 0;
@@ -160,7 +189,7 @@ namespace ItemPipes.Framework.Util
             Game1.addHUDMessage(new HUDMessage(message, numType));
         }
 
-        //Needs more checks
+        //Tools like Iridium pickaxe are not getting recognized
         public static bool IsVanillaItem(Item item)
         {
             DataAccess data = DataAccess.GetDataAccess();
@@ -173,7 +202,6 @@ namespace ItemPipes.Framework.Util
                 type = "ip";
                 id = (item as PipeItem).ParentSheetIndex;
             }
-            Printer.Info(item.getCategoryName());
             if(type == "")
             {
                 type = item.getCategoryName();

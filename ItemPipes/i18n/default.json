@@ -43,11 +43,18 @@
   //-----------------------------------------------------------------------------------------------------------------
 
   //Warnings
-  "warning.cloggedItems_1": "[Item Pipes] Check mail for recovery, or read the smapi log if not found",
-  "warning.cloggedItems_2": "[Item Pipes] Some pipes where clogged with items when saving and they were removed",
-  "warning.inputFull": "[Item Pipes] An input pipe couldn't insert an item because its container is full. Item sent back to output.",
-  "warning.outputFull": "[Item Pipes] An output pipe couldn't insert an item back because its container is full. Item dropped."
+  "warning.cloggedItems_1": "[ItemPipes] Check mail for recovery, or read the smapi log if not found",
+  "warning.cloggedItems_2": "[ItemPipes] Some pipes where clogged with items when saving and they were removed",
+  "warning.inputFull": "[ItemPipes] An input pipe couldn't insert an item because its container is full. Item sent back to output.",
+  "warning.outputFull": "[ItemPipes] An output pipe couldn't insert an item back because its container is full. Item dropped.",
 
+  "warning.filterError1": "[ItemPipes] itemName is already in the filter!.",
+  "warning.filterError2": "[ItemPipes] itemName of that quality is already in the filter!.",
+  "warning.filterError3": "[ItemPipes] Non vanilla items (itemName) are not allowed in filter pipes!",
+  "warning.filterError4": "[ItemPipes] itemType (itemName) are not allowed in filter pipes!.",
+
+  //UI
+  "ui.filterQuality": "Filter by quality"
 
 
 }

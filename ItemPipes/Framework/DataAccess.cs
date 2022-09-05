@@ -42,6 +42,8 @@ namespace ItemPipes.Framework
         //public List<Item> LostItems { get; set; }
         public Dictionary<string, string> Letters { get; set; }
         public Dictionary<string, string> Warnings { get; set; }
+        public Dictionary<string, string> UI { get; set; }
+
 
         //Vanilla items
         public List<int> VanillaObjects { get; set; }
@@ -76,6 +78,7 @@ namespace ItemPipes.Framework
 
             Letters = new Dictionary<string, string>();
             Warnings = new Dictionary<string, string>();
+            UI = new Dictionary<string, string>();
 
             VanillaObjects = new List<int>();
             VanillaBigCraftables = new List<int>();
@@ -213,6 +216,10 @@ namespace ItemPipes.Framework
                 else if (key.Contains("warning"))
                 {
                     if(!Warnings.ContainsKey(key.Split(".")[1])) { Warnings.Add(key.Split(".")[1], Translate.Get(key)); }
+                }
+                else if (key.Contains("ui"))
+                {
+                    if (!UI.ContainsKey(key.Split(".")[1])) { UI.Add(key.Split(".")[1], Translate.Get(key)); }
                 }
             }
             LoadSprites();

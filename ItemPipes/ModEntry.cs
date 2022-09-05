@@ -359,7 +359,7 @@ namespace ItemPipes.Framework
                     if (obj.Value is CustomObjectItem)
                     {
                         CustomObjectItem customObj = (CustomObjectItem)obj.Value;
-                        SObject tempObj = customObj.Save();
+                        SObject tempObj = customObj.SaveObject();
                         location.objects.Remove(obj.Key);
                         location.objects.Add(obj.Key, tempObj);
                     }
@@ -370,14 +370,14 @@ namespace ItemPipes.Framework
                             if ((obj.Value as Chest).items[i] is CustomObjectItem)
                             {
                                 CustomObjectItem customObj = (CustomObjectItem)(obj.Value as Chest).items[i];
-                                SObject tempObj = customObj.Save();
+                                Item tempObj = customObj.SaveItem();
                                 (obj.Value as Chest).items.RemoveAt(i);
                                 (obj.Value as Chest).items.Insert(i, tempObj);
                             }
                             else if ((obj.Value as Chest).items[i] is CustomToolItem)
                             {
                                 CustomToolItem customTool = (CustomToolItem)(obj.Value as Chest).items[i];
-                                Tool tempTool = customTool.Save();
+                                Item tempTool = customTool.SaveItem();
                                 (obj.Value as Chest).items.RemoveAt(i);
                                 (obj.Value as Chest).items.Insert(i, tempTool);
                             }
@@ -395,14 +395,14 @@ namespace ItemPipes.Framework
                     if (Game1.player.Items[i] is CustomObjectItem)
                     {
                         CustomObjectItem customObj = (CustomObjectItem)Game1.player.Items[i];
-                        SObject tempObj = customObj.Save();
+                        Item tempObj = customObj.SaveItem();
                         Game1.player.Items.RemoveAt(i);
                         Game1.player.Items.Insert(i, tempObj);
                     }
                     else if (Game1.player.Items[i] is CustomToolItem)
                     {
                         CustomToolItem customTool = (CustomToolItem)Game1.player.Items[i];
-                        Tool tempTool = customTool.Save();
+                        Item tempTool = customTool.SaveItem();
                         Game1.player.Items.RemoveAt(i);
                         Game1.player.Items.Insert(i, tempTool);
                     }
@@ -416,33 +416,34 @@ namespace ItemPipes.Framework
             {
                 foreach (KeyValuePair<Vector2, SObject> obj in location.Objects.Pairs.ToList())
                 {
-                    if (obj.Value is Fence && obj.Value.modData.ContainsKey("ItemPipes"))
+                    if (obj.Value.modData.ContainsKey("ItemPipes"))
                     {
                         if (obj.Value.modData["Type"] != null)
                         {
                             CustomObjectItem customObj = ItemFactory.CreateObject(obj.Key, obj.Value.modData["Type"]);
-                            customObj.Load(obj.Value.modData);
+                            customObj.LoadObject(obj.Value);
                             location.objects.Remove(obj.Key);
                             location.objects.Add(obj.Key, customObj);
                         }
                     }
-                    if (obj.Value is Chest && (obj.Value as Chest).items.Any(i => i is Fence))
+                    if (!obj.Value.modData.ContainsKey("ItemPipes") && obj.Value is Chest && (obj.Value as Chest).items.Any(i => i!=null && i.modData.ContainsKey("ItemPipes")))
                     {
                         for (int i = 0; i < (obj.Value as Chest).items.Count; i++)
                         {
-                            if ((obj.Value as Chest).items[i] is Fence && (obj.Value as Chest).items[i].modData.ContainsKey("ItemPipes"))
+                            if((obj.Value as Chest).items[i] != null)
                             {
-                                Fence tempObj = (Fence)(obj.Value as Chest).items[i];
-                                CustomObjectItem customObj = ItemFactory.CreateItem(tempObj.modData["Type"]);
-                                (obj.Value as Chest).items.RemoveAt(i);
-                                (obj.Value as Chest).items.Insert(i, customObj);
-                            }
-                            else if ((obj.Value as Chest).items[i] is Axe && (obj.Value as Chest).items[i].modData.ContainsKey("ItemPipes"))
-                            {
-                                Axe tempTool = (Axe)(obj.Value as Chest).items[i];
-                                CustomToolItem customObj = ItemFactory.CreateTool(tempTool.modData["Type"]);
-                                (obj.Value as Chest).items.RemoveAt(i);
-                                (obj.Value as Chest).items.Insert(i, customObj);
+                                if ((obj.Value as Chest).items[i] is Tool && (obj.Value as Chest).items[i].modData.ContainsKey("ItemPipes"))
+                                {
+                                    CustomToolItem customObj = ItemFactory.CreateTool((obj.Value as Chest).items[i].modData["Type"]);
+                                    (obj.Value as Chest).items.RemoveAt(i);
+                                    (obj.Value as Chest).items.Insert(i, customObj);
+                                }
+                                else if ((obj.Value as Chest).items[i].modData.ContainsKey("ItemPipes"))
+                                {
+                                    CustomObjectItem customObj = ItemFactory.CreateItem((obj.Value as Chest).items[i].modData["Type"]);
+                                    (obj.Value as Chest).items.RemoveAt(i);
+                                    (obj.Value as Chest).items.Insert(i, customObj);
+                                }
                             }
                         }
                     }
@@ -456,25 +457,26 @@ namespace ItemPipes.Framework
 
         private void ConvertFromVanillaPlayer()
         {
-            if (Game1.player.Items.Any(i =>
-                (i is Fence && (i as Fence).modData.ContainsKey("ItemPipes"))
-                || (i is Axe && (i as Axe).modData.ContainsKey("ItemPipes"))))
+            if (Game1.player.Items.Any(i =>i.modData.ContainsKey("ItemPipes")))
             {
                 for (int i = 0; i < Game1.player.Items.Count; i++)
                 {
-                    if (Game1.player.Items[i] is Fence && Game1.player.Items[i].modData.ContainsKey("ItemPipes"))
+                    if(Game1.player.Items[i] != null)
                     {
-                        CustomObjectItem customObj = ItemFactory.CreateItem(Game1.player.Items[i].modData["Type"]);
-                        customObj.Load(Game1.player.Items[i].modData);
-                        Game1.player.Items.RemoveAt(i);
-                        Game1.player.Items.Insert(i, customObj);
-                    }
-                    else if (Game1.player.Items[i] is Axe && Game1.player.Items[i].modData.ContainsKey("ItemPipes"))
-                    {
-                        CustomToolItem customTool = ItemFactory.CreateTool(Game1.player.Items[i].modData["Type"]);
-                        customTool.Load(Game1.player.Items[i].modData);
-                        Game1.player.Items.RemoveAt(i);
-                        Game1.player.Items.Insert(i, customTool);
+                        if (Game1.player.Items[i] is Axe && Game1.player.Items[i].modData.ContainsKey("ItemPipes"))
+                        {
+                            CustomToolItem customTool = ItemFactory.CreateTool(Game1.player.Items[i].modData["Type"]);
+                            customTool.LoadItem(Game1.player.Items[i].modData);
+                            Game1.player.Items.RemoveAt(i);
+                            Game1.player.Items.Insert(i, customTool);
+                        }
+                        else if (Game1.player.Items[i].modData.ContainsKey("ItemPipes"))
+                        {
+                            CustomObjectItem customObj = ItemFactory.CreateItem(Game1.player.Items[i].modData["Type"]);
+                            customObj.LoadItem(Game1.player.Items[i]);
+                            Game1.player.Items.RemoveAt(i);
+                            Game1.player.Items.Insert(i, customObj);
+                        }
                     }
                 }
             }

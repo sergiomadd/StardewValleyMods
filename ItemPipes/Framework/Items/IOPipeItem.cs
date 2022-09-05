@@ -44,21 +44,19 @@ namespace ItemPipes.Framework.Items
             PopulateDrawGuide();
         }
 
-        public override SObject Save()
+        public override SObject SaveObject()
         {    
-            Fence fence = (Fence)base.Save();
+            Fence fence = (Fence)base.SaveObject();
             if (!fence.modData.ContainsKey("signal")) { fence.modData.Add("signal", Signal); }
             else { fence.modData["signal"] = Signal; }
             return fence;
         }
 
-        public override void Load(ModDataDictionary data)
+        public override void LoadObject(Item item)
         {
-            modData = data;
+            modData = item.modData;
             stack.Value = Int32.Parse(modData["Stack"]);
             Signal = modData["signal"];
-            //Signal loaded to node on node contruction
-            //Here nodes arent made still
         }
 
         public void LoadSignals()

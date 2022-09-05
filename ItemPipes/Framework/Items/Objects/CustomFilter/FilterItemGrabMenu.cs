@@ -411,10 +411,9 @@ namespace ItemPipes.Framework.Items.CustomFilter
 					this.junimoNoteIcon.leftNeighborID = top_right.myID;
 				}
 			}
-			//string lab = DataAccess.GetDataAccess().Labels()
-			int xPoint = ItemsToGrabMenu.xPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearSideBorder + 50;
+			int xPoint = ItemsToGrabMenu.xPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearSideBorder + 50 + 20;
 			int yPoint = ItemsToGrabMenu.yPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearTopBorder + 50;
-			this.QualityCheck = new FilterCheckBox("Quality ★", 87, filter, xPoint, yPoint);
+			this.QualityCheck = new FilterCheckBox(DataAccess.GetDataAccess().UI["filterQuality"], 87, filter, xPoint, yPoint);
 			filter.Options.Add(QualityCheck, "quality");
 			ClickableComponent qualityclick = new ClickableComponent(QualityCheck.bounds, "quality");
 			base.populateClickableComponentList();

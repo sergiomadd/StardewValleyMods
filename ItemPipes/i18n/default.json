@@ -27,9 +27,9 @@
   //Filter Pipe
   "item.filterpipe.name": "Filter Pipe",
   "item.filterpipe.description": "Type: Input Pipe\nInserts items into an adjacent container. Inserts only the items already on the filter pipe inventory. Right click the Filter Pipe to open the Inventory.",
-  //PIPO
-  "item.pipo.name": "PIPO",
-  "item.pipo.description": "Type: Machine\nPIPO makes pipes of the attached network turn crossable.\n~Is a good dog~",
+  //Invisibilizer
+  "item.invisibilizer.name": "Invisibilizer",
+  "item.invisibilizer.description": "Type: Machine\nIt makes pipes of the attached network turn crossable",
   //Wrench
   "item.wrench.name": "Wrench",
   "item.wrench.description": "Type: Tool\nUsed for turning on/off Input/Output pipes.",

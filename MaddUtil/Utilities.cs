@@ -10,7 +10,7 @@ using StardewValley.Tools;
 using ItemPipes.Framework.Factories;
 
 
-namespace ItemPipes.Framework.Util
+namespace MaddUtil
 {
     public static class Utilities
     {
@@ -192,8 +192,10 @@ namespace ItemPipes.Framework.Util
         //Tools like Iridium pickaxe are not getting recognized
         public static bool IsVanillaItem(Item item)
         {
-            DataAccess data = DataAccess.GetDataAccess();
             bool itis = false;
+            /*
+            DataAccess data = DataAccess.GetDataAccess();
+            
             string idTag = item.GetContextTagList()[0];
             string type = idTag.Split("_")[1];
             int id = Int32.Parse(idTag.Split("_")[2]);
@@ -268,6 +270,7 @@ namespace ItemPipes.Framework.Util
                     }
                     break;
             }
+            */
             return itis;
         }
     }

@@ -17,6 +17,8 @@ using ItemPipes.Framework.Nodes;
 using System.Xml.Serialization;
 using StardewValley.Buildings;
 using SObject = StardewValley.Object;
+using MaddUtil;
+
 
 
 namespace ItemPipes.Framework.Items
@@ -169,7 +171,7 @@ namespace ItemPipes.Framework.Items
             Vector2 position = this.TileLocation;
             position.Y -= 1f;
             if (location.objects.ContainsKey(position) && (location.objects[position] is PipeItem && ((PipeItem)location.objects[position]).countsForDrawing(this)
-                || location.objects[position] is PIPOItem))
+                || location.objects[position] is InvisibilizerItem))
             {
                 key += "N";
             }
@@ -182,7 +184,7 @@ namespace ItemPipes.Framework.Items
             position = this.TileLocation;
             position.Y += 1f;
             if (location.objects.ContainsKey(position) && (location.objects[position] is PipeItem && ((PipeItem)location.objects[position]).countsForDrawing(this)
-                || location.objects[position] is PIPOItem))
+                || location.objects[position] is InvisibilizerItem))
             {
                 key += "S";
             }
@@ -195,7 +197,7 @@ namespace ItemPipes.Framework.Items
             position = this.TileLocation;
             position.X += 1f;
             if (location.objects.ContainsKey(position) && (location.objects[position] is PipeItem && ((PipeItem)location.objects[position]).countsForDrawing(this)
-                || location.objects[position] is PIPOItem))
+                || location.objects[position] is InvisibilizerItem))
             {
                 key += "W";
             }
@@ -208,7 +210,7 @@ namespace ItemPipes.Framework.Items
             position = this.TileLocation;
             position.X -= 1f;
             if (location.objects.ContainsKey(position) && (location.objects[position] is PipeItem && ((PipeItem)location.objects[position]).countsForDrawing(this)
-                || location.objects[position] is PIPOItem))
+                || location.objects[position] is InvisibilizerItem))
             {
                 key += "E";
             }

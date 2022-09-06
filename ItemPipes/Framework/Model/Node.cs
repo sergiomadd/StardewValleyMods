@@ -200,7 +200,7 @@ namespace ItemPipes.Framework.Model
             }
         }
 
-        public string Print()
+        public string PrintHash()
         {
             if (ParentNetwork != null)
             {
@@ -209,6 +209,18 @@ namespace ItemPipes.Framework.Model
             else
             {
                 return $"'[N?]{Name}({Position.X},{Position.Y}){GetHashCode()}'";
+            }
+        }
+
+        public string Print()
+        {
+            if (ParentNetwork != null)
+            {
+                return $"'[N{ParentNetwork.ID}]{Name}({Position.X},{Position.Y})'";
+            }
+            else
+            {
+                return $"'[N?]{Name}({Position.X},{Position.Y})'";
             }
         }
     }

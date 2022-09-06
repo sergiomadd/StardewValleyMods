@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using MaddUtil;
 using Microsoft.Xna.Framework;
-using StardewValley;
-using StardewValley.Buildings;
 using ItemPipes.Framework.Items;
-using ItemPipes.Framework.Util;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework.Items.Objects;
 using ItemPipes.Framework.Items.Tools;
@@ -58,7 +55,11 @@ namespace ItemPipes.Framework.Factories
             }
             else if (name.Equals("pipo"))
             {
-                return new PIPOItem();
+                return new InvisibilizerItem();
+            }
+            else if (name.Equals("invisibilizer"))
+            {
+                return new InvisibilizerItem();
             }
             else
             {
@@ -90,7 +91,7 @@ namespace ItemPipes.Framework.Factories
                 case 222568:
                     return new FilterPipeItem();
                 case 222660:
-                    return new PIPOItem();
+                    return new InvisibilizerItem();
                 default:
                     return null;
             }
@@ -149,7 +150,11 @@ namespace ItemPipes.Framework.Factories
             }
             else if (name.Equals("pipo"))
             {
-                return new PIPOItem(position);
+                return new InvisibilizerItem(position);
+            }
+            else if (name.Equals("invisibilizer"))
+            {
+                return new InvisibilizerItem(position);
             }
             else
             {
@@ -209,7 +214,7 @@ namespace ItemPipes.Framework.Factories
             }
             else if (name.Equals("PIPO"))
             {
-                return new PIPOItem();
+                return new InvisibilizerItem();
             }
             else
             {
@@ -258,7 +263,7 @@ namespace ItemPipes.Framework.Factories
             }
             else if (name.Equals("PIPO"))
             {
-                return new PIPOItem(position);
+                return new InvisibilizerItem(position);
             }
             else
             {

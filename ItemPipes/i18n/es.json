@@ -27,9 +27,9 @@
   //Filter Pipe
   "item.filterpipe.name": "Tubería Filtradora",
   "item.filterpipe.description": "Tipo: Tubería de Entrada\nInserta objetos en el contenedor adjacente. Inserta solo objetos ya existentes en el inventario . Haz click derecho sobre la tuberia filtradora para abrir su inventario.",
-  //PIPO
-  "item.pipo.name": "PIPO",
-  "item.pipo.description": "Tipo: Máquina\nHace que las tuberias conectadas se vuelvan atravesables.\n~Es un buen perro~",
+  //Invisibilizer
+  "item.invisibilizer.name": "Invisibilizador",
+  "item.invisibilizer.description": "Tipo: Máquina\nHace que las tuberias conectadas se vuelvan atravesables",
   //Wrench
   "item.wrench.name": "Llave Inglesa",
   "item.wrench.description": "Tipo: Herramienta\nSe usa para apagar o encender tuberias de inserción o extracción.",

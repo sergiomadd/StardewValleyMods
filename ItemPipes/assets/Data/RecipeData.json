@@ -9,7 +9,7 @@
     "inserterpipe": "222560 1 62 1/Field/222566/false/Mining 3",
     "polymorphicpipe": "222560 1 68 1/Field/222567/false/Mining 3",
     "filterpipe": "222560 1 60 1/Field/222568/false/Mining 3",
-    "pipo": "335 5 787 1/Field/222660/true/Mining 6"
+    "invisibilizer": "335 5 787 1/Field/222660/true/Mining 6"
   },
   "fakeRecipesData": {
     "ironpipe": "0 1//0 1/false/Mining 3/Fake Recipe",
@@ -21,6 +21,6 @@
     "inserterpipe": "0 1//0 1/false/Mining 3/Fake Recipe",
     "polymorphicpipe": "0 1//0 1/false/Mining 3/Fake Recipe",
     "filterpipe": "0 1//0 1/false/Mining 3/Fake Recipe",
-    "pipo": "0 1//0 1/true/Mining 6/Fake Recipe"
+    "invisibilizer": "0 1//0 1/true/Mining 6/Fake Recipe"
   }
 }

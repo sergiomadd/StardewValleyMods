@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Objects;
-using ItemPipes.Framework.Nodes;
 using ItemPipes.Framework.Model;
-using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Nodes.ObjectNodes;
 
 
@@ -44,13 +41,18 @@ namespace ItemPipes.Framework.Factories
                 case 216:
                     return new ChestContainerNode(position, location, obj);
                 case 222660:
-                    return new PIPONode(position, location, obj);
+                    return new InvisibilizerNode(position, location, obj);
                 default:
                     if(obj.Name.Equals("Chest"))
                     {
                         return new ChestContainerNode(position, location, obj);
                     }
                     else if(obj is Chest)
+                    {
+                        return new ChestContainerNode(position, location, obj);
+                    }
+                    //Autograbber?
+                    else if (obj.ParentSheetIndex.Equals(165))
                     {
                         return new ChestContainerNode(position, location, obj);
                     }

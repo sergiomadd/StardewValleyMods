@@ -14,10 +14,10 @@ using SObject = StardewValley.Object;
 
 namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
-    public class PIPONode : PipeNode
+    public class InvisibilizerNode : PipeNode
     {
-        public PIPONode() { }
-        public PIPONode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
+        public InvisibilizerNode() { }
+        public InvisibilizerNode(Vector2 position, GameLocation location, StardewValley.Object obj) : base(position, location, obj)
         {
             ItemTimer = 100;
             State = "off";
@@ -31,7 +31,7 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             SObject item;
             if (Location.objects.TryGetValue(Position, out item))
             {
-                PIPOItem pipo = (PIPOItem)item;
+                InvisibilizerItem pipo = (InvisibilizerItem)item;
                 State = pipo.State;
             }
             if (State.Equals("on"))

@@ -63,9 +63,9 @@ namespace ItemPipes.Framework.Items.Tools
                         pipe.ChangeSignal();
                         location.playSound("smallSelect");
                     }
-                    else if (obj is PIPOItem)
+                    else if (obj is InvisibilizerItem)
                     {
-                        PIPOItem pipo = (PIPOItem)obj;
+                        InvisibilizerItem pipo = (InvisibilizerItem)obj;
                         pipo.ChangeSignal();
                         location.playSound("smallSelect");
                     }

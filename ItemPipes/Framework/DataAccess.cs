@@ -12,6 +12,7 @@ using System.Threading;
 using ItemPipes.Framework.APIs;
 using ItemPipes.Framework.Items.Objects;
 using ItemPipes.Framework.Items.Tools;
+using MaddUtil;
 
 
 namespace ItemPipes.Framework
@@ -97,6 +98,13 @@ namespace ItemPipes.Framework
                 myDataAccess = new DataAccess(ModEntry.helper);
             }
             return myDataAccess;
+        }
+
+        public void TryRegisterLocation(GameLocation location)
+        {
+            if (!LocationNetworks.ContainsKey(location)) { LocationNetworks.Add(location, new List<Network>()); }
+            if (!LocationNodes.ContainsKey(location)) { LocationNodes.Add(location, new List<Node>()); }
+            if (!UsedNetworkIDs.ContainsKey(location)) { UsedNetworkIDs.Add(location, new List<long>()); }
         }
 
         public long GetNewNetworkID(GameLocation location)
@@ -296,7 +304,7 @@ namespace ItemPipes.Framework
             {
                 List<string> pipes = new List<string>
                 {"ironpipe", "goldpipe", "iridiumpipe", "extractorpipe", "goldextractorpipe",
-                 "iridiumextractorpipe", "inserterpipe", "polymorphicpipe", "filterpipe", "pipo"};
+                 "iridiumextractorpipe", "inserterpipe", "polymorphicpipe", "filterpipe", "invisibilizer"};
                 foreach (string name in pipes)
                 {
                     if (!name.Contains("iridium"))
@@ -335,12 +343,12 @@ namespace ItemPipes.Framework
                 Sprites.Add("rroff", helper.Load<Texture2D>($"assets/Pipes/rroff.png"));
                 Sprites.Add("rron", helper.Load<Texture2D>($"assets/Pipes/rron.png"));
 
-                Sprites.Add("pipo_signal_offC", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_offC.png"));
-                Sprites.Add("pipo_signal_offL", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_offL.png"));
-                Sprites.Add("pipo_signal_offR", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_offR.png"));
-                Sprites.Add("pipo_signal_onC", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_onC.png"));
-                Sprites.Add("pipo_signal_onL", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_onL.png"));
-                Sprites.Add("pipo_signal_onR", helper.Load<Texture2D>($"assets/Pipes/PIPO/pipo_signal_onR.png"));
+                Sprites.Add("invisibilizer_signal_offC", helper.Load<Texture2D>($"assets/Pipes/invisibilizer/invisibilizer_signal_offC.png"));
+                Sprites.Add("invisibilizer_signal_offL", helper.Load<Texture2D>($"assets/Pipes/invisibilizer/invisibilizer_signal_offL.png"));
+                Sprites.Add("invisibilizer_signal_offR", helper.Load<Texture2D>($"assets/Pipes/invisibilizer/invisibilizer_signal_offR.png"));
+                Sprites.Add("invisibilizer_signal_onC", helper.Load<Texture2D>($"assets/Pipes/invisibilizer/invisibilizer_signal_onC.png"));
+                Sprites.Add("invisibilizer_signal_onL", helper.Load<Texture2D>($"assets/Pipes/invisibilizer/invisibilizer_signal_onL.png"));
+                Sprites.Add("invisibilizer_signal_onR", helper.Load<Texture2D>($"assets/Pipes/invisibilizer/invisibilizer_signal_onR.png"));
 
                 Sprites.Add("wrench_item", helper.Load<Texture2D>($"assets/Objects/Wrench/wrench_item.png"));
 

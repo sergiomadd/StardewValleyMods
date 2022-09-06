@@ -11,6 +11,7 @@ using StardewValley;
 using StardewValley.Objects;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework.Items;
+using MaddUtil;
 
 
 namespace ItemPipes.Framework

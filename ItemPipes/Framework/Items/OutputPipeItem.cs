@@ -10,6 +10,8 @@ using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Items.Tools;
 using System.Xml.Serialization;
+using MaddUtil;
+
 
 namespace ItemPipes.Framework.Items
 {

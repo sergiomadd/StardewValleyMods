@@ -13,6 +13,8 @@ using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Model;
 using System.Threading;
 using System.Threading.Tasks;
+using MaddUtil;
+
 
 namespace ItemPipes.Framework.Nodes
 {
@@ -149,12 +151,12 @@ namespace ItemPipes.Framework.Nodes
                         {
                             if(inout.Item1.ConnectedContainer.InsertItem(item))
                             {
-                                if (ModEntry.config.DebugMode) { Printer.Debug($"[N{ID}] Inserted {item.Name}({item.Stack}) to {inout.Item1.Print()}"); }
+                                if (ModEntry.config.DebugMode) { Printer.Debug($"[N{ID}] Inserted {item.Name}({item.Stack}) to {inout.Item1.PrintHash()}"); }
                                 StoredItem = null;
                             }
                             else
                             {
-                                Printer.Warn($"[N{ID}] Coudn't insert {item.Name}({item.Stack}) to {inout.Item1.Print()}");
+                                Printer.Warn($"[N{ID}] Coudn't insert {item.Name}({item.Stack}) to {inout.Item1.PrintHash()}");
                                 if (this is OutputPipeNode)
                                 {
                                     Utilities.DropItem(item, Position, Location);

@@ -19,6 +19,7 @@ using ItemPipes.Framework.Items;
 using ItemPipes.Framework.Items.Objects;
 using System.Threading;
 using ItemPipes.Framework.Nodes.ObjectNodes;
+using MaddUtil;
 
 
 
@@ -270,9 +271,9 @@ namespace ItemPipes.Framework
 				spriteBatch.Draw(SpriteSheet, position, srcRect, Color.White * transparency, 0f, Vector2.Zero, 2f, SpriteEffects.None,
 					((float)(y * 64 + 32) / 10000f) + 0.002f);
 			}
-			else if (item is PIPOItem)
+			else if (item is InvisibilizerItem)
             {
-				PIPOItem PPM = (PIPOItem)item;
+				InvisibilizerItem PPM = (InvisibilizerItem)item;
 				SpriteSheet = PPM.ItemTexture;
 				srcRect = new Rectangle(0, 0, 16, 32);
 				originalPosition = Game1.GlobalToLocal(Game1.viewport, new Vector2(x * 64, y * 64 - 64));

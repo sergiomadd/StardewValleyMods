@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StardewModdingAPI;
 
-namespace ItemPipes.Framework.Util
+namespace MaddUtil
 {
     public static class Helpers
     {

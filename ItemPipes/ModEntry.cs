@@ -1,31 +1,20 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Tools;
 using StardewValley.Objects;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using StardewModdingAPI.Utilities;
 using SObject = StardewValley.Object;
-using ItemPipes.Framework;
-using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Model;
 using ItemPipes.Framework.Patches;
 using ItemPipes.Framework.Factories;
 using ItemPipes.Framework.Items;
 using ItemPipes.Framework.Nodes;
-using ItemPipes.Framework.Data;
-using ItemPipes.Framework.Items.Tools;
 using HarmonyLib;
-using System.Diagnostics;
-using System.Threading;
-using ItemPipes.Framework.APIs;
-using ItemPipes.Framework.Items.Objects;
+using MaddUtil;
 
 namespace ItemPipes.Framework
 {
@@ -83,8 +72,22 @@ namespace ItemPipes.Framework
             }
         }
 
-        private void CheckImcompatibilities()
+        private void CheckCompatibilities()
         {
+            //Compatibilities
+            //TODO
+            /*
+            if (this.Helper.ModRegistry.IsLoaded("furyx639.BetterChests"))
+            {
+                IModInfo betterChests = helper.ModRegistry.Get("furyx639.BetterChests");
+                if (betterChests != null)
+                {
+                    Printer.Warn("Found BetterChests mod in your folder.");
+                    Printer.Warn("BetterChests is compatible with ItemPipes. But the filter option wont work!");
+                }
+            }
+            */
+            //Incompatibilities
             if (this.Helper.ModRegistry.IsLoaded("Aredjay.SaveAnywhere1.5"))
             {
                 IModInfo itemSpawner = helper.ModRegistry.Get("Aredjay.SaveAnywhere1.5");
@@ -114,7 +117,7 @@ namespace ItemPipes.Framework
             config = DataAccess.LoadConfig();
             config.RegisterModConfigMenu(helper, this.ModManifest);
             ApplyPatches();
-            CheckImcompatibilities();
+            CheckCompatibilities();
         }
 
 
@@ -457,7 +460,7 @@ namespace ItemPipes.Framework
 
         private void ConvertFromVanillaPlayer()
         {
-            if (Game1.player.Items.Any(i =>i.modData.ContainsKey("ItemPipes")))
+            if (Game1.player.Items.Any(i =>i!=null && i.modData.ContainsKey("ItemPipes")))
             {
                 for (int i = 0; i < Game1.player.Items.Count; i++)
                 {

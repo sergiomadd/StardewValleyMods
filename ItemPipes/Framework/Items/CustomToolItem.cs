@@ -9,6 +9,8 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ItemPipes.Framework.Util;
+using MaddUtil;
+
 
 namespace ItemPipes.Framework.Items
 {

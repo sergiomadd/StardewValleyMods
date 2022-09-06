@@ -2,19 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using StardewValley;
-using StardewValley.Objects;
-using ItemPipes.Framework.Util;
-using ItemPipes.Framework.Nodes;
 using StardewValley.Menus;
-using Microsoft.Xna.Framework.Graphics;
 using Netcode;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework.Items.Objects;
 using ItemPipes.Framework.Nodes.ObjectNodes;
+using MaddUtil;
 
 
 namespace ItemPipes.Framework.Items.CustomFilter

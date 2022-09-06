@@ -5,7 +5,7 @@ using StardewValley.Objects;
 using System;
 using SObject = StardewValley.Object;
 
-namespace ItemPipes.Framework.Util
+namespace MaddUtil
 {
     public static class Popup
     {

@@ -1,17 +1,16 @@
 {
-  "ModItemsIDs": 
-  {
-      "ironpipe": 222560,
-      "goldpipe": 222561,
-      "iridiumpipe": 222562,
-      "extractorpipe": 222563,
-      "goldextractorpipe": 222564,
-      "iridiumextractorpipe": 222565,
-      "inserterpipe": 222566,
-      "polymorphicpipe": 222567,
-      "filterpipe": 222568,
-      "pipo": 222660,
-      "wrench": 222661
+  "ModItemsIDs": {
+    "ironpipe": 222560,
+    "goldpipe": 222561,
+    "iridiumpipe": 222562,
+    "extractorpipe": 222563,
+    "goldextractorpipe": 222564,
+    "iridiumextractorpipe": 222565,
+    "inserterpipe": 222566,
+    "polymorphicpipe": 222567,
+    "filterpipe": 222568,
+    "invisibilizer": 222660,
+    "wrench": 222661
   },
   "ModItems": [
       222560,

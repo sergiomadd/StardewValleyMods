@@ -21,7 +21,7 @@ using ItemPipes.Framework.Util;
 
 namespace ItemPipes.Framework.Items.Objects
 {
-	public class PIPOItem : PipeBigCraftableItem
+	public class InvisibilizerItem : PipeBigCraftableItem
 	{
 		public Texture2D SignalTexture { get; set; }
 		public Texture2D OnTextureR { get; set; }
@@ -31,7 +31,7 @@ namespace ItemPipes.Framework.Items.Objects
 		public Texture2D OffTextureL { get; set; }
 		public Texture2D OffTextureC { get; set; }
 
-		public PIPOItem() : base()
+		public InvisibilizerItem() : base()
 		{
 			State = "off";
 			DataAccess DataAccess = DataAccess.GetDataAccess();
@@ -44,7 +44,7 @@ namespace ItemPipes.Framework.Items.Objects
 			SignalTexture = OffTextureC;
 		}
 
-		public PIPOItem(Vector2 position) : base(position)
+		public InvisibilizerItem(Vector2 position) : base(position)
 		{
 			State = "off";
 			DataAccess DataAccess = DataAccess.GetDataAccess();
@@ -75,7 +75,7 @@ namespace ItemPipes.Framework.Items.Objects
         {
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
-			PIPONode pipo = (PIPONode)nodes.Find(n => n.Position.Equals(this.TileLocation));
+			InvisibilizerNode pipo = (InvisibilizerNode)nodes.Find(n => n.Position.Equals(this.TileLocation));
 			if (pipo.ChangeState())
 			{
 				Passable = true;
@@ -139,9 +139,9 @@ namespace ItemPipes.Framework.Items.Objects
 			DataAccess DataAccess = DataAccess.GetDataAccess();
 			List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
 			Node node = nodes.Find(n => n.Position.Equals(TileLocation));
-			if (node != null && node is PIPONode)
+			if (node != null && node is InvisibilizerNode)
 			{
-				PIPONode invis = (PIPONode)node;
+				InvisibilizerNode invis = (InvisibilizerNode)node;
 				State = invis.State;
 				float transparency = 1f;
 				if (State.Equals("on"))

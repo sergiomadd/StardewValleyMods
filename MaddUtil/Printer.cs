@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using StardewModdingAPI;
 using System.Threading;
 
-namespace ItemPipes.Framework.Util
+namespace MaddUtil
 {
     class Printer
     {

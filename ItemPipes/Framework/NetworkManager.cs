@@ -14,6 +14,7 @@ using ItemPipes.Framework.Util;
 using ItemPipes.Framework.Factories;
 using ItemPipes.Framework.Items;
 using ItemPipes.Framework.Nodes.ObjectNodes;
+using MaddUtil;
 
 
 namespace ItemPipes.Framework
@@ -58,9 +59,10 @@ namespace ItemPipes.Framework
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();
             if (ModEntry.config.DebugMode) { Printer.Debug("Adding new object: " + obj.Key.ToString() + obj.Value.Name); }
+            DataAccess.TryRegisterLocation(location);
             List<Node> nodes = DataAccess.LocationNodes[location];
             Node newNode = NodeFactory.CreateElement(obj.Key, location, obj.Value);
-            if (ModEntry.config.DebugMode) { Printer.Debug("New node created: " + newNode.Print()); }
+            if (ModEntry.config.DebugMode) { Printer.Debug("New node created: " + newNode.PrintHash()); }
             int x = (int)newNode.Position.X;
             int y = (int)newNode.Position.Y;
 
@@ -89,7 +91,7 @@ namespace ItemPipes.Framework
             {
                 newNode.AddAdjacent(SideStruct.GetSides().West, westNode);
             }
-            if (ModEntry.config.DebugMode) { newNode.Print(); }
+            if (ModEntry.config.DebugMode) { newNode.PrintHash(); }
             if (obj.Value is CustomObjectItem)
             {
                 if (ModEntry.config.DebugMode) { Printer.Debug("Assigning network to new node"); }

@@ -25,10 +25,10 @@ Temporary Wiki
 - ### Connectors:
 	- **Iron Pipe**  
 	The basic connector pipe. Unlocked at Mining LvL 3  
-![Iron Pipe Recipe](img/recipes/IronPipeRecipe.PNG)![Iron Pipe](img//items/IronPipeSprite1.png)  
+![Iron Pipe Recipe](img/recipes/IronPipeRecipe.PNG)![Iron Pipe](img/items/IronPipeSprite1.png)  
 	- **Gold Pipe**  
 	Unlocked at Mining LvL 6  
-![Gold Pipe Recipe](img/recipes/GoldPipeRecipe.PNG)![Gold Pipe](img//items/GoldPipeSprite1.png)  
+![Gold Pipe Recipe](img/recipes/GoldPipeRecipe.PNG)![Gold Pipe](img/items/GoldPipeSprite1.png)  
 	- **Iridium Pipe**  
 	Unlocked at Mining LvL 9  
 ![Iridium Pipe Recipe](img/recipes/IridiumPipeRecipe.PNG)![Iridium Pipe](img/items/IridiumPipeSprite1.png)  

@@ -8,13 +8,20 @@ Item Pipes is a mod that provides chest to chest item transportation and item so
 Download:
 - [Read for beta testing](testing.md)
 
----
+
 
 ## Requirements:
 - Stardew Valley 1.5.6
 - [SMAPI](https://smapi.io/) 3.15.0
 
----
+
+
+## Planned Features (in no order):
+- Warp Pipe (teleport items from one location to another)
+- BigCraftable (machines) support
+- More filtering options
+- Storage Hub
+Feel free to suggest new features on the issues page!
 
 ## See also
 - [Wiki](wiki.md)

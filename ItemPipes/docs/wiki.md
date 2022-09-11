@@ -24,17 +24,17 @@ Temporary Wiki
 ## Pipes:
 - ### Connectors:
 	- **Iron Pipe**  
-	The basic connector pipe. Unlocked at Mining LvL 3
-![Iron Pipe Recipe](img/recipes/IronPipeRecipe.PNG)![Iron Pipe](img/IronPipe.png)  
+	The basic connector pipe. Unlocked at Mining LvL 3  
+![Iron Pipe Recipe](img/recipes/IronPipeRecipe.PNG)![Iron Pipe](img//items/IronPipeSprite1.png)  
 	- **Gold Pipe**  
-	Unlocked at Mining LvL 6
-![Gold Pipe Recipe](img/recipes/GoldPipeRecipe.PNG)![Gold Pipe](img/GoldPipe.png)  
+	Unlocked at Mining LvL 6  
+![Gold Pipe Recipe](img/recipes/GoldPipeRecipe.PNG)![Gold Pipe](img//items/GoldPipeSprite1.png)  
 	- **Iridium Pipe**  
-	Unlocked at Mining LvL 9
-![Iridium Pipe Recipe](img/recipes/IridiumPipeRecipe.PNG)![Iridium Pipe](img/IridiumPipe.png)  
+	Unlocked at Mining LvL 9  
+![Iridium Pipe Recipe](img/recipes/IridiumPipeRecipe.PNG)![Iridium Pipe](img/items/IridiumPipeSprite1.png)  
 
 
-![Sending Items](gifs/ItemSendingGif.gif) 
+![Sending Items](gifs/ConnectorPipes.gif) 
 
 ## Input/Output Pipes (IOPipes):
 - ### Outputs:

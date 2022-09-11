@@ -20,7 +20,7 @@ Download:
 - Warp Pipe (teleport items from one location to another)
 - BigCraftable (machines) support
 - More filtering options
-- Storage Hub
+- Storage Hub  
 Feel free to suggest new features on the issues page!
 
 ## See also

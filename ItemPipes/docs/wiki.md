@@ -54,14 +54,12 @@ Filter Pipes insert items into an adjacent container. They filter items based on
 
 - ### Supported containers:  
 	- **Chest**  
-Regular vanilla chests. As you can see below, the items get out of one chest, and enter the other.  
-![Chest Sending](gifs/ChestSendingGif.gif)  
-![Chest Receiving](gifs/ChestReceivingGif.gif)  
+Regular vanilla chests.
 	- **Junimo Chest**  
 Junimo chests work as chests. But as their inventory is linked, you can move items wirelessly.  
 ![Junimo](gifs/JunimoGif.gif)  
 	- **Mini-Fridge**  
-Not yet implmented  
+Mini-fridges only work in the farm-house
 	- **Mini-Shipping Bin**  
 Mini-Shipping Bins work the exact same as chests.  
 
@@ -82,7 +80,11 @@ This is the shortest posibble network, from that, you can extend it as you like.
 
 ---
 
-- ### Pipe Signaling: 
+- ### Pipe Feedback: 
+- #### Pipe Popup: 
+- IO pipes states can be shown by a popup image on top of the pipe.
+
+- #### Pipe Signaling: 
 - Pipe state is shown through pipe signaling. Each IOPipe can have 3 colors, each corresponding with a state:
 	- **Red/Off**:  
 	The pipe is locked and wont send/receive items. You can manually turn on or off pipes by clicking on them.  

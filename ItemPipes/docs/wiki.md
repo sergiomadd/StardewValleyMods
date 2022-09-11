@@ -3,7 +3,7 @@ Temporary Wiki
 **NEEDS UPDATING!!**
 
 ## Contents:
-- [Current Features for Beta](#current-features-for-beta)
+- [Current Features](#current-features)
 	- [Pipes](#pipes)
 		- [Connectors](#connectors)
 		- [Outputs](#outputs)
@@ -19,17 +19,24 @@ Temporary Wiki
 
 ---
 
-## Current Features (for Beta):
+## Current Features:
 
 ## Pipes:
 - ### Connectors:
-	- **Connector Pipe**  
-Connector Pipes act as the link between Output and Input pipes.  
-They moves items at 2 tiles/1 second  
-![Connector Pipe Recipe](img/recipes/ConnectorPipeRecipe.PNG)![Connector Pipe](img/ConnectorPipe.png)  
+	- **Iron Pipe**  
+	The basic connector pipe. Unlocked at Mining LvL 3
+![Iron Pipe Recipe](img/recipes/IronPipeRecipe.PNG)![Iron Pipe](img/IronPipe.png)  
+	- **Gold Pipe**  
+	Unlocked at Mining LvL 6
+![Gold Pipe Recipe](img/recipes/GoldPipeRecipe.PNG)![Gold Pipe](img/GoldPipe.png)  
+	- **Iridium Pipe**  
+	Unlocked at Mining LvL 9
+![Iridium Pipe Recipe](img/recipes/IridiumPipeRecipe.PNG)![Iridium Pipe](img/IridiumPipe.png)  
+
+
 ![Sending Items](gifs/ItemSendingGif.gif) 
 
-## IOPipes:
+## Input/Output Pipes (IOPipes):
 - ### Outputs:
 	- **Extractor Pipe**  
 Extractor Pipes extract items from an adjacent container, at 1 stack/2 seconds.  

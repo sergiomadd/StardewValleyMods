@@ -356,6 +356,7 @@ namespace ItemPipes.Framework
 
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
+            /*
             SButton graphKey = SButton.L;
             if (e.Button == graphKey)
             {
@@ -366,6 +367,7 @@ namespace ItemPipes.Framework
                 }
                 Printer.Info(Utilities.GetNetworkLegend());
             }
+            */
         }
 
         private void ConvertToVanillaMap()

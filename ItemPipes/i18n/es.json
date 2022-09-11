@@ -5,19 +5,19 @@
   "item.ironpipe.description": "Tipo: Tubería de Conexión\nLa tubería basica para conectar entradas con salidas.\nRatio: 1 stack/1 segundo.",
   //Gold Pipe
   "item.goldpipe.name": "Tubería de Oro",
-  "item.goldpipe.description": "Tipo: Tubería de Conexión\nUna tubería brillante para conectar entradas con salidas.\nRatio: 1 stack/0.5 segundos.",
+  "item.goldpipe.description": "Tipo: Tubería de Conexión\nUna tubería brillante para conectar entradas con salidas.\nRatio: 2 stack/1 segundo.",
   //Iridium Pipe
   "item.iridiumpipe.name": "Tubería de Iridio",
-  "item.iridiumpipe.description": "Tipo: Tubería de Conexión\nForjada con iridio, es capaz de mover objectos a velocidades extremas.\nRatio: 1 stack/0.25 segundos.",
+  "item.iridiumpipe.description": "Tipo: Tubería de Conexión\nForjada con iridio, es capaz de mover objectos a velocidades extremas.\nRatio: 4 stack/1 segundo.",
   //Extractor Pipe
   "item.extractorpipe.name": "Tubería de Extracción",
   "item.extractorpipe.description": "Tipo: Tubería de Salida\nExtrae objectos del contenedor adjacente, y las envia por la red de tuberias.\nRatio: 1 objecto/1 segundo.",
   //Gold Extractor Pipe
   "item.goldextractorpipe.name": "Tubería de Oro de Extracción",
-  "item.goldextractorpipe.description": "Tipo: Tubería de Salida\nExtrae objectos, y puedes presumir de tener un extractor brillante.\nRatio: 10 objectos/0.5 segundos",
+  "item.goldextractorpipe.description": "Tipo: Tubería de Salida\nExtrae objectos, y puedes presumir de tener un extractor brillante.\nRatio: 20 objectos/1 segundo",
   //Iridium Extractor Pipe
   "item.iridiumextractorpipe.name": "Tubería de Iridio de Extracción",
-  "item.iridiumextractorpipe.description": "Tipo: Tubería de Salida\nGracias a la esencia de iridio, extrae objetos a una velocidad alarmante.\nRatio: 20 objectos/0.25 segundos",
+  "item.iridiumextractorpipe.description": "Tipo: Tubería de Salida\nGracias a la esencia de iridio, extrae objetos a una velocidad alarmante.\nRatio: 80 objectos/1 segundo",
   //Inserter Pipe
   "item.inserterpipe.name": "Tubería de Inserción",
   "item.inserterpipe.description": "Tipo: Tubería de Entrada\nInserta objetos en el contenedor adjacente. No filtra objetos.",

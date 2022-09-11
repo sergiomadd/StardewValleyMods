@@ -321,6 +321,7 @@ namespace ItemPipes.Framework
 
         public string PrintGraph()
         {
+            //NEED TESTING
             int minWidth = (int)Math.Round(Nodes.Min(n => n.Position.X))-1;
             int minHeight = (int)Math.Round(Nodes.Min(n => n.Position.Y))-1;
             int maxWidth = (int)Math.Round(Nodes.Max(n => n.Position.X))+2;

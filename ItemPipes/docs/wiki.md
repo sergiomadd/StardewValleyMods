@@ -29,7 +29,7 @@ They moves items at 2 tiles/1 second
 ![Connector Pipe Recipe](img/recipes/ConnectorPipeRecipe.PNG)![Connector Pipe](img/ConnectorPipe.png)  
 ![Sending Items](gifs/ItemSendingGif.gif) 
 
-## IOPipes:
+## Input/Output Pipes (IOPipes):
 - ### Outputs:
 	- **Extractor Pipe**  
 Extractor Pipes extract items from an adjacent container, at 1 stack/2 seconds.  

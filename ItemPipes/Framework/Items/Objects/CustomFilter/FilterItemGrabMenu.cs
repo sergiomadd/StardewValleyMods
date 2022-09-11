@@ -413,8 +413,7 @@ namespace ItemPipes.Framework.Items.CustomFilter
 			}
 			int xPoint = ItemsToGrabMenu.xPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearSideBorder + 50 + 20;
 			int yPoint = ItemsToGrabMenu.yPositionOnScreen - IClickableMenu.borderWidth - IClickableMenu.spaceToClearTopBorder + 50;
-			this.QualityCheck = new FilterCheckBox(DataAccess.GetDataAccess().UI["filterQuality"], 87, filter, xPoint, yPoint);
-			filter.Options.Add(QualityCheck, "quality");
+			this.QualityCheck = new FilterCheckBox(DataAccess.GetDataAccess().UI["filterQuality"], "quality", 87, filter, xPoint, yPoint);
 			ClickableComponent qualityclick = new ClickableComponent(QualityCheck.bounds, "quality");
 			base.populateClickableComponentList();
 			base.allClickableComponents.Add(qualityclick);

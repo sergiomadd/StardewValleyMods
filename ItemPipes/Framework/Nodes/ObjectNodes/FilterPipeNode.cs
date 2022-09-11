@@ -12,7 +12,7 @@ using StardewValley.Menus;
 using Netcode;
 using ItemPipes.Framework.Items.Objects;
 using SObject = StardewValley.Object;
-
+using MaddUtil;
 
 
 namespace ItemPipes.Framework.Nodes.ObjectNodes
@@ -33,17 +33,15 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
                 Filter.Items = (obj as FilterPipeItem).Filter.items;
             }
             ItemTimer = 1000;
+            
+            if(obj is FilterPipeItem)
+            {
+                Filter.UpdateOption("quality", (obj as FilterPipeItem).Filter.Options["quality"]);
+            }
         }
 
         public override void UpdateFilter()
         {
-            /*
-            Printer.Info("IN FILTER NODE");
-            foreach (Item tem in Filter.Items)
-            {
-                Printer.Info(tem.Name);
-            }
-            */
             SObject item;
             if(Location.objects.TryGetValue(Position, out item))
             {

@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework;
 using StardewValley.Objects;
 using StardewValley.Tools;
 using ItemPipes.Framework.Factories;
+using StardewValley.Buildings;
+using StardewValley.Locations;
 
 
 namespace MaddUtil
@@ -189,89 +191,84 @@ namespace MaddUtil
             Game1.addHUDMessage(new HUDMessage(message, numType));
         }
 
-        //Tools like Iridium pickaxe are not getting recognized
-        public static bool IsVanillaItem(Item item)
+        public static bool ToBool(string state)
         {
-            bool itis = false;
-            /*
-            DataAccess data = DataAccess.GetDataAccess();
-            
-            string idTag = item.GetContextTagList()[0];
-            string type = idTag.Split("_")[1];
-            int id = Int32.Parse(idTag.Split("_")[2]);
-            if (item is PipeItem)
+            if (state.Equals("True"))
             {
-                type = "ip";
-                id = (item as PipeItem).ParentSheetIndex;
+                return true;
             }
-            if(type == "")
+            else
             {
-                type = item.getCategoryName();
+                return false;
             }
-            switch (type)
+        }
+
+
+        //Location getters made by Atravita
+        public static IEnumerable<GameLocation> YieldAllLocations()
+        {
+            foreach (GameLocation location in Game1.locations)
             {
-                case "b"://boots
-                    if(data.VanillaBoots.Contains(id))
+                yield return location;
+                if (location is BuildableGameLocation buildableloc)
+                {
+                    foreach (GameLocation loc in YieldInteriorLocations(buildableloc))
                     {
-                        itis = true;
+                        yield return loc;
                     }
-                    break;
-                case "bbl"://big craftable recipe TODO
-                    break;
-                case "bl"://object recipe TODO
-                    break;
-                case "bo"://big craftable
-                    if (data.VanillaBigCraftables.Contains(id))
-                    {
-                        itis = true;
-                    }
-                    break;
-                case "c"://clothing
-                    if (data.VanillaClothing.Contains(id))
-                    {
-                        itis = true;
-                    }
-                    break;
-                case "f"://furniture
-                    if (data.VanillaFurniture.Contains(id))
-                    {
-                        itis = true;
-                    }
-                    break;
-                case "h"://hat
-                    if (data.VanillaHats.Contains(id))
-                    {
-                        itis = true;
-                    }
-                    break;
-                case "o"://object
-                    if (data.VanillaObjects.Contains(id))
-                    {
-                        itis = true;
-                    }
-                    break;
-                case "r"://ring
-                    if (data.VanillaObjects.Contains(id))
-                    {
-                        itis = true;
-                    }
-                    break;
-                case "w"://melee weapon
-                    if (data.VanillaWeapons.Contains(id))
-                    {
-                        itis = true;
-                    }
-                    break;
-                case "Tool"://tool
-                    id = (item as Tool).InitialParentTileIndex;
-                    if (data.VanillaTools.Contains(id))
-                    {
-                        itis = true;
-                    }
-                    break;
+                }
             }
-            */
-            return itis;
+        }
+
+        /// <summary>
+        /// Gets all the buildings.
+        /// </summary>
+        /// <returns>IEnumerable of all buildings.</returns>
+        public static IEnumerable<Building> GetBuildings()
+        {
+            foreach (GameLocation? loc in Game1.locations)
+            {
+                if (loc is BuildableGameLocation buildable)
+                {
+                    foreach (Building? building in GetBuildings(buildable))
+                    {
+                        yield return building;
+                    }
+                }
+            }
+        }
+
+        private static IEnumerable<GameLocation> YieldInteriorLocations(BuildableGameLocation loc)
+        {
+            foreach (Building building in loc.buildings)
+            {
+                if (building.indoors?.Value is GameLocation indoorloc)
+                {
+                    yield return indoorloc;
+                    if (indoorloc is BuildableGameLocation buildableIndoorLoc)
+                    {
+                        foreach (GameLocation nestedLocation in YieldInteriorLocations(buildableIndoorLoc))
+                        {
+                            yield return nestedLocation;
+                        }
+                    }
+                }
+            }
+        }
+
+        private static IEnumerable<Building> GetBuildings(BuildableGameLocation loc)
+        {
+            foreach (Building building in loc.buildings)
+            {
+                yield return building;
+                if (building.indoors?.Value is BuildableGameLocation buildable)
+                {
+                    foreach (Building interiorBuilding in GetBuildings(buildable))
+                    {
+                        yield return interiorBuilding;
+                    }
+                }
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ namespace ItemPipes.Framework.Model
         {
             if (obj != null)
             {
-                Name = obj.name;
+                Name = obj.Name;
                 ID = obj.ParentSheetIndex;
             }
             Position = position;

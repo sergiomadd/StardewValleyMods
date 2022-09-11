@@ -19,7 +19,7 @@ namespace ItemPipes.Framework
 {
     public static class NetworkBuilder
     {
-        //Maintain for 1.6
+        //Keep class for 1.6
         public static void BuildLocationNetworks(GameLocation location)
         {
             DataAccess DataAccess = DataAccess.GetDataAccess();

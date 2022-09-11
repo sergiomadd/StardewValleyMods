@@ -23,6 +23,7 @@ namespace ItemPipes.Framework
 
         public IModHelper Helper { get; set; }
         public ITranslationHelper Translate { get; set; }
+        public List<GameLocation> AllLocations { get; set; }
 
         public Dictionary<GameLocation, List<Network>> LocationNetworks { get; set; }
         public Dictionary<GameLocation, List<Node>> LocationNodes { get; set; }
@@ -61,6 +62,8 @@ namespace ItemPipes.Framework
         {
             Helper = helper;
             Translate = helper.Translation;
+
+            AllLocations = new List<GameLocation>();
             LocationNetworks = new Dictionary<GameLocation, List<Network>>();
             LocationNodes = new Dictionary<GameLocation, List<Node>>();
             ModItemsIDs = new Dictionary<string, int>();
@@ -100,11 +103,40 @@ namespace ItemPipes.Framework
             return myDataAccess;
         }
 
+        public void InitSave()
+        {
+            LoadLocations();
+            LoadAssets();
+            foreach (GameLocation location in AllLocations)
+            {
+                NetworkBuilder.BuildLocationNetworksTEMP(location);
+                NetworkManager.UpdateLocationNetworks(location);
+            }
+        }
+
+        public void LoadLocations()
+        {
+            List<GameLocation> locations = Utilities.YieldAllLocations().ToList();
+            foreach (GameLocation location in locations)
+            {
+                TryRegisterLocation(location);
+            }
+        }
+
         public void TryRegisterLocation(GameLocation location)
         {
+            if (!AllLocations.Contains(location)) { AllLocations.Add(location); }
             if (!LocationNetworks.ContainsKey(location)) { LocationNetworks.Add(location, new List<Network>()); }
             if (!LocationNodes.ContainsKey(location)) { LocationNodes.Add(location, new List<Node>()); }
             if (!UsedNetworkIDs.ContainsKey(location)) { UsedNetworkIDs.Add(location, new List<long>()); }
+        }
+
+        public void TryUnRegisterLocation(GameLocation location)
+        {
+            if (AllLocations.Contains(location)) { AllLocations.Remove(location); }
+            if (LocationNetworks.ContainsKey(location)) { LocationNetworks.Remove(location); }
+            if (LocationNodes.ContainsKey(location)) { LocationNodes.Remove(location); }
+            if (UsedNetworkIDs.ContainsKey(location)) { UsedNetworkIDs.Remove(location); }
         }
 
         public long GetNewNetworkID(GameLocation location)
@@ -367,6 +399,7 @@ namespace ItemPipes.Framework
 
         public void Reset()
         {
+            AllLocations.Clear();
             LocationNodes.Clear();
             LocationNetworks.Clear();
             UsedNetworkIDs.Clear();
@@ -389,6 +422,83 @@ namespace ItemPipes.Framework
             VanillaTools.Add(21);//Hoe
             VanillaTools.Add(273);//Watering can
             //VanillaTools.Add(189);//Fishing rod (same que axe?)
+        }
+
+        //Tools like Iridium pickaxe are not getting recognized
+        public bool IsVanillaItem(Item item)
+        {
+            bool itis = false;
+            string idTag = item.GetContextTagList()[0];
+            string type = idTag.Split("_")[1];
+            int id = Int32.Parse(idTag.Split("_")[2]);
+            if (type == "")
+            {
+                type = item.getCategoryName();
+            }
+            switch (type)
+            {
+                case "b"://boots
+                    if (VanillaBoots.Contains(id))
+                    {
+                        itis = true;
+                    }
+                    break;
+                case "bbl"://big craftable recipe TODO
+                    break;
+                case "bl"://object recipe TODO
+                    break;
+                case "bo"://big craftable
+                    if (VanillaBigCraftables.Contains(id))
+                    {
+                        itis = true;
+                    }
+                    break;
+                case "c"://clothing
+                    if (VanillaClothing.Contains(id))
+                    {
+                        itis = true;
+                    }
+                    break;
+                case "f"://furniture
+                    if (VanillaFurniture.Contains(id))
+                    {
+                        itis = true;
+                    }
+                    break;
+                case "h"://hat
+                    if (VanillaHats.Contains(id))
+                    {
+                        itis = true;
+                    }
+                    break;
+                case "o"://object
+                    if (VanillaObjects.Contains(id))
+                    {
+                        itis = true;
+                    }
+                    break;
+                case "r"://ring
+                    if (VanillaObjects.Contains(id))
+                    {
+                        itis = true;
+                    }
+                    break;
+                case "w"://melee weapon
+                    if (VanillaWeapons.Contains(id))
+                    {
+                        itis = true;
+                    }
+                    break;
+                case "Tool"://tool
+                    id = (item as Tool).InitialParentTileIndex;
+                    if (VanillaTools.Contains(id))
+                    {
+                        itis = true;
+                    }
+                    break;
+            }
+
+            return itis;
         }
     }
 }

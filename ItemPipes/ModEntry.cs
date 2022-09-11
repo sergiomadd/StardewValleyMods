@@ -15,6 +15,8 @@ using ItemPipes.Framework.Items;
 using ItemPipes.Framework.Nodes;
 using HarmonyLib;
 using MaddUtil;
+using StardewValley.Buildings;
+using StardewValley.Locations;
 
 namespace ItemPipes.Framework
 {
@@ -44,6 +46,8 @@ namespace ItemPipes.Framework
             helper.Events.GameLoop.UpdateTicked += this.OnUpdateTicked;
             helper.Events.World.BuildingListChanged += this.OnBuildingListChanged;
             helper.Events.Input.ButtonPressed += this.OnButtonPressed;
+            helper.Events.World.LocationListChanged += this.OnLocationListChanged;
+
 
         }
 
@@ -107,9 +111,41 @@ namespace ItemPipes.Framework
                 }
             }
         }
+
         private void OnBuildingListChanged(object sender, BuildingListChangedEventArgs e)
         {
-            NetworkBuilder.BuildLocationNetworksTEMP(e.Location);
+            foreach (Building building in e.Added)
+            {
+                foreach (GameLocation location in building.indoors)
+                {
+                    if (location is BuildableGameLocation)
+                    {
+                        DataAccess.TryRegisterLocation(location);
+                    }
+                }
+            }
+            foreach (Building building in e.Removed)
+            {
+                foreach (GameLocation location in building.indoors)
+                {
+                    if (location is BuildableGameLocation)
+                    {
+                        DataAccess.TryUnRegisterLocation(location);
+                    }
+                }
+            }
+        }
+
+        private void OnLocationListChanged(object sender, LocationListChangedEventArgs e)
+        {
+            foreach(GameLocation location in e.Added)
+            {
+                DataAccess.TryRegisterLocation(location);
+            }
+            foreach (GameLocation location in e.Removed)
+            {
+                DataAccess.TryUnRegisterLocation(location);
+            }
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -165,16 +201,14 @@ namespace ItemPipes.Framework
         {
             if (Context.IsMainPlayer)
             {
-                //DataAccess.LostItems.Clear();
-                if (ModEntry.config.DebugMode) { Printer.Debug("Waiting for all items to arrive at inputs..."); }
-                foreach (GameLocation location in Game1.locations)
+                Printer.Debug("Waiting for all items to arrive at inputs...");
+                foreach (GameLocation location in DataAccess.AllLocations)
                 {
                     foreach(KeyValuePair<Vector2, SObject> pair in location.objects.Pairs)
                     {
                         if(pair.Value is PipeItem)
                         {
-                            DataAccess DataAccess = DataAccess.GetDataAccess();
-                            List<Node> nodes = DataAccess.LocationNodes[Game1.currentLocation];
+                            List<Node> nodes = DataAccess.LocationNodes[location];
                             Node node = nodes.Find(n => n.Position.Equals(pair.Value.TileLocation));
                             if (node != null && node is PipeNode)
                             {
@@ -184,10 +218,9 @@ namespace ItemPipes.Framework
                         }
                     }
                 }
-                if (ModEntry.config.DebugMode) { Printer.Debug("Saving modded items...!"); }
+                Printer.Debug("Saving pipes...");
                 ConvertToVanillaMap();
                 ConvertToVanillaPlayer();
-                if (ModEntry.config.DebugMode) { Printer.Debug("All modded items saved!"); }
             }
         }
 
@@ -196,18 +229,10 @@ namespace ItemPipes.Framework
             if (Context.IsMainPlayer) 
             {
                 DataAccess.Reset();
-                foreach (GameLocation location in Game1.locations)
-                {
-                    DataAccess.LocationNetworks.Add(location, new List<Network>());
-                    DataAccess.LocationNodes.Add(location, new List<Node>());
-                    DataAccess.UsedNetworkIDs.Add(location, new List<long>());
-                    NetworkBuilder.BuildLocationNetworksTEMP(location);
-                    NetworkManager.UpdateLocationNetworks(location);
-                }
+                DataAccess.InitSave();
 
                 ConvertFromVanillaMap();
                 ConvertFromVanillaPlayer();
-
                 if (ModEntry.config.DebugMode) { Printer.Debug("Location networks loaded!"); }
             }
         }
@@ -217,27 +242,18 @@ namespace ItemPipes.Framework
             if (Context.IsMainPlayer)
             {
                 DataAccess.Reset();
-                DataAccess.LoadAssets();
+                DataAccess.InitSave();
                 Helper.GameContent.InvalidateCache("Data/CraftingRecipes");
                 Helper.GameContent.InvalidateCache($"Data/CraftingRecipes.{this.Helper.Translation.Locale}");
-
-                foreach (GameLocation location in Game1.locations)
-                {
-                    DataAccess.LocationNetworks.Add(location, new List<Network>());
-                    DataAccess.LocationNodes.Add(location, new List<Node>());
-                    DataAccess.UsedNetworkIDs.Add(location, new List<long>());
-                    NetworkBuilder.BuildLocationNetworksTEMP(location);
-                    NetworkManager.UpdateLocationNetworks(location);
-                }
 
                 ConvertFromVanillaMap();
                 ConvertFromVanillaPlayer();
             }
-            if (ModEntry.config.DebugMode) { Printer.Debug("Location networks loaded!"); }
         }
 
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
+            //this.Helper.Multiplayer.GetActiveLocations();
             if (ModEntry.config.ItemSending)
             {
                 if (Context.IsWorldReady)
@@ -245,7 +261,7 @@ namespace ItemPipes.Framework
                     //Tier 1 Extractors
                     if (e.IsMultipleOf(60))
                     {
-                        foreach (GameLocation location in Game1.locations)
+                        foreach (GameLocation location in DataAccess.AllLocations)
                         {
                             List<Network> networks = DataAccess.LocationNetworks[location];
                             if (networks.Count > 0)
@@ -254,8 +270,7 @@ namespace ItemPipes.Framework
                                 {
                                     if (network != null && network.Outputs.Count > 0)
                                     {
-                                        network.ProcessExchanges(1);
-                                        
+                                        network.ProcessExchanges(1);                                        
                                     }
                                 }
                             }
@@ -264,7 +279,7 @@ namespace ItemPipes.Framework
                     //Tier 2 Extractors
                     if (e.IsMultipleOf(30))
                     {
-                        foreach (GameLocation location in Game1.locations)
+                        foreach (GameLocation location in DataAccess.AllLocations)
                         {
                             List<Network> networks = DataAccess.LocationNetworks[location];
                             if (networks.Count > 0)
@@ -275,7 +290,6 @@ namespace ItemPipes.Framework
                                     {
                                         network.ProcessExchanges(2);
                                     }
-
                                 }
                             }
                         }
@@ -283,7 +297,7 @@ namespace ItemPipes.Framework
                     //Tier 3 Extractors
                     if (e.IsMultipleOf(15))
                     {
-                        foreach (GameLocation location in Game1.locations)
+                        foreach (GameLocation location in DataAccess.AllLocations)
                         {
                             List<Network> networks = DataAccess.LocationNetworks[location];
                             if (networks.Count > 0)
@@ -304,15 +318,6 @@ namespace ItemPipes.Framework
 
         private void OnObjectListChanged(object sender, ObjectListChangedEventArgs e)
         {
-            List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();
-            foreach (KeyValuePair<Vector2, StardewValley.Object> obj in addedObjects)
-            {
-                if(obj.Value is CustomObjectItem || obj.Value is Chest)
-                {
-                    NetworkManager.AddObject(obj, e.Location);
-                    NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
-                }
-            }
 
             List<KeyValuePair<Vector2, StardewValley.Object>> removedObjects = e.Removed.ToList();
             foreach (KeyValuePair<Vector2, StardewValley.Object> obj in removedObjects)
@@ -324,8 +329,18 @@ namespace ItemPipes.Framework
                     NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
                 }
             }
-            
-            foreach (GameLocation location in Game1.locations)
+
+            List<KeyValuePair<Vector2, StardewValley.Object>> addedObjects = e.Added.ToList();
+            foreach (KeyValuePair<Vector2, StardewValley.Object> obj in addedObjects)
+            {
+                if(obj.Value is CustomObjectItem || (obj.Value is Chest && !obj.Value.modData.ContainsKey("ItemPipes")))
+                {
+                    NetworkManager.AddObject(obj, e.Location);
+                    NetworkManager.UpdateLocationNetworks(Game1.currentLocation);
+                }
+            }
+
+            foreach (GameLocation location in DataAccess.AllLocations)
             {
                 NetworkManager.UpdateLocationNetworks(location);
             }
@@ -355,7 +370,9 @@ namespace ItemPipes.Framework
 
         private void ConvertToVanillaMap()
         {
-            foreach (GameLocation location in Game1.locations)
+
+            List<GameLocation> locations = Utilities.YieldAllLocations().ToList();
+            foreach (GameLocation location in locations)
             {
                 foreach (KeyValuePair<Vector2, SObject> obj in location.Objects.Pairs.ToList())
                 {
@@ -389,25 +406,55 @@ namespace ItemPipes.Framework
                 }
             }
         }
+        //Multiplayer?
         private void ConvertToVanillaPlayer()
         {
-            if (Game1.player.Items.Any(i => i is CustomObjectItem || i is CustomToolItem))
+            if(Game1.IsMultiplayer)
             {
-                for (int i = 0; i < Game1.player.Items.Count; i++)
+                foreach (Farmer farmer in Game1.getOnlineFarmers())
                 {
-                    if (Game1.player.Items[i] is CustomObjectItem)
+                    if (farmer.Items.Any(i => i is CustomObjectItem || i is CustomToolItem))
                     {
-                        CustomObjectItem customObj = (CustomObjectItem)Game1.player.Items[i];
-                        Item tempObj = customObj.SaveItem();
-                        Game1.player.Items.RemoveAt(i);
-                        Game1.player.Items.Insert(i, tempObj);
+                        for (int i = 0; i < farmer.Items.Count; i++)
+                        {
+                            if (farmer.Items[i] is CustomObjectItem)
+                            {
+                                CustomObjectItem customObj = (CustomObjectItem)farmer.Items[i];
+                                Item tempObj = customObj.SaveItem();
+                                farmer.Items.RemoveAt(i);
+                                farmer.Items.Insert(i, tempObj);
+                            }
+                            else if (farmer.Items[i] is CustomToolItem)
+                            {
+                                CustomToolItem customTool = (CustomToolItem)farmer.Items[i];
+                                Item tempTool = customTool.SaveItem();
+                                farmer.Items.RemoveAt(i);
+                                farmer.Items.Insert(i, tempTool);
+                            }
+                        }
                     }
-                    else if (Game1.player.Items[i] is CustomToolItem)
+                }
+            }
+            else
+            {
+                if (Game1.player.Items.Any(i => i is CustomObjectItem || i is CustomToolItem))
+                {
+                    for (int i = 0; i < Game1.player.Items.Count; i++)
                     {
-                        CustomToolItem customTool = (CustomToolItem)Game1.player.Items[i];
-                        Item tempTool = customTool.SaveItem();
-                        Game1.player.Items.RemoveAt(i);
-                        Game1.player.Items.Insert(i, tempTool);
+                        if (Game1.player.Items[i] is CustomObjectItem)
+                        {
+                            CustomObjectItem customObj = (CustomObjectItem)Game1.player.Items[i];
+                            Item tempObj = customObj.SaveItem();
+                            Game1.player.Items.RemoveAt(i);
+                            Game1.player.Items.Insert(i, tempObj);
+                        }
+                        else if (Game1.player.Items[i] is CustomToolItem)
+                        {
+                            CustomToolItem customTool = (CustomToolItem)Game1.player.Items[i];
+                            Item tempTool = customTool.SaveItem();
+                            Game1.player.Items.RemoveAt(i);
+                            Game1.player.Items.Insert(i, tempTool);
+                        }
                     }
                 }
             }
@@ -415,7 +462,8 @@ namespace ItemPipes.Framework
 
         private void ConvertFromVanillaMap()
         {
-            foreach (GameLocation location in Game1.locations)
+            List<GameLocation> locations = Utilities.YieldAllLocations().ToList();
+            foreach (GameLocation location in locations)
             {
                 foreach (KeyValuePair<Vector2, SObject> obj in location.Objects.Pairs.ToList())
                 {

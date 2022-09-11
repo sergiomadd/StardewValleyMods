@@ -23,18 +23,11 @@ namespace ItemPipes.Framework
     {
         public static void UpdateLocationNetworks(GameLocation location)
         {
-            DataAccess DataAccess = DataAccess.GetDataAccess();
-            if(location.name == "Farm")
-            {
-                //Printer.Info(DataAccess.LocationNetworks[location].Count.ToString());
-            }
-            List<Network> networkList = DataAccess.LocationNetworks[location];
-            
+            List<Network> networkList = DataAccess.GetDataAccess().LocationNetworks[location];
             foreach (Network network in networkList)
             {
                 if(network != null)
                 {
-                    //Printer.Info("Updating: "+location.name);
                     network.Update();
                 }
             }
@@ -52,7 +45,10 @@ namespace ItemPipes.Framework
         public static void AddNewElement(Node newNode, Network network)
         {
             newNode.ParentNetwork = network;
-            LoadNodeToNetwork(newNode.Position, newNode.Location, network);
+            if (LoadNodeToNetwork(newNode.Position, newNode.Location, network) == false)
+            {
+                Printer.Warn($"Couldn't load node {newNode.Print()} to network {network.ID} in {newNode.Location}");
+            }
         }
 
         public static void AddObject(KeyValuePair<Vector2, StardewValley.Object> obj, GameLocation location)
@@ -65,8 +61,8 @@ namespace ItemPipes.Framework
             if (ModEntry.config.DebugMode) { Printer.Debug("New node created: " + newNode.PrintHash()); }
             int x = (int)newNode.Position.X;
             int y = (int)newNode.Position.Y;
-
             nodes.Add(newNode);
+            Node node = nodes.Find(n => n.Position.Equals(newNode.Position));
             Vector2 north = new Vector2(x, y - 1);
             Node northNode = nodes.Find(n => n.Position.Equals(north));
             if (northNode != null)
@@ -150,11 +146,11 @@ namespace ItemPipes.Framework
                     newNode.AddAdjacent(SideStruct.GetSides().West, westNode);
                 }
             }
-            Node node = nodes.Find(n => n.Position.Equals(obj.Key));
+            Node node2 = nodes.Find(n => n.Position.Equals(obj.Key));
             List<Network> networks = DataAccess.LocationNetworks[node.Location];
-            if (node.ParentNetwork != null && !networks.Contains(node.ParentNetwork))
+            if (node2.ParentNetwork != null && !networks.Contains(node2.ParentNetwork))
             {
-                networks.Add(node.ParentNetwork);
+                networks.Add(node2.ParentNetwork);
             }
         }
 

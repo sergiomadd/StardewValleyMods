@@ -20,8 +20,7 @@ namespace ItemPipes.Framework.Items.CustomFilter
         public int Cols { get; set; }
         public int Rows { get; set; }
         public int Capacity { get; set; }
-        public bool Quality { get; set; }
-        public Dictionary<OptionsElement, string> Options { get; set; }
+        public Dictionary<string, string> Options { get; set; }
         public FilterPipeItem FilterPipe { get; set; }
         public Filter()
         {
@@ -35,15 +34,22 @@ namespace ItemPipes.Framework.Items.CustomFilter
             //Generate cols and rows based on capacity
             Cols = 9;
             Rows = 1;
-            Quality = true;
-            Options = new Dictionary<OptionsElement, string>();
             FilterPipe = filterPipe;
+            Options = new Dictionary<string, string>();
+            PopulateOptions();
         }
 
-        public void UpdateOption(OptionsElement elem)
+        public void PopulateOptions()
         {
-            string changed = Options[elem];
-            (FilterPipe.GetNode() as FilterPipeNode).Filter.UpdateOption(changed);
+            Options.Add("quality", "False");
+        }
+
+        public void UpdateOption(string option, string value)
+        {
+            if(FilterPipe.GetNode() != null)
+            {
+                (FilterPipe.GetNode() as FilterPipeNode).Filter.UpdateOption(option, value);
+            }
         }
 
         public void ShowMenu()
@@ -73,7 +79,7 @@ namespace ItemPipes.Framework.Items.CustomFilter
                 Utilities.ShowInGameMessage(dataAccess.Warnings["filterError4"].Replace("itemName", item.DisplayName).Replace("itemType", item.getCategoryName()), "error");
                 Printer.Debug($"Attempted to place a tool [{item.Name}] in a filter pipe. Tools are not allowed in filter pipes!");
             }
-            else if (!Utilities.IsVanillaItem(item))
+            else if (!dataAccess.IsVanillaItem(item))
             {
                 can = false;
                 Utilities.ShowInGameMessage(dataAccess.Warnings["filterError3"].Replace("itemName", item.DisplayName), "error");
@@ -96,7 +102,7 @@ namespace ItemPipes.Framework.Items.CustomFilter
                 can = false;
                 if(items.Count < Capacity)
                 {
-                    if (Quality)
+                    if (Utilities.ToBool(Options["quality"]))
                     {
                         if(item is SObject)
                         {

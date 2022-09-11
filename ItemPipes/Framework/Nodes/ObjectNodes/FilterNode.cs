@@ -7,7 +7,8 @@ using Netcode;
 using StardewValley;
 using SObject = StardewValley.Object;
 using ItemPipes.Framework.Util;
-
+using StardewValley.Menus;
+using ItemPipes.Framework.Items.Objects.CustomFilter;
 
 namespace ItemPipes.Framework.Nodes.ObjectNodes
 {
@@ -24,11 +25,11 @@ namespace ItemPipes.Framework.Nodes.ObjectNodes
             Quality = false;
         }
 
-        public void UpdateOption(string option)
+        public void UpdateOption(string option, string value)
         {
-            if(option.Equals("quality"))
+            if (option.Equals("quality"))
             {
-                Quality = !Quality;
+                Quality = MaddUtil.Utilities.ToBool(value);
             }
         }
 

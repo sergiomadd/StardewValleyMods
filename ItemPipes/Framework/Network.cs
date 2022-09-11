@@ -24,7 +24,7 @@ namespace ItemPipes.Framework
         public List<InputPipeNode> Inputs { get; set; }
         public List<ConnectorPipeNode> Connectors { get; set; }
         public bool IsPassable { get; set; }
-        public List<InvisibilizerNode> PIPOs { get; set; }
+        public List<InvisibilizerNode> Invisibilizers { get; set; }
 
         public Network() { }
         public Network(long id)
@@ -34,7 +34,7 @@ namespace ItemPipes.Framework
             Outputs = new List<OutputPipeNode>();
             Inputs = new List<InputPipeNode>();
             Connectors = new List<ConnectorPipeNode>();
-            PIPOs = new List<InvisibilizerNode>();
+            Invisibilizers = new List<InvisibilizerNode>();
             IsPassable = false;
         }
 
@@ -50,7 +50,7 @@ namespace ItemPipes.Framework
                 TryConnectOutput(output);
                 output.UpdateSignal();
             }
-            if (PIPOs.Count == 0)
+            if (Invisibilizers.Count == 0)
             {
                 Deinvisibilize(null);
             }
@@ -92,9 +92,9 @@ namespace ItemPipes.Framework
                 {
                     Connectors.Add((ConnectorPipeNode)node);
                 }
-                else if (node is InvisibilizerNode && !PIPOs.Contains(node))
+                else if (node is InvisibilizerNode && !Invisibilizers.Contains(node))
                 {
-                    PIPOs.Add((InvisibilizerNode)node);
+                    Invisibilizers.Add((InvisibilizerNode)node);
                     if (!IsPassable && (node as InvisibilizerNode).State == "on")
                     {
                         Invisibilize((InvisibilizerNode)node);
@@ -107,7 +107,10 @@ namespace ItemPipes.Framework
             }
             else if(node.ParentNetwork != this)
             {
-                Printer.Warn($"Tried to add {node.PrintHash()} to N{ID}, but they dont match.");
+                if(!(node is ChestContainerNode))
+                {
+                    Printer.Warn($"Tried to add {node.PrintHash()} to N{ID}, but they dont match.");
+                }
             }
             return added;
         }
@@ -131,9 +134,9 @@ namespace ItemPipes.Framework
                 {
                     Connectors.Remove((ConnectorPipeNode)node);
                 }
-                else if (node is InvisibilizerNode && PIPOs != null)
+                else if (node is InvisibilizerNode && Invisibilizers != null)
                 {
-                    PIPOs.Remove((InvisibilizerNode)node);
+                    Invisibilizers.Remove((InvisibilizerNode)node);
                     if (!IsPassable && (node as InvisibilizerNode).State == "on")
                     {
                         Invisibilize((InvisibilizerNode)node);
@@ -193,7 +196,7 @@ namespace ItemPipes.Framework
                 {
                     if (output.IsInputConnected(input))
                     {
-                        if (!output.CanConnectedWith(input) || input.ConnectedContainer == null)
+                        if (input.ConnectedContainer == null || !output.CanConnectedWith(input))
                         {
                             canDisconnect = output.RemoveConnectedInput(input);
                             if (ModEntry.config.DebugMode) { Printer.Debug($"[N{ID}] {input.PrintHash()} disconnected"); }
@@ -225,7 +228,7 @@ namespace ItemPipes.Framework
 
         public void Invisibilize(InvisibilizerNode invis)
         {
-            if (PIPOs.All(p => p.Passable))
+            if (Invisibilizers.All(p => p.Passable))
             {
                 IsPassable = true;
                 foreach (Node node in Nodes)
@@ -240,7 +243,7 @@ namespace ItemPipes.Framework
 
         public void Deinvisibilize(InvisibilizerNode invis)
         {
-            if(PIPOs.Count == 0)
+            if(Invisibilizers.Count == 0)
             {
                 IsPassable = false;
                 foreach (Node node in Nodes)
@@ -251,7 +254,7 @@ namespace ItemPipes.Framework
                     }
                 }
             }
-            else if (PIPOs.Any(p => !p.Passable))
+            else if (Invisibilizers.Any(p => !p.Passable))
             {
                 IsPassable = false;
                 foreach (Node node in Nodes)
@@ -303,7 +306,7 @@ namespace ItemPipes.Framework
                 }
                 graph.Append("\n");
                 graph.Append("PIPOs: \n");
-                foreach (InvisibilizerNode pipo in PIPOs)
+                foreach (InvisibilizerNode pipo in Invisibilizers)
                 {
                     graph.Append(pipo.PrintHash() + $" {pipo.State} {pipo.Passable} " + ", ");
                 }

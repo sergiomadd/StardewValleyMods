@@ -15,6 +15,7 @@ using SObject = StardewValley.Object;
 using ItemPipes.Framework.Util;
 using StardewValley.Objects;
 using ItemPipes.Framework.Nodes.ObjectNodes;
+using MaddUtil;
 
 
 namespace ItemPipes.Framework.Items.Objects
@@ -44,6 +45,9 @@ namespace ItemPipes.Framework.Items.Objects
 			else { modData["State"] = State; }
 			if (!modData.ContainsKey("signal")) { modData.Add("signal", Signal); }
 			else { modData["signal"] = Signal; }
+			if (!modData.ContainsKey("filter_quality")) { modData.Add("filter_quality", Filter.Options["quality"]); }
+			else { modData["filter_quality"] = Filter.Options["quality"]; }
+
 			Chest filterChest = null;
 			if (Filter != null)
             {
@@ -58,12 +62,19 @@ namespace ItemPipes.Framework.Items.Objects
 			return filterChest;
 		}
 
+
+
 		public override void LoadObject(Item item)
 		{
 			modData = item.modData;
 			stack.Value = Int32.Parse(modData["Stack"]);
 			Signal = modData["signal"];
-			if(item is Chest)
+			if(modData.ContainsKey("filter_quality"))
+            {
+				Filter.Options["quality"] = modData["filter_quality"];
+				Filter.UpdateOption("quality", Filter.Options["quality"]);
+			}
+			if (item is Chest)
             {
 				Filter.items = (item as Chest).items;
             }

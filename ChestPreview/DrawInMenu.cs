@@ -138,6 +138,7 @@ namespace ChestPreview
 			if ((bool)item.bigCraftable)
 			{
 				Microsoft.Xna.Framework.Rectangle sourceRect = SObject.getSourceRectForBigCraftable(item.parentSheetIndex);
+				//location + new Vector2(32f, 32f)
 				spriteBatch.Draw(Game1.bigCraftableSpriteSheet,
 					location + new Vector2(32f, 32f), sourceRect,
 					color * transparency, 0f, new Vector2(8f, 16f), 4f * (((double)scaleSize < 0.2) ? scaleSize : (scaleSize / 2f)), SpriteEffects.None, layerDepth);

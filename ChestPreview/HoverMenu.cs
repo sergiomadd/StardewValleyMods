@@ -23,7 +23,12 @@ namespace ChestPreview
 		public HoverMenu(int xPosition, int yPosition, bool playerInventory, IList<Item> actualInventory, highlightThisItem highlightMethod = null, int capacity = -1, int rows = 3, int horizontalGap = 0, int verticalGap = 0, bool drawSlots = true)
 		: base(xPosition, yPosition, playerInventory, actualInventory, null, capacity)
 		{
-			Scale = 0.5f;
+			/*Scales
+			 * 0.4 Small
+			 * 0.5 Normal
+			 * 0.6 Big
+			 * */
+			Scale = 0.6f;
 			SourceX = xPosition;
 			SourceY = yPosition;
 			this.width = (int)(width * Scale);
@@ -95,8 +100,10 @@ namespace ChestPreview
 				for (int k = 0; k < this.capacity; k++)
 				{
 					Vector2 toDraw2 = new Vector2(
-						base.xPositionOnScreen + k % (this.capacity / this.rows) * (64*Scale) + this.horizontalGap * (k % (this.capacity / this.rows)) * Scale - 16,
-						base.yPositionOnScreen + k / (this.capacity / this.rows) * ((64*Scale) + this.verticalGap) + (k / (this.capacity / this.rows) - 1) * 4
+						base.xPositionOnScreen + k % (this.capacity / this.rows) * (64*Scale) 
+						+ this.horizontalGap * (k % (this.capacity / this.rows)) * Scale - 16,
+						base.yPositionOnScreen + k / (this.capacity / this.rows) * ((64*Scale) 
+						+ this.verticalGap) + (k / (this.capacity / this.rows) - 1) * 4
 						- ((k < this.capacity / this.rows && this.playerInventory && this.verticalGap == 0) ? 12 : 0) - 16);
 
 					if (this.actualInventory.Count > k && this.actualInventory.ElementAt(k) != null)
@@ -122,9 +129,18 @@ namespace ChestPreview
 			Vector2 originalPosition;
 			Vector2 position = new Vector2(x, y);
 
-			if(item is SObject)
+			/*
+			if(item is ModdedItem)
             {
-				//DrawInMenu.drawInMenuObject((item as SObject), spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+				//usar 
+				item.drawInMenu(spriteBatch, normal, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+				//o
+				//draw itemnotfound sprite
+			}
+			*/
+			if (item is SObject)
+            {
+				DrawInMenu.drawInMenuObject((item as SObject), spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
 			}
 			else if (item is Boots)
 			{
@@ -145,7 +161,7 @@ namespace ChestPreview
             {
 				item.drawInMenu(spriteBatch, normal, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
 			}
-			//FURNITURE NO SE SHOWEA
+			//FURNITURE NO SE SHOWEA <<<<<<<<<<<-----------------------------------------
 			/*
 			 //REPASAR SI TODAS FUNCIONAN
 			if (item is Tool)

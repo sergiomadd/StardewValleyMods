@@ -22,7 +22,7 @@ namespace ChestPreview
     public class ModEntry : Mod
     {
         public static IModHelper helper;
-        //public static ModConfig config;
+        public static ModConfig config;
         public SpriteBatch batch { get; set; }
         public override void Entry(IModHelper helper)
         {
@@ -32,55 +32,86 @@ namespace ChestPreview
             Helpers.SetModHelper(helper);
             Helpers.SetContentHelper(helper.Content);
             Helpers.SetModContentHelper(helper.ModContent);
-            
 
-            //helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
+            helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             //helper.Events.Input.CursorMoved += this.OnCursorMoved;
             helper.Events.Display.Rendered += this.OnRendered;
 
         }
 
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            config = null;
+            try
+            {
+                config = ModEntry.helper.ReadConfig<ModConfig>();
+                if (config == null)
+                {
+                    Printer.Error($"The config file seems to be empty or invalid. Data class returned null.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Printer.Error($"The config file seems to be missing or invalid.\n{ex}");
+            }
+            config.RegisterModConfigMenu(helper, this.ModManifest);
+
+        }
 
         private void OnRendered(object sender, RenderedEventArgs e)
         {
             if (Context.IsWorldReady && Game1.activeClickableMenu == null)
             {
                 Vector2 tile = Game1.currentCursorTile;
-                if(Game1.currentLocation.Objects.ContainsKey(tile)
-                    && Game1.currentLocation.Objects[tile] != null 
-                    && Game1.currentLocation.Objects[tile] is Chest)
+                if(config.Range > 0
+                    && Utility.tileWithinRadiusOfPlayer((int)tile.X, (int)tile.Y, config.Range, Game1.player))
                 {
-                    Chest chest = Game1.currentLocation.Objects[tile] as Chest;
-                    //Util para la opcion del rango?
-                    //Utility.isOnScreen
-                    //Utility.tileWithinRadiusOfPlayer
-
-                    //Para coger el height desde donde tiene que drawearse el handle, 
-                    //usar el maxHeight de la textura del objeto en custion
-                    //chest.getBoundingBox();
-
-                    //handle multiplayer?
-                    InventoryMenu menu = CreatePreviewMenu(tile, GetItemList(chest).ToList(), chest.GetActualCapacity());
-
-                    /*
-                    Game1.InUIMode(() =>
-                    {
-                        menu2.draw(e.SpriteBatch);
-
-                    });
-                    */
-                    menu.draw(e.SpriteBatch);
-                    
+                    DrawPreview(tile, e);
                 }
-                else if(Game1.currentLocation is FarmHouse
-                    && (Game1.currentLocation as FarmHouse).fridgePosition.Equals(tile.ToPoint()))
+                else if(config.Range <= 0)
                 {
-                    InventoryMenu menu = CreatePreviewMenu(tile, (Game1.currentLocation as FarmHouse).fridge.First().items.ToList(), 36);
-                    menu.draw(e.SpriteBatch);
+                    DrawPreview(tile, e);
                 }
             }
         }
 
+        public void DrawPreview(Vector2 tile, RenderedEventArgs e)
+        {
+            if (Game1.currentLocation.Objects.ContainsKey(tile)
+                && Game1.currentLocation.Objects[tile] != null
+                && Game1.currentLocation.Objects[tile] is Chest)
+            {
+                Chest chest = Game1.currentLocation.Objects[tile] as Chest;
+                //Util para la opcion del rango?
+                //Utility.isOnScreen
+                //Utility.tileWithinRadiusOfPlayer
+
+                //Para coger el height desde donde tiene que drawearse el handle, 
+                //usar el maxHeight de la textura del objeto en custion
+                //chest.getBoundingBox();
+
+                //handle multiplayer?
+                InventoryMenu menu = CreatePreviewMenu(tile, GetItemList(chest).ToList(), chest.GetActualCapacity());
+
+                /*
+                Game1.InUIMode(() =>
+                {
+                    menu2.draw(e.SpriteBatch);
+
+                });
+                */
+                menu.draw(e.SpriteBatch);
+
+            }
+            else if (Game1.currentLocation is FarmHouse
+                && (Game1.currentLocation as FarmHouse).fridgePosition.Equals(tile.ToPoint()))
+            {
+                InventoryMenu menu = CreatePreviewMenu(tile, (Game1.currentLocation as FarmHouse).fridge.First().items.ToList(), 36);
+                menu.draw(e.SpriteBatch);
+            }
+        }
+        
+        //To make preview handle match object sprite top
         public int GetSpriteYOffset(Item item)
         {
             int offset = 0;

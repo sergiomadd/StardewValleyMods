@@ -7,7 +7,6 @@ using SObject = StardewValley.Object;
 using Microsoft.Xna.Framework;
 using StardewValley.Objects;
 using StardewValley.Tools;
-using ItemPipes.Framework.Factories;
 using StardewValley.Buildings;
 using StardewValley.Locations;
 

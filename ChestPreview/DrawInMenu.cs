@@ -16,7 +16,6 @@ namespace ChestPreview
 {
     public static class DrawInMenu
     {
-		//ONly in watercan for tools
 		public static void drawInMenuTool(Tool item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
 			spriteBatch.Draw(Game1.toolSpriteSheet, location + new Vector2(32f, 32f), Game1.getSquareSourceRectForNonStandardTileSheet(Game1.toolSpriteSheet, 16, 16, item.IndexOfMenuItemView), color * transparency, 0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth);
@@ -25,7 +24,7 @@ namespace ChestPreview
 				Game1.drawWithBorder(string.Concat(((Stackable)item).NumberInStack), Color.Black, Color.White, location + new Vector2(64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).X, 64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).Y * 3f / 4f), 0f, 0.5f, 1f);
 			}
 		}
-		//TODO RINGS
+		/*
 		public static void drawInMenuRing(Tool item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
 			spriteBatch.Draw(Game1.toolSpriteSheet, location + new Vector2(32f, 32f), Game1.getSquareSourceRectForNonStandardTileSheet(Game1.toolSpriteSheet, 16, 16, item.IndexOfMenuItemView), color * transparency, 0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth);
@@ -34,7 +33,7 @@ namespace ChestPreview
 				Game1.drawWithBorder(string.Concat(((Stackable)item).NumberInStack), Color.Black, Color.White, location + new Vector2(64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).X, 64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).Y * 3f / 4f), 0f, 0.5f, 1f);
 			}
 		}
-		//TODO DAGGERS
+		*/
 		/* Melee weapons types:
 		 * 0 Sword
 		 * 1 Dagger
@@ -44,75 +43,220 @@ namespace ChestPreview
 		public static void drawInMenuDagger(MeleeWeapon item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
 			float addedScale = 0f;
+			float x = 36f;
+			float y = 28f;
+			if (ModEntry.config.Size.Equals("Small"))
+			{
+				x += -4;
+				y += -2;
+			}
+			else if (ModEntry.config.Size.Equals("Big"))
+			{
+				x += 4;
+				y += 4;
+			}
 			spriteBatch.Draw(Tool.weaponsTexture,
-				location + (((int)item.type == 1) ? new Vector2(36f, 28f) : new Vector2(32f, 32f)),
+				location + (((int)item.type == 1) ? new Vector2(x, y) : new Vector2(x, y)),
 				Game1.getSourceRectForStandardTileSheet(Tool.weaponsTexture, item.IndexOfMenuItemView, 16, 16),
 				color * transparency, 0f, new Vector2(8f, 8f), 4f * (scaleSize + addedScale), SpriteEffects.None, layerDepth);
 		}
 
 		public static void drawInMenuWateringCan(WateringCan item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
-			drawInMenuTool((item as WateringCan), spriteBatch,
-				location + (Game1.player.hasWateringCanEnchantment ? new Vector2(0f, 0f) : new Vector2(0f, -8f)),
-				scaleSize, transparency, layerDepth, StackDrawType.Draw, Color.White, false);
-
-			if (drawStackNumber != 0 && !Game1.player.hasWateringCanEnchantment)
+			if (ModEntry.config.Size.Equals("Small"))
 			{
-				//Left
-				spriteBatch.Draw(Game1.mouseCursors, 
-					location + new Vector2(16f, 38f), 
-					new Rectangle
-					(
-						297, 
-						420, 
-						(int)(7), 
-						(int)(2)
-					), 
-					Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+				drawInMenuTool((item as WateringCan), spriteBatch,
+					location + (Game1.player.hasWateringCanEnchantment ? new Vector2(0f, 0f) : new Vector2(-2f, -8f)),
+					scaleSize, transparency, layerDepth, StackDrawType.Draw, Color.White, false);
 				
-				spriteBatch.Draw(Game1.mouseCursors,
-					location + new Vector2(16f, 40f),
-					new Rectangle
-					(
-						297,
-						422,
-						(int)(7),
-						(int)(2)
-					),
-					Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
-				//Right
-				spriteBatch.Draw(Game1.mouseCursors,
-					location + new Vector2(20f, 38f),
-					new Rectangle
-					(
-						304,
-						420,
-						(int)(7),
-						(int)(2)
-					),
-					Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+				if (drawStackNumber != 0 && !Game1.player.hasWateringCanEnchantment)
+				{
+					//Left
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(14f, 34f),
+						new Rectangle
+						(
+							297,
+							420,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
 
-				spriteBatch.Draw(Game1.mouseCursors,
-					location + new Vector2(20f, 40f),
-					new Rectangle
-					(
-						304,
-						422,
-						(int)(7),
-						(int)(2)
-					),
-					Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);		
-				spriteBatch.Draw(Game1.staminaRect, 
-					new Rectangle
-					(
-						(int)location.X + 8 + 12, 
-						(int)location.Y + 64 - 16 - 8, 
-						(int)(((float)item.WaterLeft / (float)item.waterCanMax * 48f)*scaleSize), 
-						(int)(8*scaleSize)
-					),
-					item.IsBottomless ? (Color.BlueViolet * 1f * transparency) : (Color.DodgerBlue * 0.7f * transparency));
-				
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(14f, 36f),
+						new Rectangle
+						(
+							297,
+							422,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+					//Right
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(18f, 34f),
+						new Rectangle
+						(
+							304,
+							420,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(18f, 36f),
+						new Rectangle
+						(
+							304,
+							422,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+					spriteBatch.Draw(Game1.staminaRect,
+						new Rectangle
+						(
+							(int)location.X + 8 + 10,
+							(int)location.Y + 64 - 16 - 12,
+							(int)(((float)item.WaterLeft / (float)item.waterCanMax * 48f) * scaleSize),
+							(int)(8 * scaleSize)
+						),
+						item.IsBottomless ? (Color.BlueViolet * 1f * transparency) : (Color.DodgerBlue * 0.7f * transparency));
+
+				}
 			}
+			else if (ModEntry.config.Size.Equals("Big"))
+			{
+				drawInMenuTool((item as WateringCan), spriteBatch,
+					location + (Game1.player.hasWateringCanEnchantment ? new Vector2(0f, 0f) : new Vector2(4f, -4f)),
+					scaleSize, transparency, layerDepth, StackDrawType.Draw, Color.White, false);
+				if (drawStackNumber != 0 && !Game1.player.hasWateringCanEnchantment)
+				{
+					//Left
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(20f, 42f),
+						new Rectangle
+						(
+							297,
+							420,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(20f, 44f),
+						new Rectangle
+						(
+							297,
+							422,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+					//Right
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(24f, 42f),
+						new Rectangle
+						(
+							304,
+							420,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(24f, 44f),
+						new Rectangle
+						(
+							304,
+							422,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+					spriteBatch.Draw(Game1.staminaRect,
+						new Rectangle
+						(
+							(int)location.X + 8 + 16,
+							(int)location.Y + 64 - 16 - 4,
+							(int)(((float)item.WaterLeft / (float)item.waterCanMax * 48f) * scaleSize)-2,
+							(int)(8 * scaleSize)
+						),
+						item.IsBottomless ? (Color.BlueViolet * 1f * transparency) : (Color.DodgerBlue * 0.7f * transparency));
+
+				}
+			}
+			else
+            {
+				drawInMenuTool((item as WateringCan), spriteBatch,
+					location + (Game1.player.hasWateringCanEnchantment ? new Vector2(0f, 0f) : new Vector2(0f, -8f)),
+					scaleSize, transparency, layerDepth, StackDrawType.Draw, Color.White, false);
+				
+				if (drawStackNumber != 0 && !Game1.player.hasWateringCanEnchantment)
+				{
+					//Left
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(16f, 38f),
+						new Rectangle
+						(
+							297,
+							420,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(16f, 40f),
+						new Rectangle
+						(
+							297,
+							422,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+					//Right
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(20f, 38f),
+						new Rectangle
+						(
+							304,
+							420,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(20f, 40f),
+						new Rectangle
+						(
+							304,
+							422,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 4f, SpriteEffects.None, layerDepth + 0.0001f);
+					spriteBatch.Draw(Game1.staminaRect,
+						new Rectangle
+						(
+							(int)location.X + 8 + 12,
+							(int)location.Y + 64 - 16 - 8,
+							(int)(((float)item.WaterLeft / (float)item.waterCanMax * 48f) * scaleSize),
+							(int)(8 * scaleSize)
+						),
+						item.IsBottomless ? (Color.BlueViolet * 1f * transparency) : (Color.DodgerBlue * 0.7f * transparency));
+
+				}
+			}
+
+
+
 		}
 
 		public static void drawInMenuBoots(Boots item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
@@ -122,6 +266,57 @@ namespace ChestPreview
 				Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, item.indexInTileSheet.Value, 16, 16),
 				color * transparency, 0f, new Vector2(8f, 8f) * scaleSize, scaleSize * 4f, SpriteEffects.None, layerDepth);
 		}
+		/*
+		//Private method from Furniture.cs
+		private static float getScaleSizeFurniture(Furniture item)
+		{
+			int tilesWide = item.defaultSourceRect.Width / 16;
+			int tilesHigh = item.defaultSourceRect.Height / 16;
+			if (tilesWide >= 7)
+			{
+				return 0.5f;
+			}
+			if (tilesWide >= 6)
+			{
+				return 0.66f;
+			}
+			if (tilesWide >= 5)
+			{
+				return 0.75f;
+			}
+			if (tilesHigh >= 5)
+			{
+				return 0.8f;
+			}
+			if (tilesHigh >= 3)
+			{
+				return 1f;
+			}
+			if (tilesWide <= 2)
+			{
+				return 2f;
+			}
+			if (tilesWide <= 4)
+			{
+				return 1f;
+			}
+			return 0.1f;
+		}
+
+		public static void drawInMenuFurniture(Furniture item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
+		{
+			spriteBatch.Draw(
+				Furniture.furnitureTexture,
+				location + new Vector2(32f, 32f),
+				item.defaultSourceRect,
+				color * transparency, 0f,
+				new Vector2(item.defaultSourceRect.Width / 2, item.defaultSourceRect.Height / 2), 1f * getScaleSizeFurniture(item) * scaleSize, SpriteEffects.None, layerDepth);
+			if (((drawStackNumber == StackDrawType.Draw && item.maximumStackSize() > 1 && item.Stack > 1) || drawStackNumber == StackDrawType.Draw_OneInclusive) && (double)scaleSize > 0.3 && item.Stack != int.MaxValue)
+			{
+				Utility.drawTinyDigits(item.stack, spriteBatch, location + new Vector2((float)(64 - Utility.getWidthOfTinyDigitString(item.stack, 3f * scaleSize)) + 3f * scaleSize, 64f - 18f * scaleSize + 2f), 3f * scaleSize, 1f, color);
+			}
+		}
+		*/
 
 		public static void drawInMenuObject(SObject item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
@@ -137,16 +332,43 @@ namespace ChestPreview
 			}
 			if ((bool)item.bigCraftable)
 			{
+				float x = 32f;
+				float y = 32f;
+				if (ModEntry.config.Size.Equals("Small"))
+				{
+					x += -2;
+					y += -2;
+				}
+				else if (ModEntry.config.Size.Equals("Big"))
+				{
+					x += 4;
+					y += 2;
+				}
 				Microsoft.Xna.Framework.Rectangle sourceRect = SObject.getSourceRectForBigCraftable(item.parentSheetIndex);
-				//location + new Vector2(32f, 32f)
 				spriteBatch.Draw(Game1.bigCraftableSpriteSheet,
-					location + new Vector2(32f, 32f), sourceRect,
+					location + new Vector2(x, y), sourceRect,
 					color * transparency, 0f, new Vector2(8f, 16f), 4f * (((double)scaleSize < 0.2) ? scaleSize : (scaleSize / 2f)), SpriteEffects.None, layerDepth);
 				if (shouldDrawStackNumber)
 				{
-					Utility.drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(32, 18f * scaleSize + 64 * scaleSize),
+					if (ModEntry.config.Size.Equals("Small"))
+                    {
+						drawTinyDigits(item.stack, spriteBatch,
+						location + new Vector2(28, 32f * scaleSize + 64 * scaleSize - 4),
 						3f * scaleSize, 1f, color);
+					}
+					else if (ModEntry.config.Size.Equals("Big"))
+					{
+						drawTinyDigits(item.stack, spriteBatch,
+						location + new Vector2(40, 8f * scaleSize + 64 * scaleSize),
+						3f * scaleSize, 1f, color);
+					}
+					else
+					{
+						drawTinyDigits(item.stack, spriteBatch,
+						location + new Vector2(34, 18f * scaleSize + 64 * scaleSize),
+						3f * scaleSize, 1f, color);
+					}
+
 				}
 			}
 			else
@@ -155,22 +377,69 @@ namespace ChestPreview
 				{
 					spriteBatch.Draw(Game1.shadowTexture, location + new Vector2(32f, 48f), Game1.shadowTexture.Bounds, color * 0.5f, 0f, new Vector2(Game1.shadowTexture.Bounds.Center.X, Game1.shadowTexture.Bounds.Center.Y), 3f, SpriteEffects.None, layerDepth - 0.0001f);
 				}
+				float x = 8;
+				float y = 8;
+				if (ModEntry.config.Size.Equals("Small"))
+				{
+					x += 2;
+					y += 2;
+				}
+				else if (ModEntry.config.Size.Equals("Big"))
+				{
+					x += 2;
+					y += 0;
+				}
 				spriteBatch.Draw(Game1.objectSpriteSheet,
-					location + new Vector2((int)(32f * scaleSize) + 8, (int)(32f * scaleSize) + 8),
+					location + new Vector2((int)(32f * scaleSize) + x, (int)(32f * scaleSize) + y),
 					Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, item.parentSheetIndex, 16, 16),
 					color * transparency, 0f, new Vector2(8f, 8f) * scaleSize, 4f * scaleSize, SpriteEffects.None, layerDepth);
 				if (shouldDrawStackNumber)
 				{
-					Utility.drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(32, 18f * scaleSize + 64 * scaleSize),
+					if (ModEntry.config.Size.Equals("Small"))
+					{
+						drawTinyDigits(item.stack, spriteBatch,
+						location + new Vector2(27, 22f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
+					}
+					else if (ModEntry.config.Size.Equals("Big"))
+					{
+						drawTinyDigits(item.stack, spriteBatch,
+						location + new Vector2(40, 8f * scaleSize + 64 * scaleSize),
+						3f * scaleSize, 1f, color);
+					}
+					else
+                    {
+						drawTinyDigits(item.stack, spriteBatch,
+							location + new Vector2(34, 18f * scaleSize + 64 * scaleSize),
+							3f * scaleSize, 1f, color);
+                    }
 				}
 				if (drawStackNumber != 0 && (int)item.quality > 0)
 				{
 					Microsoft.Xna.Framework.Rectangle quality_rect = (((int)item.quality < 4) ? new Microsoft.Xna.Framework.Rectangle(338 + ((int)item.quality - 1) * 8, 400, 8, 8) : new Microsoft.Xna.Framework.Rectangle(346, 392, 8, 8));
 					Texture2D quality_sheet = Game1.mouseCursors;
-					float yOffset = (((int)item.quality < 4) ? 0f : (((float)Math.Cos((double)Game1.currentGameTime.TotalGameTime.Milliseconds * Math.PI / 512.0) + 1f) * 0.05f));
-					spriteBatch.Draw(quality_sheet, location + new Vector2(12f, 52f + yOffset), quality_rect, color * transparency, 0f, new Vector2(4f, 4f), 3f * scaleSize * (1f + yOffset), SpriteEffects.None, layerDepth);
+					float xOffset = 0;
+					float yOffset = yOffset = (((int)item.quality < 4) ? 0f :
+							(((float)Math.Cos((double)Game1.currentGameTime.TotalGameTime.Milliseconds * Math.PI / 512.0) + 1f) * 0.05f));
+					float yOffset2 = 0;
+					if (ModEntry.config.Size.Equals("Small"))
+					{
+						xOffset = -18;
+						yOffset2 = -13;
+					}
+					else if (ModEntry.config.Size.Equals("Big"))
+					{
+						xOffset = -26;
+						yOffset2 = -6;
+					}
+					else
+					{
+						xOffset = -22;
+						yOffset2 = -8;
+					}
+					spriteBatch.Draw(quality_sheet, location + new Vector2(12f + xOffset, 52f + yOffset + yOffset2), 
+						quality_rect, color * transparency, 0f, 
+						new Vector2(4f, 4f), 3f * scaleSize * (1f + yOffset), SpriteEffects.None, layerDepth);
 				}
 				if (item.Category == -22 && item.uses.Value > 0)
 				{
@@ -182,6 +451,43 @@ namespace ChestPreview
 			{
 				spriteBatch.Draw(Game1.objectSpriteSheet, location + new Vector2(16f, 16f), Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, 451, 16, 16), color, 0f, Vector2.Zero, 3f, SpriteEffects.None, layerDepth + 0.0001f);
 			}
+		}
+		//Needed custom draw func because vanilla one breaks with my scale values, don't really know why
+		public static void drawTinyDigits(int toDraw, SpriteBatch b, Vector2 position, float scale, float layerDepth, Color c)
+		{
+			//scale = 1.5f;
+			int xPosition = 8;
+			int currentValue = toDraw;
+			int numDigits = 0;
+			do
+			{
+				numDigits++;
+			}
+			while ((toDraw /= 10) >= 1);
+			int digitStrip = (int)Math.Pow(10.0, numDigits - 1);
+			bool significant = false;
+			List<int> list = new List<int>();
+			for (int i = 0; i < numDigits; i++)
+			{
+				int currentDigit = currentValue / digitStrip % 10;
+				if (currentDigit > 0 || i == numDigits - 1)
+				{
+					significant = true;
+				}
+				if (significant)
+				{
+					list.Add(currentDigit);
+				}
+				digitStrip /= 10;
+			}
+			list.Reverse();
+			foreach(int digit in list)
+			{
+				int currentDigit = digit;
+				b.Draw(Game1.mouseCursors, position + new Vector2(xPosition, 0f), new Microsoft.Xna.Framework.Rectangle(368 + currentDigit * 5, 56, 5, 7), c, 0f, Vector2.Zero, scale, SpriteEffects.None, layerDepth);
+				xPosition -= (int)(5f * scale) - 1;
+			}
+			
 		}
 	}
 }

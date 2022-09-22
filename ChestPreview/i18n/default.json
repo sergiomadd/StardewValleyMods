@@ -1,0 +1,24 @@
+{
+  "config.enabled.name": "Show chest preview",
+  "config.range.name": "Show preview range",
+  "config.range.tooltip": "0 or -1 for infite range. The amount of tiles away from the player where a preview should be shown.",
+  "config.size.name": "Preview menu UI size",
+  "config.size.small": "Small",
+  "config.size.medium": "Medium",
+  "config.size.big": "Big",
+  "config.size.huge": "Huge",
+  "config.connector.name": "Show chest to preview connector",
+  "config.enablekey.name": "Use keyboard key to show preview",
+  "config.key.name": "Key to press",
+  "config.key.tooltip": "Only works if the avobe option is checked",
+  "config.enablemouse.name": "Use mouse button to show preview",
+  "config.mouse.name": "Mouse button to press",
+  "config.mouse.tooltip": "Only works if the avobe option is checked",
+  "config.mouse.left": "MouseLeft",
+  "config.mouse.right": "MouseRight",
+  "config.mouse.middle": "MouseMiddle",
+  "config.mouse.x1": "MouseX1",
+  "config.mouse.x2": "MouseX2"
+
+
+}

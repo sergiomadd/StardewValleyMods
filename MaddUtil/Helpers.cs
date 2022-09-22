@@ -11,11 +11,16 @@ namespace MaddUtil
     {
         private static IModContentHelper modContentHelper;
         private static IContentHelper contentHelper;
+        private static ITranslationHelper translationHelper;
         private static IModHelper modHelper;
 
         public static void SetModHelper(IModHelper helper)
         {
             modHelper = helper;
+            SetContentHelper(helper.Content);
+            SetModContentHelper(helper.ModContent);
+            SetModContentHelper(helper.ModContent);
+            SetTranslationHelper(helper.Translation);
         }
 
         public static IModHelper GetModHelper()
@@ -39,6 +44,15 @@ namespace MaddUtil
         public static IContentHelper GetContentHelper()
         {
             return contentHelper;
+        }
+        public static void SetTranslationHelper(ITranslationHelper helper)
+        {
+            translationHelper = helper;
+        }
+
+        public static ITranslationHelper GetTranslationHelper()
+        {
+            return translationHelper;
         }
     }
 }

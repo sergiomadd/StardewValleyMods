@@ -1,0 +1,8 @@
+{
+  "config.range.name": "Rango para mostrar la preview",
+  "config.range.tooltip": "0 o -1 para rango infinito. La cantidad de casillas de las que tiene que estar el cofre del jugador para que se muestre la preview.",
+  "config.size.name": "Tamaño de la preview",
+  "config.size.small": "Pequeña",
+  "config.size.medium": "Mediana",
+  "config.size.big": "Grande"
+}

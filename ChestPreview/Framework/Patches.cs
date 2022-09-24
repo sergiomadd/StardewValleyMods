@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 
-namespace ChestPreview
+namespace ChestPreview.Framework
 {
     public class Patches
     {

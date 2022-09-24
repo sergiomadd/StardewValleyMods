@@ -12,7 +12,7 @@ using StardewValley.Tools;
 using StardewValley.Objects;
 using MaddUtil;
 
-namespace ChestPreview
+namespace ChestPreview.Framework
 {
     public static class DrawInMenu
     {

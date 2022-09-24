@@ -120,7 +120,7 @@ namespace ItemPipes.Framework
                 {
                     Printer.Info("chest preview api loadsed.");
 
-                    chestPreview.SendIDs(DataAccess.NetworkItems);
+                    chestPreview.LoadIDs(DataAccess.NetworkItems);
                     
                     foreach(int id in DataAccess.NetworkItems)
                     {
@@ -128,7 +128,7 @@ namespace ItemPipes.Framework
                         if(item is PipeItem)
                         {
                             Action<SpriteBatch, Vector2, float, float, float, StackDrawType, Color, bool> action = (item as PipeItem).drawInMenuPreview;
-                            chestPreview.DrawInMenu(id, action);
+                            chestPreview.DrawInPreview(id, action);
                         }
                     }
                     

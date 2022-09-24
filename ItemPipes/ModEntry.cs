@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
 using StardewValley;
 using StardewValley.Tools;
 using StardewValley.Objects;
@@ -17,6 +19,7 @@ using HarmonyLib;
 using MaddUtil;
 using StardewValley.Buildings;
 using StardewValley.Locations;
+using ItemPipes.Framework.APIs;
 
 namespace ItemPipes.Framework
 {
@@ -110,6 +113,36 @@ namespace ItemPipes.Framework
                     Printer.Error("SaveAnywhere is imcompatible with ItemPipes. You must not save the game using it or the game will crash!");
                 }
             }
+            if (this.Helper.ModRegistry.IsLoaded("sergiomadd.ChestPreview"))
+            {
+                IChestPreviewAPI chestPreview = helper.ModRegistry.GetApi<IChestPreviewAPI>("sergiomadd.ChestPreview");
+                if (chestPreview != null)
+                {
+                    Printer.Info("chest preview api loadsed.");
+
+                    chestPreview.SendIDs(DataAccess.NetworkItems);
+                    
+                    foreach(int id in DataAccess.NetworkItems)
+                    {
+                        Item item = Factories.ItemFactory.CreateItemFromID(id);
+                        if(item is PipeItem)
+                        {
+                            Action<SpriteBatch, Vector2, float, float, float, StackDrawType, Color, bool> action = (item as PipeItem).drawInMenuPreview;
+                            chestPreview.DrawInMenu(id, action);
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    Printer.Error("chest preview api error.");
+                }
+            }
+        }
+
+        public void test(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
+        {
+
         }
 
         private void OnBuildingListChanged(object sender, BuildingListChangedEventArgs e)
@@ -153,7 +186,6 @@ namespace ItemPipes.Framework
             config = DataAccess.LoadConfig();
             config.RegisterModConfigMenu(helper, this.ModManifest);
             ApplyPatches();
-            CheckCompatibilities();
         }
 
 
@@ -246,8 +278,11 @@ namespace ItemPipes.Framework
                 Helper.GameContent.InvalidateCache("Data/CraftingRecipes");
                 Helper.GameContent.InvalidateCache($"Data/CraftingRecipes.{this.Helper.Translation.Locale}");
 
+                CheckCompatibilities();
+
                 ConvertFromVanillaMap();
                 ConvertFromVanillaPlayer();
+
             }
         }
 

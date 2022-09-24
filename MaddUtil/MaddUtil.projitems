@@ -13,5 +13,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Popup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Printer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Vanilla.cs" />
   </ItemGroup>
 </Project>

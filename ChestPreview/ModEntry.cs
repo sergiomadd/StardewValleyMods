@@ -7,7 +7,6 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
 using Microsoft.Xna.Framework.Graphics;
 using Netcode;
 using StardewValley;
@@ -17,7 +16,7 @@ using MaddUtil;
 using StardewValley.Tools;
 using StardewValley.Locations;
 using SObject = StardewValley.Object;
-
+using HarmonyLib;
 
 namespace ChestPreview
 {
@@ -29,6 +28,8 @@ namespace ChestPreview
         public string CurrentSize { get; set; }
         public InventoryMenu Preview { get; set; }
         public Vector2 LastTile { get; set; }
+        public static List<int> ModdedIDs { get; set; }
+        public static Dictionary<int, Action<SpriteBatch, Vector2, float, float, float, StackDrawType, Color, bool>> DrawFunctions { get; set; }
 
         public override void Entry(IModHelper helper)
         {
@@ -37,12 +38,35 @@ namespace ChestPreview
             Printer.SetMonitor(this.Monitor);
             Helpers.SetModHelper(helper);
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
-            //helper.Events.Input.CursorMoved += this.OnCursorMoved;
+            //helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
+
             helper.Events.Display.Rendered += this.OnRendered;
             helper.Events.Display.WindowResized += this.OnWindowResized;
 
             Preview = null;
             LastTile = Vector2.Zero;
+            //ApplyPatches();
+            ModdedIDs = new List<int>();
+            DrawFunctions = new Dictionary<int, Action<SpriteBatch, Vector2, float, float, float, StackDrawType, Color, bool>>();
+        }
+
+        private void ApplyPatches()
+        {
+            var harmony = new Harmony(ModManifest.UniqueID);
+            try
+            {
+                Patches.Apply(harmony);
+            }
+            catch (Exception e)
+            {
+                Printer.Error("Error while applying harmony patches");
+                Printer.Error(e.Message);
+            }
+        }
+
+        public override object GetApi()
+        {
+            return new ChestPreviewAPI();
         }
 
         public static float GetSize()
@@ -96,19 +120,21 @@ namespace ChestPreview
                 Printer.Error($"The config file seems to be missing or invalid.\n{ex}");
             }
             config.RegisterModConfigMenu(helper, this.ModManifest);
+
+            Vanilla.Init();
         }
 
         private void OnRendered(object sender, RenderedEventArgs e)
         {
-            Printer.Info($"key {(!config.EnableKey || (config.EnableKey && !config.EnableMouse && Helper.Input.IsDown(config.Key)))} | mouse {(!config.EnableMouse || (config.EnableMouse && !config.EnableKey && Helper.Input.IsDown(config.GetMouseButton(config.Mouse))))}");
+            //Printer.Info($"key {(!config.EnableKey || (config.EnableKey && !config.EnableMouse && Helper.Input.IsDown(config.Key)))} | mouse {(!config.EnableMouse || (config.EnableMouse && !config.EnableKey && Helper.Input.IsDown(config.GetMouseButton(config.Mouse))))}");
             if (config.Enabled 
                 && Context.IsWorldReady 
                 && Game1.activeClickableMenu == null 
                 && (!config.EnableKey
-                || (config.EnableKey && config.EnableMouse
+                || (config.EnableKey
                 && Helper.Input.IsDown(config.Key)))
                 && (!config.EnableMouse
-                || (config.EnableMouse && config.EnableKey
+                || (config.EnableMouse
                 && Helper.Input.IsDown(config.GetMouseButton(config.Mouse)))))
             {
                 Vector2 tile = Game1.currentCursorTile;
@@ -214,68 +240,5 @@ namespace ChestPreview
             return menu;
         }
         
-        /*
-        private void OnCursorMoved(object sender, CursorMovedEventArgs e)
-        {
-            if (config.Enabled && Context.IsWorldReady && Game1.activeClickableMenu == null)
-            {
-                Vector2 tile = e.NewPosition.Tile;
-                if(tile != e.OldPosition.Tile)
-                {
-                    if (Preview != null && Game1.onScreenMenus.Contains(Preview))
-                    {
-                        Printer.Info("removing");
-                        Game1.onScreenMenus.Remove(Preview);
-                        Preview = null;
-                    }
-                }
-                if (Game1.currentLocation.Objects.ContainsKey(tile)
-                    && Game1.currentLocation.Objects[tile] != null 
-                    && Game1.currentLocation.Objects[tile] is Chest)
-                {
-                    if (config.Range <= 0 ||
-                        (config.Range > 0
-                        && Utility.tileWithinRadiusOfPlayer((int)tile.X, (int)tile.Y, config.Range, Game1.player)))
-                    {
-                        if (Game1.currentLocation.Objects.ContainsKey(tile)
-                          && Game1.currentLocation.Objects[tile] != null
-                          && Game1.currentLocation.Objects[tile] is Chest)
-                                            {
-
-                            Chest chest = Game1.currentLocation.Objects[tile] as Chest;
-
-                            //Para coger el height desde donde tiene que drawearse el handle, 
-                            //usar el maxHeight de la textura del objeto en custion
-                            //chest.getBoundingBox();
-
-                            //handle multiplayer?
-                            if(Preview == null)
-                            {
-                                LastTile = tile;
-                                Preview = CreatePreviewMenu(tile, GetItemList(chest).ToList(), chest.GetActualCapacity());
-                            }
-                            if (!Game1.onScreenMenus.Contains(Preview))
-                            {
-                                Game1.onScreenMenus.Add(Preview);
-                            }
-
-                            //menu.draw(b);
-
-                        }
-                        
-                        else if (Game1.currentLocation is FarmHouse
-                            && (Game1.currentLocation as FarmHouse).fridgePosition.Equals(tile.ToPoint()))
-                        {
-                            Preview = CreatePreviewMenu(tile, (Game1.currentLocation as FarmHouse).fridge.First().items.ToList(), 36);
-                            if (!Game1.onScreenMenus.Contains(Preview)) Game1.onScreenMenus.Add(Preview);
-
-                            //menu.draw(b);
-                        }
-                    }
-                }
-            }
-        }
-        */
-
     }
 }

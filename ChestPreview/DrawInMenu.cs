@@ -55,6 +55,11 @@ namespace ChestPreview
 				x += 4;
 				y += 4;
 			}
+			else if (ModEntry.config.Size.Equals("Huge"))
+			{
+				x += 7;
+				y += 6;
+			}
 			spriteBatch.Draw(Tool.weaponsTexture,
 				location + (((int)item.type == 1) ? new Vector2(x, y) : new Vector2(x, y)),
 				Game1.getSourceRectForStandardTileSheet(Tool.weaponsTexture, item.IndexOfMenuItemView, 16, 16),
@@ -188,6 +193,71 @@ namespace ChestPreview
 						),
 						item.IsBottomless ? (Color.BlueViolet * 1f * transparency) : (Color.DodgerBlue * 0.7f * transparency));
 
+				}
+			}
+			else if (ModEntry.config.Size.Equals("Huge"))
+			{
+				
+				drawInMenuTool((item as WateringCan), spriteBatch,
+					location + (Game1.player.hasWateringCanEnchantment ? new Vector2(0f, 0f) : new Vector2(8f, -4f)),
+					scaleSize, transparency, layerDepth, StackDrawType.Draw, Color.White, false);
+				
+				if (drawStackNumber != 0 && !Game1.player.hasWateringCanEnchantment)
+				{
+					//Left
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(20f, 48f),
+						new Rectangle
+						(
+							297,
+							420,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 5f, SpriteEffects.None, layerDepth + 0.0001f);
+
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(20f, 50f),
+						new Rectangle
+						(
+							297,
+							422,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 5f, SpriteEffects.None, layerDepth + 0.0001f);
+					//Right
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(24f, 48f),
+						new Rectangle
+						(
+							304,
+							420,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 5f, SpriteEffects.None, layerDepth + 0.0001f);
+
+					spriteBatch.Draw(Game1.mouseCursors,
+						location + new Vector2(24f, 50f),
+						new Rectangle
+						(
+							304,
+							422,
+							(int)(7),
+							(int)(2)
+						),
+						Color.White * transparency, 0f, Vector2.Zero, 5f, SpriteEffects.None, layerDepth + 0.0001f);
+					
+					spriteBatch.Draw(Game1.staminaRect,
+						new Rectangle
+						(
+							(int)location.X + 8 + 16,
+							(int)location.Y + 64 - 16 + 2,
+							(int)(((float)item.WaterLeft / (float)item.waterCanMax * 48f) * scaleSize) - 2,
+							(int)(8 * scaleSize)
+						),
+						item.IsBottomless ? (Color.BlueViolet * 1f * transparency) : (Color.DodgerBlue * 0.7f * transparency));
 				}
 			}
 			else
@@ -344,6 +414,11 @@ namespace ChestPreview
 					x += 4;
 					y += 2;
 				}
+				else if (ModEntry.config.Size.Equals("Huge"))
+				{
+					x += 7;
+					y += 6;
+				}
 				Microsoft.Xna.Framework.Rectangle sourceRect = SObject.getSourceRectForBigCraftable(item.parentSheetIndex);
 				spriteBatch.Draw(Game1.bigCraftableSpriteSheet,
 					location + new Vector2(x, y), sourceRect,
@@ -362,10 +437,16 @@ namespace ChestPreview
 						location + new Vector2(40, 8f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
+					else if (ModEntry.config.Size.Equals("Huge"))
+					{
+						drawTinyDigits(item.stack, spriteBatch,
+						location + new Vector2(44, 8f * scaleSize + 64 * scaleSize - 4),
+						3f * scaleSize, 1f, color);
+					}
 					else
 					{
 						drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(34, 18f * scaleSize + 64 * scaleSize),
+						location + new Vector2(40, 18f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
 
@@ -389,6 +470,11 @@ namespace ChestPreview
 					x += 2;
 					y += 0;
 				}
+				else if (ModEntry.config.Size.Equals("Huge"))
+				{
+					x = 8;
+					y = 8;
+				}
 				spriteBatch.Draw(Game1.objectSpriteSheet,
 					location + new Vector2((int)(32f * scaleSize) + x, (int)(32f * scaleSize) + y),
 					Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, item.parentSheetIndex, 16, 16),
@@ -407,10 +493,16 @@ namespace ChestPreview
 						location + new Vector2(40, 8f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
+					else if (ModEntry.config.Size.Equals("Huge"))
+					{
+						drawTinyDigits(item.stack, spriteBatch,
+						location + new Vector2(42, 8f * scaleSize + 64 * scaleSize - 4),
+						3f * scaleSize, 1f, color);
+					}
 					else
                     {
 						drawTinyDigits(item.stack, spriteBatch,
-							location + new Vector2(34, 18f * scaleSize + 64 * scaleSize),
+							location + new Vector2(38, 18f * scaleSize + 64 * scaleSize),
 							3f * scaleSize, 1f, color);
                     }
 				}
@@ -432,10 +524,15 @@ namespace ChestPreview
 						xOffset = -26;
 						yOffset2 = -6;
 					}
+					else if (ModEntry.config.Size.Equals("Huge"))
+					{
+						xOffset = -32;
+						yOffset2 = -2;
+					}
 					else
 					{
-						xOffset = -22;
-						yOffset2 = -8;
+						xOffset = -26;
+						yOffset2 = -6;
 					}
 					spriteBatch.Draw(quality_sheet, location + new Vector2(12f + xOffset, 52f + yOffset + yOffset2), 
 						quality_rect, color * transparency, 0f, 

@@ -54,14 +54,16 @@ namespace ChestPreview
 
 			//Screen limits
 			bool inLimit = false;
-			/*
+			
 			Printer.Info("----------");
 			Printer.Info("source: " + (SourceX).ToString());
 			Printer.Info("xscreenposition: " + (xPositionOnScreen).ToString());
+			Printer.Info("xscreenpositionB: " + (xPositionOnScreen).ToString());
 			Printer.Info("width: " + (this.width).ToString());
+			Printer.Info("widthB: " + (this.width).ToString());
 			Printer.Info("device: " + Game1.defaultDeviceViewport.ToString());
 			Printer.Info("right check: " + (bXPos + bWidth / 2).ToString());
-			*/
+			
 			Viewport viewport = Game1.defaultDeviceViewport;
 			//Left wall
 			if (bXPos < 0)
@@ -76,7 +78,14 @@ namespace ChestPreview
 			{
 				//Printer.Info("sum: " + (this.xPositionOnScreen + width - (int)viewport.Width).ToString());
 				//Printer.Info("xpos pre: "+ this.xPositionOnScreen.ToString());
-				this.xPositionOnScreen = this.xPositionOnScreen - (this.xPositionOnScreen + width / 2 - (int)viewport.Width) + (int)(IClickableMenu.spaceToClearSideBorder * Scale);
+				/*
+				this.xPositionOnScreen = this.xPositionOnScreen - 
+					(this.xPositionOnScreen + width / 2 - (int)viewport.Width) 
+					+ (int)(IClickableMenu.spaceToClearSideBorder * Scale);
+				*/
+				this.xPositionOnScreen = this.xPositionOnScreen -
+					(bXPos + bWidth / 2 - (int)viewport.Width)
+					+ (int)(IClickableMenu.spaceToClearSideBorder * Scale);
 				bXPos = (int)(this.xPositionOnScreen
 					- (IClickableMenu.spaceToClearSideBorder * Scale)
 					- (IClickableMenu.spaceToClearSideBorder * Scale) / 2)
@@ -211,16 +220,6 @@ namespace ChestPreview
 			Vector2 position = new Vector2(x, y);
 			int xOffSet = 0;
 			int yOffSet = 0;
-
-			/*
-			if(item is ModdedItem)
-            {
-				//usar 
-				item.drawInMenu(spriteBatch, normal, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
-				//o
-				//draw itemnotfound sprite
-			}
-			*/
 			if (item is SObject)
             {
 				if (item is Furniture)
@@ -237,8 +236,8 @@ namespace ChestPreview
 					}
 					else if (ModEntry.config.Size.Equals("Huge"))
 					{
-						xOffSet = 4;
-						yOffSet = 4;
+						xOffSet = 7;
+						yOffSet = 6;
 					}
 					position.X += xOffSet;
 					position.Y += yOffSet;
@@ -258,8 +257,8 @@ namespace ChestPreview
 					}
 					else if (ModEntry.config.Size.Equals("Huge"))
 					{
-						xOffSet = 4;
-						yOffSet = 4;
+						xOffSet = 6;
+						yOffSet = 6;
 					}
 					position.X += xOffSet;
 					position.Y += yOffSet;
@@ -267,11 +266,87 @@ namespace ChestPreview
 				}
 				else if((item as SObject).bigCraftable)
                 {
-					DrawInMenu.drawInMenuObject((item as SObject), spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+					//If modded item, usar draw propia
+					if (ModEntry.ModdedIDs.Contains(item.ParentSheetIndex))
+					{
+						if (ModEntry.config.Size.Equals("Small"))
+						{
+							xOffSet = -2;
+							yOffSet = -2;
+						}
+						else if (ModEntry.config.Size.Equals("Big"))
+						{
+							xOffSet = 4;
+							yOffSet = 4;
+						}
+						else if (ModEntry.config.Size.Equals("Huge"))
+						{
+							xOffSet = 6;
+							yOffSet = 6;
+						}
+						else
+						{
+							xOffSet = 8;
+							yOffSet = 8;
+						}
+						position.X += xOffSet;
+						position.Y += yOffSet;
+						//translate
+						//if se provee una draw custom, usar esa. Pero no es necesaria
+						//osea que usar esta si el autor quiere modificar como se ve su item en mi mod
+						if (ModEntry.DrawFunctions.ContainsKey(item.ParentSheetIndex))
+						{
+							ModEntry.DrawFunctions[item.ParentSheetIndex].Invoke(spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+						}
+						else
+						{
+							item.drawInMenu(spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+						}
+					}
+					else
+                    {
+						DrawInMenu.drawInMenuObject((item as SObject), spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+                    }
 				}
 				else
                 {
-					DrawInMenu.drawInMenuObject((item as SObject), spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+					if (ModEntry.ModdedIDs.Contains(item.ParentSheetIndex))
+                    {
+						if (ModEntry.config.Size.Equals("Small"))
+						{
+							xOffSet = -2;
+							yOffSet = -2;
+						}
+						else if (ModEntry.config.Size.Equals("Big"))
+						{
+							xOffSet = 4;
+							yOffSet = 4;
+						}
+						else if (ModEntry.config.Size.Equals("Huge"))
+						{
+							xOffSet = 6;
+							yOffSet = 6;
+						}
+						else
+                        {
+							xOffSet = 8;
+							yOffSet = 8;
+						}
+						position.X += xOffSet;
+						position.Y += yOffSet;
+						if(ModEntry.DrawFunctions.ContainsKey(item.ParentSheetIndex))
+                        {
+							ModEntry.DrawFunctions[item.ParentSheetIndex].Invoke(spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+						}
+						else
+                        {
+							item.drawInMenu(spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+						}
+					}
+					else
+                    {
+						DrawInMenu.drawInMenuObject((item as SObject), spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
+					}
 				}
 			}
 			else if (item is Tool)
@@ -298,8 +373,8 @@ namespace ChestPreview
 					}
 					else if (ModEntry.config.Size.Equals("Huge"))
 					{
-						xOffSet = 4;
-						yOffSet = 4;
+						xOffSet = 6;
+						yOffSet = 6;
 					}
 					position.X += xOffSet;
 					position.Y += yOffSet;
@@ -320,8 +395,8 @@ namespace ChestPreview
 				}
 				else if (ModEntry.config.Size.Equals("Huge"))
 				{
-					xOffSet = 4;
-					yOffSet = 4;
+					xOffSet = -2;
+					yOffSet = 0;
 				}
 				position.X += xOffSet;
 				position.Y += yOffSet;
@@ -341,8 +416,8 @@ namespace ChestPreview
 				}
 				else if (ModEntry.config.Size.Equals("Huge"))
 				{
-					xOffSet = 4;
-					yOffSet = 4;
+					xOffSet = 8;
+					yOffSet = 8;
 				}
 				else
                 {
@@ -400,6 +475,5 @@ namespace ChestPreview
 				item.drawInMenu(spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
 			}
 		}
-
 	}
 }

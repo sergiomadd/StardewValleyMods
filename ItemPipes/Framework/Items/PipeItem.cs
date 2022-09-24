@@ -152,6 +152,23 @@ namespace ItemPipes.Framework
 			}
 		}
 
+		public void drawInMenuPreview(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
+		{
+			Printer.Info("pipe drawing preview");
+			bool shouldDrawStackNumber = ((drawStackNumber == StackDrawType.Draw && this.maximumStackSize() > 1 && this.Stack > 1)
+				|| drawStackNumber == StackDrawType.Draw_OneInclusive) && (double)scaleSize > 0.3 && this.Stack != int.MaxValue;
+			Rectangle srcRect = new Rectangle(0, 0, 16, 16);
+			spriteBatch.Draw(ItemTexture, location + new Vector2((int)(32f * scaleSize), (int)(32f * scaleSize)), srcRect, color * transparency, 0f,
+				new Vector2(8f, 8f) * scaleSize, 4f * scaleSize, SpriteEffects.None, layerDepth);
+
+			if (shouldDrawStackNumber)
+			{
+				var loc = location + new Vector2((float)(64 - Utility.getWidthOfTinyDigitString(this.Stack, 3f * scaleSize)) + 3f * scaleSize, 64f - 18f * scaleSize + 2f);
+				Utility.drawTinyDigits(this.Stack, spriteBatch, loc, 3f * scaleSize, 1f, color);
+
+			}
+		}
+
 		public override void drawAsProp(SpriteBatch b)
 		{
 			int x = (int)this.TileLocation.X;

@@ -18,7 +18,11 @@ Chest Preview provides a preview of a chest's items without opening the chest.
     <summary>DrawInMenuPreview() example:</summary>
   
     From ItemPipes compatibility (LINK)  
-    Make sure your method has the same signature as the action.
+    Make sure your method has the same signature as the action.  
+    Probably, you will need to adjust: 
+    - The sprite position
+    - The stack numbers (tinyDigits) position
+    - The quality star position
     ```c#
   
     public void drawInPreview(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)

@@ -20,7 +20,7 @@ using ItemPipes.Framework.Items.Objects;
 using System.Threading;
 using ItemPipes.Framework.Nodes.ObjectNodes;
 using MaddUtil;
-
+using ItemPipes.Framework.APIs;
 
 
 namespace ItemPipes.Framework
@@ -152,21 +152,89 @@ namespace ItemPipes.Framework
 			}
 		}
 
-		public void drawInMenuPreview(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
+		public void drawInPreview(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
-			Printer.Info("pipe drawing preview");
+			IChestPreviewAPI api = ModEntry.ChestPreviewAPI;
+
 			bool shouldDrawStackNumber = ((drawStackNumber == StackDrawType.Draw && this.maximumStackSize() > 1 && this.Stack > 1)
 				|| drawStackNumber == StackDrawType.Draw_OneInclusive) && (double)scaleSize > 0.3 && this.Stack != int.MaxValue;
+			
 			Rectangle srcRect = new Rectangle(0, 0, 16, 16);
-			spriteBatch.Draw(ItemTexture, location + new Vector2((int)(32f * scaleSize), (int)(32f * scaleSize)), srcRect, color * transparency, 0f,
+
+			int xOffSet = 0;
+			int yOffSet = 0;
+			int xOffSetDigit = 0;
+			int yOffSetDigit = 0;
+			int xOffSetQuality = 0;
+			int yOffSetQuality = 0;
+			//"Small"
+			//String check also available 
+			//api.GetPreviewSizeString().Equals("Small")
+			if (api.GetPreviewSizeInt() == 0)
+			{
+				xOffSet = 10;
+				yOffSet = 10;
+				xOffSetDigit = -20;
+				yOffSetDigit = -22;
+				xOffSetQuality = 10;
+				yOffSetQuality = -14;
+			}
+			//"Medium"
+			//String check also available 
+			//api.GetPreviewSizeString().Equals("Medium")
+			else if (api.GetPreviewSizeInt() == 1)
+			{
+				xOffSet = 8;
+				yOffSet = 8;
+				xOffSetQuality = 12;
+				yOffSetQuality = -8;
+			}
+			//"Big"
+			//String check also available 
+			//api.GetPreviewSizeString().Equals("Big")
+			else if (api.GetPreviewSizeInt() == 2)
+			{
+				xOffSet = 8;
+				yOffSet = 8;
+				xOffSetDigit = -8;
+				yOffSetDigit = -12;
+				xOffSetQuality = 12;
+				yOffSetQuality = -4;
+			}
+			//"Huge"
+			//String check also available 
+			//api.GetPreviewSizeString().Equals("Huge")
+			else if (api.GetPreviewSizeInt() == 3)
+			{
+				xOffSet = 10;
+				yOffSet = 10;
+				xOffSetDigit = 0;
+				yOffSetDigit = -2;
+				xOffSetQuality = 12;
+				yOffSetQuality = 2;
+			}
+			spriteBatch.Draw(ItemTexture, location + new Vector2((int)(32f * scaleSize) + xOffSet, (int)(32f * scaleSize) + yOffSet), srcRect, color * transparency, 0f,
 				new Vector2(8f, 8f) * scaleSize, 4f * scaleSize, SpriteEffects.None, layerDepth);
 
 			if (shouldDrawStackNumber)
 			{
-				var loc = location + new Vector2((float)(64 - Utility.getWidthOfTinyDigitString(this.Stack, 3f * scaleSize)) + 3f * scaleSize, 64f - 18f * scaleSize + 2f);
+				var loc = location + new Vector2((float)
+					(64 - Utility.getWidthOfTinyDigitString(this.Stack, 3f * scaleSize)) + 3f * scaleSize + xOffSetDigit,
+					64f - 18f * scaleSize + 2f + yOffSetDigit);
 				Utility.drawTinyDigits(this.Stack, spriteBatch, loc, 3f * scaleSize, 1f, color);
-
 			}
+
+			if (drawStackNumber != 0 && (int)quality > 0)
+			{
+				Microsoft.Xna.Framework.Rectangle quality_rect = (((int)quality < 4) ? new Microsoft.Xna.Framework.Rectangle(338 + ((int)quality - 1) * 8, 400, 8, 8) : new Microsoft.Xna.Framework.Rectangle(346, 392, 8, 8));
+				Texture2D quality_sheet = Game1.mouseCursors;
+				float yOffsetVanilla = (((int)quality < 4) ? 0f :
+						(((float)Math.Cos((double)Game1.currentGameTime.TotalGameTime.Milliseconds * Math.PI / 512.0) + 1f) * 0.05f));
+				spriteBatch.Draw(quality_sheet, location + new Vector2(12f + xOffSetQuality, 52f + yOffsetVanilla + yOffSetQuality),
+					quality_rect, color * transparency, 0f,
+					new Vector2(4f, 4f), 3f * scaleSize * (1f + yOffsetVanilla), SpriteEffects.None, layerDepth);
+			}
+
 		}
 
 		public override void drawAsProp(SpriteBatch b)

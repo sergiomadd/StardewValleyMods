@@ -11,8 +11,10 @@ namespace ItemPipes.Framework.APIs
 {
     public interface IChestPreviewAPI
     {
+        string GetPreviewSizeString();
+        int GetPreviewSizeInt();
+        float GetPreviewScale();
         void LoadIDs(List<int> list);
-        void DrawInPreview(int id, Action<SpriteBatch, Vector2, float, float, float, StackDrawType, Color, bool> draw);
 
     }
 }

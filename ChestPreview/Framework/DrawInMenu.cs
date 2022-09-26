@@ -45,17 +45,17 @@ namespace ChestPreview.Framework
 			float addedScale = 0f;
 			float x = 36f;
 			float y = 28f;
-			if (ModEntry.config.Size.Equals("Small"))
+			if (ModEntry.CurrentSize == Size.Small)
 			{
 				x += -4;
 				y += -2;
 			}
-			else if (ModEntry.config.Size.Equals("Big"))
+			else if (ModEntry.CurrentSize == Size.Big)
 			{
 				x += 4;
 				y += 4;
 			}
-			else if (ModEntry.config.Size.Equals("Huge"))
+			else if (ModEntry.CurrentSize == Size.Huge)
 			{
 				x += 7;
 				y += 6;
@@ -68,7 +68,7 @@ namespace ChestPreview.Framework
 
 		public static void drawInMenuWateringCan(WateringCan item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
-			if (ModEntry.config.Size.Equals("Small"))
+			if (ModEntry.CurrentSize == Size.Small)
 			{
 				drawInMenuTool((item as WateringCan), spriteBatch,
 					location + (Game1.player.hasWateringCanEnchantment ? new Vector2(0f, 0f) : new Vector2(-2f, -8f)),
@@ -132,7 +132,7 @@ namespace ChestPreview.Framework
 
 				}
 			}
-			else if (ModEntry.config.Size.Equals("Big"))
+			else if (ModEntry.CurrentSize == Size.Big)
 			{
 				drawInMenuTool((item as WateringCan), spriteBatch,
 					location + (Game1.player.hasWateringCanEnchantment ? new Vector2(0f, 0f) : new Vector2(4f, -4f)),
@@ -195,7 +195,7 @@ namespace ChestPreview.Framework
 
 				}
 			}
-			else if (ModEntry.config.Size.Equals("Huge"))
+			else if (ModEntry.CurrentSize == Size.Huge)
 			{
 				
 				drawInMenuTool((item as WateringCan), spriteBatch,
@@ -404,17 +404,17 @@ namespace ChestPreview.Framework
 			{
 				float x = 32f;
 				float y = 32f;
-				if (ModEntry.config.Size.Equals("Small"))
+				if (ModEntry.CurrentSize == Size.Small)
 				{
 					x += -2;
 					y += -2;
 				}
-				else if (ModEntry.config.Size.Equals("Big"))
+				else if (ModEntry.CurrentSize == Size.Big)
 				{
 					x += 4;
 					y += 2;
 				}
-				else if (ModEntry.config.Size.Equals("Huge"))
+				else if (ModEntry.CurrentSize == Size.Huge)
 				{
 					x += 7;
 					y += 6;
@@ -425,31 +425,30 @@ namespace ChestPreview.Framework
 					color * transparency, 0f, new Vector2(8f, 16f), 4f * (((double)scaleSize < 0.2) ? scaleSize : (scaleSize / 2f)), SpriteEffects.None, layerDepth);
 				if (shouldDrawStackNumber)
 				{
-					if (ModEntry.config.Size.Equals("Small"))
+					if (ModEntry.CurrentSize == Size.Small)
                     {
 						drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(28, 32f * scaleSize + 64 * scaleSize - 4),
+						location + new Vector2(28, 32f * scaleSize + 64 * scaleSize - 2),
 						3f * scaleSize, 1f, color);
 					}
-					else if (ModEntry.config.Size.Equals("Big"))
+					else if (ModEntry.CurrentSize == Size.Medium)
 					{
 						drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(40, 8f * scaleSize + 64 * scaleSize),
+						location + new Vector2(34, 18f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
-					else if (ModEntry.config.Size.Equals("Huge"))
+					else if (ModEntry.CurrentSize == Size.Big)
 					{
 						drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(44, 8f * scaleSize + 64 * scaleSize - 4),
+						location + new Vector2(38, 8f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
-					else
+					else if (ModEntry.CurrentSize == Size.Huge)
 					{
 						drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(40, 18f * scaleSize + 64 * scaleSize),
+						location + new Vector2(44, 8f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
-
 				}
 			}
 			else
@@ -460,17 +459,17 @@ namespace ChestPreview.Framework
 				}
 				float x = 8;
 				float y = 8;
-				if (ModEntry.config.Size.Equals("Small"))
+				if (ModEntry.CurrentSize == Size.Small)
 				{
 					x += 2;
 					y += 2;
 				}
-				else if (ModEntry.config.Size.Equals("Big"))
+				else if (ModEntry.CurrentSize == Size.Big)
 				{
 					x += 2;
 					y += 0;
 				}
-				else if (ModEntry.config.Size.Equals("Huge"))
+				else if (ModEntry.CurrentSize == Size.Huge)
 				{
 					x = 8;
 					y = 8;
@@ -481,62 +480,64 @@ namespace ChestPreview.Framework
 					color * transparency, 0f, new Vector2(8f, 8f) * scaleSize, 4f * scaleSize, SpriteEffects.None, layerDepth);
 				if (shouldDrawStackNumber)
 				{
-					if (ModEntry.config.Size.Equals("Small"))
+					if (ModEntry.CurrentSize == Size.Small)
 					{
 						drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(27, 22f * scaleSize + 64 * scaleSize),
+						location + new Vector2(28, 32f * scaleSize + 64 * scaleSize - 2),
 						3f * scaleSize, 1f, color);
 					}
-					else if (ModEntry.config.Size.Equals("Big"))
+					else if (ModEntry.CurrentSize == Size.Medium)
 					{
 						drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(40, 8f * scaleSize + 64 * scaleSize),
-						3f * scaleSize, 1f, color);
-					}
-					else if (ModEntry.config.Size.Equals("Huge"))
-					{
-						drawTinyDigits(item.stack, spriteBatch,
-						location + new Vector2(42, 8f * scaleSize + 64 * scaleSize - 4),
-						3f * scaleSize, 1f, color);
-					}
-					else
-                    {
-						drawTinyDigits(item.stack, spriteBatch,
-							location + new Vector2(38, 18f * scaleSize + 64 * scaleSize),
+							location + new Vector2(34, 18f * scaleSize + 64 * scaleSize),
 							3f * scaleSize, 1f, color);
-                    }
+					}
+					else if (ModEntry.CurrentSize == Size.Big)
+					{
+						drawTinyDigits(item.stack, spriteBatch,
+						location + new Vector2(38, 8f * scaleSize + 64 * scaleSize),
+						3f * scaleSize, 1f, color);
+					}
+					else if (ModEntry.CurrentSize == Size.Huge)
+					{
+						drawTinyDigits(item.stack, spriteBatch,
+						location + new Vector2(42, 8f * scaleSize + 64 * scaleSize),
+						3f * scaleSize, 1f, color);
+					}
 				}
 				if (drawStackNumber != 0 && (int)item.quality > 0)
 				{
 					Microsoft.Xna.Framework.Rectangle quality_rect = (((int)item.quality < 4) ? new Microsoft.Xna.Framework.Rectangle(338 + ((int)item.quality - 1) * 8, 400, 8, 8) : new Microsoft.Xna.Framework.Rectangle(346, 392, 8, 8));
 					Texture2D quality_sheet = Game1.mouseCursors;
-					float xOffset = 0;
-					float yOffset = yOffset = (((int)item.quality < 4) ? 0f :
+					int xOffset = 0;
+					float yOffset = (((int)item.quality < 4) ? 0f :
 							(((float)Math.Cos((double)Game1.currentGameTime.TotalGameTime.Milliseconds * Math.PI / 512.0) + 1f) * 0.05f));
-					float yOffset2 = 0;
-					if (ModEntry.config.Size.Equals("Small"))
+					int yOffset2 = 0;
+					if (ModEntry.CurrentSize == Size.Small)
 					{
-						xOffset = -18;
-						yOffset2 = -13;
+						xOffset = 10;
+						yOffset2 = -14;
 					}
-					else if (ModEntry.config.Size.Equals("Big"))
+					else if (ModEntry.CurrentSize == Size.Medium)
 					{
-						xOffset = -26;
-						yOffset2 = -6;
+						xOffset = 12;
+						yOffset2 = -8;
 					}
-					else if (ModEntry.config.Size.Equals("Huge"))
+					else if (ModEntry.CurrentSize == Size.Big)
 					{
-						xOffset = -32;
-						yOffset2 = -2;
+						xOffset = 12;
+						yOffset2 = -4;
 					}
-					else
+					else if (ModEntry.CurrentSize == Size.Huge)
 					{
-						xOffset = -26;
-						yOffset2 = -6;
+						xOffset = 12;
+						yOffset2 = 2;
 					}
+
 					spriteBatch.Draw(quality_sheet, location + new Vector2(12f + xOffset, 52f + yOffset + yOffset2), 
 						quality_rect, color * transparency, 0f, 
 						new Vector2(4f, 4f), 3f * scaleSize * (1f + yOffset), SpriteEffects.None, layerDepth);
+					
 				}
 				if (item.Category == -22 && item.uses.Value > 0)
 				{

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StardewModdingAPI;
+using StardewModdingAPI.Utilities;
 using MaddUtil;
+using ChestPreview.Framework.APIs;
 
 namespace ChestPreview
 {
@@ -23,6 +25,7 @@ namespace ChestPreview
         public ModConfig()
         {
             ResetToDefault();
+            
         }
 
         public void RegisterModConfigMenu(IModHelper helper, IManifest manifest)
@@ -49,11 +52,20 @@ namespace ChestPreview
                 getValue: () => Range,
                 setValue: value => Range = value
             );
+            configMenu.AddNumberOption(
+                mod: manifest,
+                name: () => Helpers.GetTranslationHelper().Get("config.size.name"),
+                min: 0,
+                max: 3,
+                interval: 1,
+                getValue: () => Range,
+                setValue: value => Range = value
+            );
             configMenu.AddTextOption(
                 mod: manifest,
                 name: () => Helpers.GetTranslationHelper().Get("config.size.name"),
                 getValue: () => Size,
-                setValue: value => Size = value,
+                setValue: value => Size = ModEntry.UpdateSize(value),
                 allowedValues: new string[] { "Small", "Medium", "Big", "Huge" },
                 formatAllowedValue: value => GetTranslationSize(value)
             );

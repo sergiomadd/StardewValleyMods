@@ -12,15 +12,21 @@ namespace ChestPreview.Framework.APIs
 {
     public class ChestPreviewAPI : IChestPreviewAPI
     {
+        public string GetPreviewSizeString()
+        {
+            return ModEntry.config.Size;
+        }
+        public int GetPreviewSizeInt()
+        {
+            return (int)ModEntry.CurrentSize;
+        }
+        public float GetPreviewScale()
+        {
+            return ModEntry.GetSizeValue();
+        }
         public void LoadIDs(List<int> list)
         {
-            Printer.Info("in api");
-            Printer.Info(list.Count.ToString());
             ModEntry.ModdedIDs.AddRange(list);
-        }
-        public void DrawInPreview(int id, Action<SpriteBatch, Vector2, float, float, float, StackDrawType, Color, bool> draw)
-        {
-            ModEntry.DrawFunctions.Add(id, draw);
         }
     }
 }

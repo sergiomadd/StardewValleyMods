@@ -28,6 +28,7 @@ namespace ItemPipes.Framework
         public static IModHelper helper;
         public static ModConfig config;
         public DataAccess DataAccess { get; set; }
+        public static IChestPreviewAPI ChestPreviewAPI { get; set; }
 
         public override void Entry(IModHelper helper)
         {
@@ -115,23 +116,10 @@ namespace ItemPipes.Framework
             }
             if (this.Helper.ModRegistry.IsLoaded("sergiomadd.ChestPreview"))
             {
-                IChestPreviewAPI chestPreview = helper.ModRegistry.GetApi<IChestPreviewAPI>("sergiomadd.ChestPreview");
-                if (chestPreview != null)
+                ChestPreviewAPI = helper.ModRegistry.GetApi<IChestPreviewAPI>("sergiomadd.ChestPreview");
+                if (ChestPreviewAPI != null)
                 {
-                    Printer.Info("chest preview api loadsed.");
-
-                    chestPreview.LoadIDs(DataAccess.NetworkItems);
-                    
-                    foreach(int id in DataAccess.NetworkItems)
-                    {
-                        Item item = Factories.ItemFactory.CreateItemFromID(id);
-                        if(item is PipeItem)
-                        {
-                            Action<SpriteBatch, Vector2, float, float, float, StackDrawType, Color, bool> action = (item as PipeItem).drawInMenuPreview;
-                            chestPreview.DrawInPreview(id, action);
-                        }
-                    }
-                    
+                    Printer.Info("chest preview api loadsed.");                    
                 }
                 else
                 {

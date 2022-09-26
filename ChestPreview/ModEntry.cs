@@ -17,6 +17,8 @@ using StardewValley.Tools;
 using StardewValley.Locations;
 using SObject = StardewValley.Object;
 using HarmonyLib;
+using ChestPreview.Framework;
+using ChestPreview.Framework.APIs;
 
 namespace ChestPreview
 {
@@ -24,44 +26,18 @@ namespace ChestPreview
     {
         public static IModHelper helper;
         public static ModConfig config;
-        public SpriteBatch batch { get; set; }
-        public string CurrentSize { get; set; }
-        public InventoryMenu Preview { get; set; }
-        public Vector2 LastTile { get; set; }
-        public static List<int> ModdedIDs { get; set; }
-        public static Dictionary<int, Action<SpriteBatch, Vector2, float, float, float, StackDrawType, Color, bool>> DrawFunctions { get; set; }
+        public static Size CurrentSize { get; set; }
+        public static IDynamicGameAssetsApi DGAAPI { get; set; }
 
         public override void Entry(IModHelper helper)
         {
             ModEntry.helper = helper;
-            
             Printer.SetMonitor(this.Monitor);
             Helpers.SetModHelper(helper);
-            helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
-            //helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
 
+            helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
             helper.Events.Display.Rendered += this.OnRendered;
             helper.Events.Display.WindowResized += this.OnWindowResized;
-
-            Preview = null;
-            LastTile = Vector2.Zero;
-            //ApplyPatches();
-            ModdedIDs = new List<int>();
-            DrawFunctions = new Dictionary<int, Action<SpriteBatch, Vector2, float, float, float, StackDrawType, Color, bool>>();
-        }
-
-        private void ApplyPatches()
-        {
-            var harmony = new Harmony(ModManifest.UniqueID);
-            try
-            {
-                Patches.Apply(harmony);
-            }
-            catch (Exception e)
-            {
-                Printer.Error("Error while applying harmony patches");
-                Printer.Error(e.Message);
-            }
         }
 
         public override object GetApi()
@@ -69,26 +45,69 @@ namespace ChestPreview
             return new ChestPreviewAPI();
         }
 
-        public static float GetSize()
+        public static string GetSizeFromEnum(Size size)
         {
-            /*Scales
-             * 0.4 Small
-             * 0.5 Normal
-             * 0.6 Big
-             * */
-            if (config.Size.Equals("Small"))
+            if (size == Size.Small)
+            {
+                return "Small";
+            }
+            else if (size == Size.Medium)
+            {
+                return "Medium";
+            }
+            else if (size == Size.Big)
+            {
+                return "Big";
+            }
+            else if (size == Size.Huge)
+            {
+                return "Huge";
+            }
+            else
+            {
+                return "Medium";
+            }
+        }
+
+        public static Size GetSizeFromString(string size)
+        {
+            if (size.Equals("Small"))
+            {
+                return Size.Small;
+            }
+            else if (size.Equals("Medium"))
+            {
+                return Size.Medium;
+            }
+            else if (size.Equals("Big"))
+            {
+                return Size.Big;
+            }
+            else if (size.Equals("Huge"))
+            {
+                return Size.Huge;
+            }
+            else
+            {
+                return Size.Medium;
+            }
+        }
+
+        public static float GetSizeValue()
+        {
+            if (CurrentSize == Size.Small)
             {
                 return 0.4f;
             }
-            else if(config.Size.Equals("Medium"))
+            else if(CurrentSize == Size.Medium)
             {
                 return 0.5f;
             }
-            else if(config.Size.Equals("Big"))
+            else if(CurrentSize == Size.Big)
             {
                 return 0.6f;
             }
-            else if (config.Size.Equals("Huge"))
+            else if (CurrentSize == Size.Huge)
             {
                 return 0.7f;
             }
@@ -96,6 +115,12 @@ namespace ChestPreview
             {
                 return 0.5f;
             }
+        }
+
+        public static string UpdateSize(string size)
+        {
+            CurrentSize = GetSizeFromString(size);
+            return size;
         }
 
         private void OnWindowResized(object sender, WindowResizedEventArgs e)
@@ -120,8 +145,19 @@ namespace ChestPreview
                 Printer.Error($"The config file seems to be missing or invalid.\n{ex}");
             }
             config.RegisterModConfigMenu(helper, this.ModManifest);
-
-            Vanilla.Init();
+            CurrentSize = GetSizeFromString(config.Size);
+            if (this.Helper.ModRegistry.IsLoaded("spacechase0.DynamicGameAssets"))
+            {
+                DGAAPI = helper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
+                if (DGAAPI != null)
+                {
+                    Printer.Info("dga preview api loadsed.");
+                }
+                else
+                {
+                    Printer.Error("dga preview api error.");
+                }
+            }
         }
 
         private void OnRendered(object sender, RenderedEventArgs e)
@@ -225,6 +261,9 @@ namespace ChestPreview
         public InventoryMenu CreatePreviewMenu(Vector2 tile, List<Item> items, int capacity, int yOffset)
         {
             //Printer.Info("tile: " + (tile).ToString());
+            //Printer.Info("tile "+ (tile.X * Game1.tileSize).ToString());
+            //Printer.Info("viewport " + (Game1.viewport.X).ToString());
+
             Vector2 position = new Vector2(
                 (tile.X * Game1.tileSize) - Game1.viewport.X + Game1.tileSize / 2,
                 (tile.Y * Game1.tileSize) - Game1.viewport.Y);

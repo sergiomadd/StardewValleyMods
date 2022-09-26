@@ -4,7 +4,7 @@ Chest Preview provides a preview of a chest's items without opening the chest.
 
 ## Requirements:
 - Stardew Valley 1.5.6
-- [SMAPI](https://smapi.io/) 3.15.0
+- [SMAPI](https://smapi.io/)
 
 
 

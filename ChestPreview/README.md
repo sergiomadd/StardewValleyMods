@@ -1,6 +1,6 @@
 # Chest Preview
-Chest Preview provides a preview of a chest's items without opening the chest.
-![Preview](/docs/media/Big.PNG)
+Chest Preview provides a preview of a chest's items without opening the chest.  
+![Preview](/docs/media/Big.png)
 
 ## Requirements:
 - Stardew Valley 1.5.6

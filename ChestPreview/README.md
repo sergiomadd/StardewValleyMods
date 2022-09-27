@@ -1,5 +1,7 @@
 # Chest Preview
-Chest Preview provides a preview of a chest's items without opening the chest.
+Chest Preview provides a preview of a chest's items without opening the chest.  
+![Preview](docs/media/Big.PNG)
+
 
 ## Requirements:
 - Stardew Valley 1.5.6
@@ -118,6 +120,7 @@ If your mod adds custom items another way:
 
 <details>
 <summary>Custom Chests:</summary>
+	
 Compatible with:
 - [Better Chests](https://www.nexusmods.com/stardewvalley/mods/9791)
 
@@ -129,5 +132,5 @@ Planned compatibility with:
 ## See also
 - [Read for translations](../translations.md)
 - [Release Notes](release-notes.md)
-- [Nexus Mod Page]
+- [Nexus Mod Page](https://www.nexusmods.com/stardewvalley/mods/13946)
 - [Contact](https://twitter.com/madded__)

@@ -1,4 +1,4 @@
-This page is for people that want to help translating the mod.
+This page is for people that want to help translating my mods.
 
 If you have never translated a mod, read [Translation guide](https://stardewvalleywiki.com/Modding:Translations).
 
@@ -13,7 +13,7 @@ You can ping me on discord (@sergiomadd#5168) or on twitter (@madded__) if you h
 
 ### Translation state:
 
-| Language  | State |
+| Language  | Chest Preview |
 | ------------- | ------------- |
 | Spanish | Translated |
 | French | Not Translated |

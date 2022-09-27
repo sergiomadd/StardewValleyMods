@@ -1,6 +1,5 @@
 # Chest Preview
 Chest Preview provides a preview of a chest's items without opening the chest.
-- [Read for translations](translations.md)
 
 ## Requirements:
 - Stardew Valley 1.5.6
@@ -126,10 +125,9 @@ Planned compatibility with:
 - [Expanded Storage](https://www.nexusmods.com/stardewvalley/mods/7431)
 </details>
 
-## Planned Features (in no order):
-
 
 ## See also
+- [Read for translations](../translations.md)
 - [Release Notes](release-notes.md)
 - [Nexus Mod Page]
 - [Contact](https://twitter.com/madded__)

@@ -120,6 +120,7 @@ If your mod adds custom items another way:
 
 <details>
 <summary>Custom Chests:</summary>
+	
 Compatible with:
 - [Better Chests](https://www.nexusmods.com/stardewvalley/mods/9791)
 

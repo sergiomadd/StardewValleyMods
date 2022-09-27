@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MaddUtil;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StardewValley;
+using ChestPreview.Framework;
 
 namespace ChestPreview.Framework.APIs
 {
@@ -14,7 +11,7 @@ namespace ChestPreview.Framework.APIs
     {
         public string GetPreviewSizeString()
         {
-            return ModEntry.config.Size;
+            return Conversor.GetSizeName(ModEntry.config.Size);
         }
         public int GetPreviewSizeInt()
         {
@@ -22,11 +19,7 @@ namespace ChestPreview.Framework.APIs
         }
         public float GetPreviewScale()
         {
-            return ModEntry.GetSizeValue();
-        }
-        public void LoadIDs(List<int> list)
-        {
-            ModEntry.ModdedIDs.AddRange(list);
+            return Conversor.GetCurrentSizeValue();
         }
     }
 }

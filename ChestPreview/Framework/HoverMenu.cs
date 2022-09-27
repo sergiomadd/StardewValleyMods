@@ -23,9 +23,9 @@ namespace ChestPreview.Framework
         public int ConnectorOffset { get; set; }
 
         public HoverMenu(int xPosition, int yPosition, int connectorOffset, bool playerInventory, IList<Item> actualInventory, highlightThisItem highlightMethod = null, int capacity = -1, int rows = 3, int horizontalGap = 0, int verticalGap = 0, bool drawSlots = true)
-		: base(xPosition, yPosition, playerInventory, actualInventory, null, capacity)
+		: base(xPosition, yPosition, playerInventory, actualInventory, null, capacity, rows)
 		{
-			Scale = ModEntry.GetSizeValue();
+			Scale = Conversor.GetCurrentSizeValue();
 			SourceX = xPosition;
 			SourceY = yPosition;
 			this.width = (int)(width * Scale);
@@ -37,7 +37,6 @@ namespace ChestPreview.Framework
 		
 		public override void draw(SpriteBatch b, int red = -1, int green = -1, int blue = -1)
 		{
-
 			int bWidth = this.width 
 				+ (int)(IClickableMenu.spaceToClearSideBorder
 				+ IClickableMenu.spaceToClearSideBorder*Scale
@@ -55,19 +54,7 @@ namespace ChestPreview.Framework
 
 			//Screen limits
 			bool inLimit = false;
-			/*
-			Printer.Info("----------");
-			Printer.Info("source: " + (SourceX).ToString());
-			Printer.Info("xscreenposition: " + (xPositionOnScreen).ToString());
-			Printer.Info("xscreenpositionB: " + (xPositionOnScreen).ToString());
-			Printer.Info("width: " + (this.width).ToString());
-			Printer.Info("widthB: " + (this.width).ToString());
-			Printer.Info("right check: " + (bXPos + bWidth / 2).ToString());
-
-			Printer.Info("ui viewport "+Game1.uiViewport);
-			*/
 			int viewportWidth = Game1.uiViewport.Width;
-
 			//Left wall
 			if (bXPos < 0)
 			{
@@ -79,23 +66,12 @@ namespace ChestPreview.Framework
 			//Right wall
 			else if (bXPos + bWidth > viewportWidth)
 			{
-				/*
-								bXPos = viewportWidth - bWidth 
-					- (int)((IClickableMenu.spaceToClearSideBorder * Scale)
-					+ (IClickableMenu.spaceToClearSideBorder * Scale) / 2);
-				this.xPositionOnScreen = (int)(bXPos
-					+ (IClickableMenu.spaceToClearSideBorder * Scale)
-					+ (IClickableMenu.spaceToClearSideBorder * Scale) / 2);
-				*/
 				bXPos = viewportWidth - bWidth 
-					- (int)((IClickableMenu.spaceToClearSideBorder)
-					+ (int)(IClickableMenu.spaceToClearSideBorder / 2));
+					- (int)((IClickableMenu.spaceToClearSideBorder));
 				this.xPositionOnScreen = (int)(bXPos
 					+ (IClickableMenu.spaceToClearSideBorder * Scale)
 					+ (IClickableMenu.spaceToClearSideBorder * Scale) / 2);
-
 				inLimit = true;
-
 			}
 			//Up wall
 			if (bYPos < 0)
@@ -104,18 +80,9 @@ namespace ChestPreview.Framework
 				this.yPositionOnScreen = offset + (int)(IClickableMenu.spaceToClearSideBorder * Scale) + (int)((IClickableMenu.spaceToClearSideBorder * Scale) / 2);
 				bYPos = offset;
 			}
-
 			Game1.DrawBox(bXPos, bYPos, bWidth, bHeight);
-			/*
-			PERFECT
-			int bWidth = this.width + (int)(IClickableMenu.spaceToClearSideBorder + IClickableMenu.spaceToClearSideBorder*Scale) ;
-			int bHeight = this.height + (int)((IClickableMenu.spaceToClearSideBorder + IClickableMenu.spaceToClearSideBorder * Scale));
-			int xPosBox = (int)(this.xPositionOnScreen - (IClickableMenu.spaceToClearSideBorder * Scale) - (IClickableMenu.spaceToClearSideBorder * Scale)/2);
-			int yPosBox = (int)(this.yPositionOnScreen - (IClickableMenu.spaceToClearSideBorder * Scale) - (IClickableMenu.spaceToClearSideBorder * Scale)/2 - 4); 
-			*/
-
-				//line
-				if (ModEntry.config.Connector)
+			//Chest preview connector
+			if (ModEntry.config.Connector)
             {
 				Texture2D menu_texture = Game1.menuTexture;
 				Microsoft.Xna.Framework.Rectangle sourceRect = new Microsoft.Xna.Framework.Rectangle(0, 0, 64, 64);
@@ -138,11 +105,6 @@ namespace ChestPreview.Framework
 				int yLine = bYPos + bHeight + IClickableMenu.borderWidth/4+6;
 				int wLine = 64;
 				int hLine = SourceY - yLine + ConnectorOffset;
-				/*
-				int xOffSetL = -6;
-				int xOffSetR = 6;
-				int xOffSetM = 30;
-				*/
 				int xOffSetL = -6;
 				int xOffSetR = 6;
 				int xOffSetFill = 29;
@@ -153,19 +115,26 @@ namespace ChestPreview.Framework
 					xLine = SourceX;
 				}
 				Vector2 adaptedLine = new Vector2(xLine - wLine / 2, yLine);
-				if (ModEntry.config.Size.Equals("Small"))
+				if (ModEntry.CurrentSize == Size.Small)
 				{
 					xOffSetL = -8;
 					xOffSetR = 6;
 					xOffSetFill = 28;
 					wFill = 6;
 				}
-				else if (ModEntry.config.Size.Equals("Big"))
+				else if (ModEntry.CurrentSize == Size.Big)
 				{
 					xOffSetL = -1;
 					xOffSetR = 8;
 					xOffSetFill = 33;
 					wFill = 5;
+				}
+				else if (ModEntry.CurrentSize == Size.Huge)
+				{
+					xOffSetL = -2;
+					xOffSetR = 10;
+					xOffSetFill = 33;
+					wFill = 6;
 				}
 				//Left
 				sourceRect.X = 0;
@@ -207,7 +176,6 @@ namespace ChestPreview.Framework
 						{
 							toDraw2 += 1f * new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2));
 						}
-						//this.actualInventory[k].drawInMenu(b, toDraw2, 1f*Scale, (!this.highlightMethod(this.actualInventory[k])) ? 0.25f : 1f, float.MaxValue, StackDrawType.Draw, Color.White, highlight2);
 						DrawItem(b, this.actualInventory[k], (int)toDraw2.X, (int)toDraw2.Y, Scale, 1f, float.MaxValue);
 					}
 				}
@@ -220,8 +188,6 @@ namespace ChestPreview.Framework
 			Vector2 position = new Vector2(x, y);
 			int xOffSet = 0;
 			int yOffSet = 0;
-			//Check if it has custom preview method
-
 			MethodInfo drawInPreview = item.GetType().GetMethod(
 				"drawInPreview",
 				BindingFlags.Public | BindingFlags.Instance,
@@ -231,7 +197,7 @@ namespace ChestPreview.Framework
 				null);
 			if (drawInPreview != null)
 			{
-				item.GetType().GetMethod("drawInPreview").Invoke(item, new object[] { spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false });
+				drawInPreview.Invoke(item, new object[] { spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false });
 			}
 			else if (item is SObject)
             {
@@ -287,7 +253,7 @@ namespace ChestPreview.Framework
 					position.Y += yOffSet;
 					item.drawInMenu(spriteBatch, position, scaleSize, transparency, layer, StackDrawType.Draw, Color.White, false);
 				}
-				else if((item as SObject).bigCraftable)
+				else if((item as SObject).bigCraftable.Value)
                 {
 					if (NonVanillaCheck(item))
 					{

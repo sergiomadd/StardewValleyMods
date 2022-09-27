@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StardewValley.Menus;
 using StardewValley;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,16 +23,6 @@ namespace ChestPreview.Framework
 				Game1.drawWithBorder(string.Concat(((Stackable)item).NumberInStack), Color.Black, Color.White, location + new Vector2(64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).X, 64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).Y * 3f / 4f), 0f, 0.5f, 1f);
 			}
 		}
-		/*
-		public static void drawInMenuRing(Tool item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
-		{
-			spriteBatch.Draw(Game1.toolSpriteSheet, location + new Vector2(32f, 32f), Game1.getSquareSourceRectForNonStandardTileSheet(Game1.toolSpriteSheet, 16, 16, item.IndexOfMenuItemView), color * transparency, 0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth);
-			if ((bool)item.stackable)
-			{
-				Game1.drawWithBorder(string.Concat(((Stackable)item).NumberInStack), Color.Black, Color.White, location + new Vector2(64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).X, 64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).Y * 3f / 4f), 0f, 0.5f, 1f);
-			}
-		}
-		*/
 		/* Melee weapons types:
 		 * 0 Sword
 		 * 1 Dagger
@@ -336,57 +325,6 @@ namespace ChestPreview.Framework
 				Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, item.indexInTileSheet.Value, 16, 16),
 				color * transparency, 0f, new Vector2(8f, 8f) * scaleSize, scaleSize * 4f, SpriteEffects.None, layerDepth);
 		}
-		/*
-		//Private method from Furniture.cs
-		private static float getScaleSizeFurniture(Furniture item)
-		{
-			int tilesWide = item.defaultSourceRect.Width / 16;
-			int tilesHigh = item.defaultSourceRect.Height / 16;
-			if (tilesWide >= 7)
-			{
-				return 0.5f;
-			}
-			if (tilesWide >= 6)
-			{
-				return 0.66f;
-			}
-			if (tilesWide >= 5)
-			{
-				return 0.75f;
-			}
-			if (tilesHigh >= 5)
-			{
-				return 0.8f;
-			}
-			if (tilesHigh >= 3)
-			{
-				return 1f;
-			}
-			if (tilesWide <= 2)
-			{
-				return 2f;
-			}
-			if (tilesWide <= 4)
-			{
-				return 1f;
-			}
-			return 0.1f;
-		}
-
-		public static void drawInMenuFurniture(Furniture item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
-		{
-			spriteBatch.Draw(
-				Furniture.furnitureTexture,
-				location + new Vector2(32f, 32f),
-				item.defaultSourceRect,
-				color * transparency, 0f,
-				new Vector2(item.defaultSourceRect.Width / 2, item.defaultSourceRect.Height / 2), 1f * getScaleSizeFurniture(item) * scaleSize, SpriteEffects.None, layerDepth);
-			if (((drawStackNumber == StackDrawType.Draw && item.maximumStackSize() > 1 && item.Stack > 1) || drawStackNumber == StackDrawType.Draw_OneInclusive) && (double)scaleSize > 0.3 && item.Stack != int.MaxValue)
-			{
-				Utility.drawTinyDigits(item.stack, spriteBatch, location + new Vector2((float)(64 - Utility.getWidthOfTinyDigitString(item.stack, 3f * scaleSize)) + 3f * scaleSize, 64f - 18f * scaleSize + 2f), 3f * scaleSize, 1f, color);
-			}
-		}
-		*/
 
 		public static void drawInMenuObject(SObject item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
@@ -553,7 +491,6 @@ namespace ChestPreview.Framework
 		//Needed custom draw func because vanilla one breaks with my scale values, don't really know why
 		public static void drawTinyDigits(int toDraw, SpriteBatch b, Vector2 position, float scale, float layerDepth, Color c)
 		{
-			//scale = 1.5f;
 			int xPosition = 8;
 			int currentValue = toDraw;
 			int numDigits = 0;

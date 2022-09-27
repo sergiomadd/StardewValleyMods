@@ -14,7 +14,5 @@ namespace ItemPipes.Framework.APIs
         string GetPreviewSizeString();
         int GetPreviewSizeInt();
         float GetPreviewScale();
-        void LoadIDs(List<int> list);
-
     }
 }

@@ -6,17 +6,13 @@ using System.Threading.Tasks;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using Netcode;
 using StardewValley;
 using StardewValley.Objects;
 using StardewValley.Menus;
 using MaddUtil;
-using StardewValley.Tools;
 using StardewValley.Locations;
 using SObject = StardewValley.Object;
-using HarmonyLib;
 using ChestPreview.Framework;
 using ChestPreview.Framework.APIs;
 
@@ -40,88 +36,6 @@ namespace ChestPreview
             helper.Events.Display.WindowResized += this.OnWindowResized;
         }
 
-        public override object GetApi()
-        {
-            return new ChestPreviewAPI();
-        }
-
-        public static string GetSizeFromEnum(Size size)
-        {
-            if (size == Size.Small)
-            {
-                return "Small";
-            }
-            else if (size == Size.Medium)
-            {
-                return "Medium";
-            }
-            else if (size == Size.Big)
-            {
-                return "Big";
-            }
-            else if (size == Size.Huge)
-            {
-                return "Huge";
-            }
-            else
-            {
-                return "Medium";
-            }
-        }
-
-        public static Size GetSizeFromString(string size)
-        {
-            if (size.Equals("Small"))
-            {
-                return Size.Small;
-            }
-            else if (size.Equals("Medium"))
-            {
-                return Size.Medium;
-            }
-            else if (size.Equals("Big"))
-            {
-                return Size.Big;
-            }
-            else if (size.Equals("Huge"))
-            {
-                return Size.Huge;
-            }
-            else
-            {
-                return Size.Medium;
-            }
-        }
-
-        public static float GetSizeValue()
-        {
-            if (CurrentSize == Size.Small)
-            {
-                return 0.4f;
-            }
-            else if(CurrentSize == Size.Medium)
-            {
-                return 0.5f;
-            }
-            else if(CurrentSize == Size.Big)
-            {
-                return 0.6f;
-            }
-            else if (CurrentSize == Size.Huge)
-            {
-                return 0.7f;
-            }
-            else
-            {
-                return 0.5f;
-            }
-        }
-
-        public static string UpdateSize(string size)
-        {
-            CurrentSize = GetSizeFromString(size);
-            return size;
-        }
 
         private void OnWindowResized(object sender, WindowResizedEventArgs e)
         {
@@ -137,7 +51,7 @@ namespace ChestPreview
                 config = ModEntry.helper.ReadConfig<ModConfig>();
                 if (config == null)
                 {
-                    Printer.Error($"The config file seems to be empty or invalid. Data class returned null.");
+                    Printer.Error($"The config file seems to be empty or invalid.");
                 }
             }
             catch (Exception ex)
@@ -145,33 +59,28 @@ namespace ChestPreview
                 Printer.Error($"The config file seems to be missing or invalid.\n{ex}");
             }
             config.RegisterModConfigMenu(helper, this.ModManifest);
-            CurrentSize = GetSizeFromString(config.Size);
+            CurrentSize = Conversor.GetSizeFromConfigInt(config.Size);
             if (this.Helper.ModRegistry.IsLoaded("spacechase0.DynamicGameAssets"))
             {
                 DGAAPI = helper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
                 if (DGAAPI != null)
                 {
-                    Printer.Info("dga preview api loadsed.");
+                    Printer.Debug("DGA API loaded");
                 }
                 else
                 {
-                    Printer.Error("dga preview api error.");
+                    Printer.Debug("DGA API not loaded");
                 }
             }
         }
 
         private void OnRendered(object sender, RenderedEventArgs e)
         {
-            //Printer.Info($"key {(!config.EnableKey || (config.EnableKey && !config.EnableMouse && Helper.Input.IsDown(config.Key)))} | mouse {(!config.EnableMouse || (config.EnableMouse && !config.EnableKey && Helper.Input.IsDown(config.GetMouseButton(config.Mouse))))}");
             if (config.Enabled 
                 && Context.IsWorldReady 
                 && Game1.activeClickableMenu == null 
-                && (!config.EnableKey
-                || (config.EnableKey
-                && Helper.Input.IsDown(config.Key)))
-                && (!config.EnableMouse
-                || (config.EnableMouse
-                && Helper.Input.IsDown(config.GetMouseButton(config.Mouse)))))
+                && (!config.EnableKey || (config.EnableKey && Helper.Input.IsDown(config.Key))) 
+                && (!config.EnableMouse || (config.EnableMouse && Helper.Input.IsDown(Conversor.GetMouseButton(config.Mouse)))))
             {
                 Vector2 tile = Game1.currentCursorTile;
                 Vector2 downTile = new Vector2(tile.X, tile.Y+1);
@@ -179,7 +88,7 @@ namespace ChestPreview
                     && (Game1.currentLocation as FarmHouse).fridgePosition.Equals(tile.ToPoint()))
                 {
                     int yOffset = (int)(-94 * Game1.options.zoomLevel);
-                    InventoryMenu menu = CreatePreviewMenu(tile, (Game1.currentLocation as FarmHouse).fridge.First().items.ToList(), 36, yOffset);
+                    InventoryMenu menu = CreatePreviewMenu(tile, (Game1.currentLocation as FarmHouse).fridge.First().items.ToList(), 36, yOffset, 3);
                     menu.draw(e.SpriteBatch);
                 }
                 else if ((Game1.currentLocation.Objects.ContainsKey(tile)
@@ -205,11 +114,31 @@ namespace ChestPreview
         public void DrawPreview(Vector2 tile, SpriteBatch b)
         {
             Chest chest = Game1.currentLocation.Objects[tile] as Chest;
+            int slotsPerRow = 12;
+            int maxRows = 8;
             int yOffset = GetSpriteYOffset(chest);
-            InventoryMenu menu = CreatePreviewMenu(tile, GetItemList(chest).ToList(), chest.GetActualCapacity(), yOffset);
+            int capacity = chest.GetActualCapacity();
+            int rows = capacity / slotsPerRow;
+            if(capacity >= slotsPerRow * maxRows)
+            {
+                capacity = slotsPerRow * maxRows;
+                rows = capacity / slotsPerRow;
+            }
+            InventoryMenu menu = CreatePreviewMenu(tile, chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID).ToList(), capacity, yOffset, rows);
             menu.draw(b);
         }
-        
+
+        public InventoryMenu CreatePreviewMenu(Vector2 tile, List<Item> items, int capacity, int yOffset, int rows)
+        {
+            Vector2 position = new Vector2(
+                (tile.X * Game1.tileSize) - Game1.viewport.X + Game1.tileSize / 2,
+                (tile.Y * Game1.tileSize) - Game1.viewport.Y);
+            position = Utility.ModifyCoordinatesForUIScale(position);
+            HoverMenu menu = new HoverMenu((int)position.X, (int)position.Y, yOffset, false, items, null, capacity, rows);
+            menu.populateClickableComponentList();
+            return menu;
+        }
+
         public int GetSpriteYOffset(Item item)
         {
             int offset = 0;
@@ -244,40 +173,20 @@ namespace ChestPreview
             return offset;
         }
 
-        public NetObjectList<Item> GetItemList(Chest chest)
+        public static int UpdateSize(float value)
         {
-            NetObjectList<Item> itemList;
-            if (chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin || chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest)
+            int size = (int)value;
+            CurrentSize = Conversor.GetSizeFromConfigInt(size);
+            if(!(config.Size == (int)value))
             {
-                itemList = chest.GetItemsForPlayer(Game1.player.UniqueMultiplayerID);
+                Printer.Debug($"Size changed from {Conversor.GetSizeName(config.Size)} to {CurrentSize}");
             }
-            else
-            {
-                itemList = chest.items;
-            }
-            return itemList;
+            return size;
         }
 
-        public InventoryMenu CreatePreviewMenu(Vector2 tile, List<Item> items, int capacity, int yOffset)
+        public override object GetApi()
         {
-            //Printer.Info("tile: " + (tile).ToString());
-            //Printer.Info("tile "+ (tile.X * Game1.tileSize).ToString());
-            //Printer.Info("viewport " + (Game1.viewport.X).ToString());
-
-            Vector2 position = new Vector2(
-                (tile.X * Game1.tileSize) - Game1.viewport.X + Game1.tileSize / 2,
-                (tile.Y * Game1.tileSize) - Game1.viewport.Y);
-            //Printer.Info("pre modify: " + (position).ToString());
-            position = Utility.ModifyCoordinatesForUIScale(position);
-            Vector2 absolutPosition = new Vector2(
-                tile.X + Game1.viewport.X,
-                tile.Y + Game1.viewport.Y);
-            //Printer.Info("------------");
-            //Printer.Info("absolutePre: " + absolutPosition.X.ToString());
-            HoverMenu menu = new HoverMenu((int)position.X, (int)position.Y, yOffset, false, items, null, capacity);
-            menu.populateClickableComponentList();
-            return menu;
+            return new ChestPreviewAPI();
         }
-        
     }
 }

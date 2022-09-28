@@ -131,6 +131,6 @@ Planned compatibility with:
 
 ## See also
 - [Read for translations](../translations.md)
-- [Release Notes](release-notes.md)
+- [Release Notes](docs/release-notes.md)
 - [Nexus Mod Page](https://www.nexusmods.com/stardewvalley/mods/13946)
 - [Contact](https://twitter.com/madded__)

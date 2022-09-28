@@ -28,7 +28,7 @@ If your mod adds custom items another way:
     <details>
     <summary>DrawInPreview() example:</summary>
   
-    From ItemPipes compatibility (LINK)  
+    From [ItemPipes](../ItemPipes/Framework/Items/PipeItem.cs#L155) 
     Probably, you will need to adjust: 
     - The sprite position
     - The stack numbers (tinyDigits) position

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31727.386
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36301.6 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectedFences", "ConnectedFences.csproj", "{0691F984-B8C9-41A1-875F-7825E82F5422}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectedFences", "ConnectedFences.csproj", "{20DF4838-A97A-4FA8-A3F3-224609D777EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0691F984-B8C9-41A1-875F-7825E82F5422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0691F984-B8C9-41A1-875F-7825E82F5422}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0691F984-B8C9-41A1-875F-7825E82F5422}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0691F984-B8C9-41A1-875F-7825E82F5422}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20DF4838-A97A-4FA8-A3F3-224609D777EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20DF4838-A97A-4FA8-A3F3-224609D777EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20DF4838-A97A-4FA8-A3F3-224609D777EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20DF4838-A97A-4FA8-A3F3-224609D777EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2FDF1E10-87E1-44A8-9A6F-67E18C1779DD}
+		SolutionGuid = {FF77A415-84CF-4BC0-8F9F-C7171C7ED7AE}
 	EndGlobalSection
 EndGlobal

@@ -40,7 +40,7 @@ namespace ConnectedFences.Patches
 
         private static void Fence_countsForDrawing_Postfix(Fence __instance, ref bool __result)
         {
-            if (((float)__instance.health > 1f || __instance.repairQueued.Value) && !__instance.isGate)
+            if ((__instance.health.Value > 1f || __instance.repairQueued.Value) && !__instance.isGate.Value)
             {
                 __result = true;
             }

@@ -1,20 +1,21 @@
-﻿using System;
+﻿using ChestPreview.Framework;
+using ChestPreview.Framework.APIs;
+using MaddUtil;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using StardewModdingAPI;
+using StardewModdingAPI.Events;
+using StardewValley;
+using StardewValley.Locations;
+using StardewValley.Menus;
+using StardewValley.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using StardewModdingAPI;
-using StardewModdingAPI.Events;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StardewValley;
-using StardewValley.Objects;
-using StardewValley.Menus;
-using MaddUtil;
-using StardewValley.Locations;
+using static StardewValley.Menus.CharacterCustomization;
 using SObject = StardewValley.Object;
-using ChestPreview.Framework;
-using ChestPreview.Framework.APIs;
 
 namespace ChestPreview
 {
@@ -88,7 +89,7 @@ namespace ChestPreview
                     && (Game1.currentLocation as FarmHouse).fridgePosition.Equals(tile.ToPoint()))
                 {
                     int yOffset = (int)(-94 * Game1.options.zoomLevel);
-                    InventoryMenu menu = CreatePreviewMenu(tile, (Game1.currentLocation as FarmHouse).fridge.First().items.ToList(), 36, yOffset, 3);
+                    InventoryMenu menu = CreatePreviewMenu(tile, (Game1.currentLocation as FarmHouse).fridge.First().Items.ToList(), 36, yOffset, 3);
                     menu.draw(e.SpriteBatch);
                 }
                 else if ((Game1.currentLocation.Objects.ContainsKey(tile)
@@ -119,7 +120,11 @@ namespace ChestPreview
             int yOffset = GetSpriteYOffset(chest);
             int capacity = chest.GetActualCapacity();
             int rows = capacity / slotsPerRow;
-            if(capacity >= slotsPerRow * maxRows)
+            if (chest.SpecialChestType == Chest.SpecialChestTypes.JunimoChest || chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin) 
+            {
+                rows = 3; 
+            }
+            if (capacity >= slotsPerRow * maxRows)
             {
                 capacity = slotsPerRow * maxRows;
                 rows = capacity / slotsPerRow;
@@ -133,8 +138,7 @@ namespace ChestPreview
             Vector2 position = new Vector2(
                 (tile.X * Game1.tileSize) - Game1.viewport.X + Game1.tileSize / 2,
                 (tile.Y * Game1.tileSize) - Game1.viewport.Y);
-            position = Utility.ModifyCoordinatesForUIScale(position);
-            HoverMenu menu = new HoverMenu((int)position.X, (int)position.Y, yOffset, false, items, null, capacity, rows);
+            HoverMenu menu = new HoverMenu((int)position.X, (int)position.Y, yOffset, false, items, null, capacity, rows == 0 ? 1 : rows);
             menu.populateClickableComponentList();
             return menu;
         }
@@ -160,7 +164,7 @@ namespace ChestPreview
                 {
 
                 }
-                else if ((item as Chest).fridge)
+                else if ((item as Chest).fridge.Value)
                 {
                     offset = -74;
                 }

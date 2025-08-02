@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using StardewValley.Menus;
-using StardewValley;
+﻿using MaddUtil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SObject = StardewValley.Object;
-using StardewValley.Tools;
+using StardewValley;
+using StardewValley.Menus;
 using StardewValley.Objects;
-using MaddUtil;
+using StardewValley.Tools;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using static StardewValley.Menus.CharacterCustomization;
+using SObject = StardewValley.Object;
 
 namespace ChestPreview.Framework
 {
@@ -25,15 +26,15 @@ namespace ChestPreview.Framework
         public HoverMenu(int xPosition, int yPosition, int connectorOffset, bool playerInventory, IList<Item> actualInventory, highlightThisItem highlightMethod = null, int capacity = -1, int rows = 3, int horizontalGap = 0, int verticalGap = 0, bool drawSlots = true)
 		: base(xPosition, yPosition, playerInventory, actualInventory, null, capacity, rows)
 		{
-			Scale = Conversor.GetCurrentSizeValue();
-			SourceX = xPosition;
-			SourceY = yPosition;
-			this.width = (int)(width * Scale);
-			this.height = (int)(height * Scale);
-			this.xPositionOnScreen = (int)(this.xPositionOnScreen - width / 2);
-			this.yPositionOnScreen = this.yPositionOnScreen - this.height * 2;
-			ConnectorOffset = connectorOffset;
-		}
+            Scale = Conversor.GetCurrentSizeValue();
+            SourceX = xPosition;
+            SourceY = yPosition;
+            this.width = (int)(width * Scale);
+            this.height = (int)(height * Scale);
+            this.xPositionOnScreen = (int)(this.xPositionOnScreen - width / 2);
+            this.yPositionOnScreen = this.yPositionOnScreen - this.height * 2;
+            ConnectorOffset = connectorOffset;
+        }
 		
 		public override void draw(SpriteBatch b, int red = -1, int green = -1, int blue = -1)
 		{
@@ -46,9 +47,8 @@ namespace ChestPreview.Framework
 				+ IClickableMenu.spaceToClearSideBorder * Scale));
 			int bXPos = (int)(this.xPositionOnScreen 
 				- (IClickableMenu.spaceToClearSideBorder * Scale) 
-				- (IClickableMenu.spaceToClearSideBorder * Scale)/2) 
-				;
-			int bYPos = (int)(this.yPositionOnScreen 
+				- (IClickableMenu.spaceToClearSideBorder * Scale)/2);
+            int bYPos = (int)(this.yPositionOnScreen 
 				- (IClickableMenu.spaceToClearSideBorder * Scale)
 				- (IClickableMenu.spaceToClearSideBorder * Scale)/2 - 4);
 

@@ -18,9 +18,9 @@ namespace ChestPreview.Framework
 		public static void drawInMenuTool(Tool item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
 			spriteBatch.Draw(Game1.toolSpriteSheet, location + new Vector2(32f, 32f), Game1.getSquareSourceRectForNonStandardTileSheet(Game1.toolSpriteSheet, 16, 16, item.IndexOfMenuItemView), color * transparency, 0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth);
-			if ((bool)item.stackable)
+			if (item.maximumStackSize() > 1)
 			{
-				Game1.drawWithBorder(string.Concat(((Stackable)item).NumberInStack), Color.Black, Color.White, location + new Vector2(64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).X, 64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).Y * 3f / 4f), 0f, 0.5f, 1f);
+				//Game1.drawWithBorder(string.Concat(item.Stack, Color.Black, Color.White, location + new Vector2(64f - Game1.dialogueFont.MeasureString(string.Concat(item.Stack.X, 64f - Game1.dialogueFont.MeasureString(string.Concat(((Stackable)item).NumberInStack)).Y * 3f / 4f), 0f, 0.5f, 1f);
 			}
 		}
 		/* Melee weapons types:
@@ -50,7 +50,7 @@ namespace ChestPreview.Framework
 				y += 6;
 			}
 			spriteBatch.Draw(Tool.weaponsTexture,
-				location + (((int)item.type == 1) ? new Vector2(x, y) : new Vector2(x, y)),
+				location + ((item.type.Value == 1) ? new Vector2(x, y) : new Vector2(x, y)),
 				Game1.getSourceRectForStandardTileSheet(Tool.weaponsTexture, item.IndexOfMenuItemView, 16, 16),
 				color * transparency, 0f, new Vector2(8f, 8f), 4f * (scaleSize + addedScale), SpriteEffects.None, layerDepth);
 		}
@@ -328,7 +328,7 @@ namespace ChestPreview.Framework
 
 		public static void drawInMenuObject(SObject item, SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
 		{
-			if ((bool)item.isRecipe)
+			if (item.IsRecipe)
 			{
 				transparency = 0.5f;
 				scaleSize *= 0.75f;
@@ -338,7 +338,7 @@ namespace ChestPreview.Framework
 			{
 				shouldDrawStackNumber = false;
 			}
-			if ((bool)item.bigCraftable)
+			if (item.bigCraftable.Value)
 			{
 				float x = 32f;
 				float y = 32f;
@@ -357,7 +357,7 @@ namespace ChestPreview.Framework
 					x += 7;
 					y += 6;
 				}
-				Microsoft.Xna.Framework.Rectangle sourceRect = SObject.getSourceRectForBigCraftable(item.parentSheetIndex);
+				Microsoft.Xna.Framework.Rectangle sourceRect = SObject.getSourceRectForBigCraftable(item.ParentSheetIndex);
 				spriteBatch.Draw(Game1.bigCraftableSpriteSheet,
 					location + new Vector2(x, y), sourceRect,
 					color * transparency, 0f, new Vector2(8f, 16f), 4f * (((double)scaleSize < 0.2) ? scaleSize : (scaleSize / 2f)), SpriteEffects.None, layerDepth);
@@ -365,25 +365,25 @@ namespace ChestPreview.Framework
 				{
 					if (ModEntry.CurrentSize == Size.Small)
                     {
-						drawTinyDigits(item.stack, spriteBatch,
+						drawTinyDigits(item.Stack, spriteBatch,
 						location + new Vector2(28, 32f * scaleSize + 64 * scaleSize - 2),
 						3f * scaleSize, 1f, color);
 					}
 					else if (ModEntry.CurrentSize == Size.Medium)
 					{
-						drawTinyDigits(item.stack, spriteBatch,
+						drawTinyDigits(item.Stack, spriteBatch,
 						location + new Vector2(34, 18f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
 					else if (ModEntry.CurrentSize == Size.Big)
 					{
-						drawTinyDigits(item.stack, spriteBatch,
+						drawTinyDigits(item.Stack, spriteBatch,
 						location + new Vector2(38, 8f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
 					else if (ModEntry.CurrentSize == Size.Huge)
 					{
-						drawTinyDigits(item.stack, spriteBatch,
+						drawTinyDigits(item.Stack, spriteBatch,
 						location + new Vector2(44, 8f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
@@ -391,7 +391,7 @@ namespace ChestPreview.Framework
 			}
 			else
 			{
-				if ((int)item.parentSheetIndex != 590 && drawShadow)
+				if ((int)item.ParentSheetIndex != 590 && drawShadow)
 				{
 					spriteBatch.Draw(Game1.shadowTexture, location + new Vector2(32f, 48f), Game1.shadowTexture.Bounds, color * 0.5f, 0f, new Vector2(Game1.shadowTexture.Bounds.Center.X, Game1.shadowTexture.Bounds.Center.Y), 3f, SpriteEffects.None, layerDepth - 0.0001f);
 				}
@@ -414,41 +414,41 @@ namespace ChestPreview.Framework
 				}
 				spriteBatch.Draw(Game1.objectSpriteSheet,
 					location + new Vector2((int)(32f * scaleSize) + x, (int)(32f * scaleSize) + y),
-					Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, item.parentSheetIndex, 16, 16),
+					Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, item.ParentSheetIndex, 16, 16),
 					color * transparency, 0f, new Vector2(8f, 8f) * scaleSize, 4f * scaleSize, SpriteEffects.None, layerDepth);
 				if (shouldDrawStackNumber)
 				{
 					if (ModEntry.CurrentSize == Size.Small)
 					{
-						drawTinyDigits(item.stack, spriteBatch,
+						drawTinyDigits(item.Stack, spriteBatch,
 						location + new Vector2(28, 32f * scaleSize + 64 * scaleSize - 2),
 						3f * scaleSize, 1f, color);
 					}
 					else if (ModEntry.CurrentSize == Size.Medium)
 					{
-						drawTinyDigits(item.stack, spriteBatch,
+						drawTinyDigits(item.Stack, spriteBatch,
 							location + new Vector2(34, 18f * scaleSize + 64 * scaleSize),
 							3f * scaleSize, 1f, color);
 					}
 					else if (ModEntry.CurrentSize == Size.Big)
 					{
-						drawTinyDigits(item.stack, spriteBatch,
+						drawTinyDigits(item.Stack, spriteBatch,
 						location + new Vector2(38, 8f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
 					else if (ModEntry.CurrentSize == Size.Huge)
 					{
-						drawTinyDigits(item.stack, spriteBatch,
+						drawTinyDigits(item.Stack, spriteBatch,
 						location + new Vector2(42, 8f * scaleSize + 64 * scaleSize),
 						3f * scaleSize, 1f, color);
 					}
 				}
-				if (drawStackNumber != 0 && (int)item.quality > 0)
+				if (drawStackNumber != 0 && item.Quality > 0)
 				{
-					Microsoft.Xna.Framework.Rectangle quality_rect = (((int)item.quality < 4) ? new Microsoft.Xna.Framework.Rectangle(338 + ((int)item.quality - 1) * 8, 400, 8, 8) : new Microsoft.Xna.Framework.Rectangle(346, 392, 8, 8));
+					Microsoft.Xna.Framework.Rectangle quality_rect = ((item.Quality < 4) ? new Microsoft.Xna.Framework.Rectangle(338 + (item.Quality - 1) * 8, 400, 8, 8) : new Microsoft.Xna.Framework.Rectangle(346, 392, 8, 8));
 					Texture2D quality_sheet = Game1.mouseCursors;
 					int xOffset = 0;
-					float yOffset = (((int)item.quality < 4) ? 0f :
+					float yOffset = ((item.Quality < 4) ? 0f :
 							(((float)Math.Cos((double)Game1.currentGameTime.TotalGameTime.Milliseconds * Math.PI / 512.0) + 1f) * 0.05f));
 					int yOffset2 = 0;
 					if (ModEntry.CurrentSize == Size.Small)
@@ -483,7 +483,7 @@ namespace ChestPreview.Framework
 					spriteBatch.Draw(Game1.staminaRect, new Microsoft.Xna.Framework.Rectangle((int)location.X, (int)(location.Y + 56f * scaleSize), (int)(64f * scaleSize * health), (int)(8f * scaleSize)), Utility.getRedToGreenLerpColor(health));
 				}
 			}
-			if ((bool)item.isRecipe)
+			if (item.IsRecipe)
 			{
 				spriteBatch.Draw(Game1.objectSpriteSheet, location + new Vector2(16f, 16f), Game1.getSourceRectForStandardTileSheet(Game1.objectSpriteSheet, 451, 16, 16), color, 0f, Vector2.Zero, 3f, SpriteEffects.None, layerDepth + 0.0001f);
 			}

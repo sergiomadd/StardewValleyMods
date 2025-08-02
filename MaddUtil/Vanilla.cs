@@ -57,7 +57,7 @@ namespace MaddUtil
         public static bool IsVanillaItem(Item item)
         {
             bool itis = false;
-            string idTag = item.GetContextTagList()[0];
+            string idTag = item.GetContextTags().First();
             string type = idTag.Split("_")[1];
             int id = Int32.Parse(idTag.Split("_")[2]);
             if (type == "")

@@ -10,15 +10,14 @@ namespace MaddUtil
     public static class Helpers
     {
         private static IModContentHelper modContentHelper;
-        private static IContentHelper contentHelper;
+        private static IGameContentHelper gameContentHelper;
         private static ITranslationHelper translationHelper;
         private static IModHelper modHelper;
 
         public static void SetModHelper(IModHelper helper)
         {
             modHelper = helper;
-            SetContentHelper(helper.Content);
-            SetModContentHelper(helper.ModContent);
+            SetContentHelper(helper.GameContent);
             SetModContentHelper(helper.ModContent);
             SetTranslationHelper(helper.Translation);
         }
@@ -36,14 +35,14 @@ namespace MaddUtil
         {
             return modContentHelper;
         }
-        public static void SetContentHelper(IContentHelper helper)
+        public static void SetContentHelper(IGameContentHelper helper)
         {
-            contentHelper = helper;
+            gameContentHelper = helper;
         }
 
-        public static IContentHelper GetContentHelper()
+        public static IGameContentHelper GetContentHelper()
         {
-            return contentHelper;
+            return gameContentHelper;
         }
         public static void SetTranslationHelper(ITranslationHelper helper)
         {

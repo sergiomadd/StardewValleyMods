@@ -28,7 +28,7 @@ If your mod adds custom items another way:
     <details>
     <summary>DrawInPreview() example:</summary>
   
-    From ItemPipes compatibility (LINK)  
+    From [ItemPipes](../ItemPipes/Framework/Items/PipeItem.cs#L155) 
     Probably, you will need to adjust: 
     - The sprite position
     - The stack numbers (tinyDigits) position
@@ -131,6 +131,6 @@ Planned compatibility with:
 
 ## See also
 - [Read for translations](../translations.md)
-- [Release Notes](release-notes.md)
+- [Release Notes](docs/release-notes.md)
 - [Nexus Mod Page](https://www.nexusmods.com/stardewvalley/mods/13946)
 - [Contact](https://twitter.com/madded__)

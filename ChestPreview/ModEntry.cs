@@ -33,10 +33,10 @@ namespace ChestPreview
             Helpers.SetModHelper(helper);
 
             helper.Events.GameLoop.GameLaunched += this.OnGameLaunched;
-            helper.Events.Display.Rendered += this.OnRendered;
+            //helper.Events.Display.Rendered += this.OnRendered;
+            helper.Events.Display.RenderedWorld += this.OnRenderedWorld;
             helper.Events.Display.WindowResized += this.OnWindowResized;
         }
-
 
         private void OnWindowResized(object sender, WindowResizedEventArgs e)
         {
@@ -75,8 +75,45 @@ namespace ChestPreview
             }
         }
 
+        private void OnRenderedWorld(object sender, RenderedWorldEventArgs e)
+        {
+            if (config.Enabled
+                && Context.IsWorldReady
+                && Game1.activeClickableMenu == null
+                && (!config.EnableKey || (config.EnableKey && Helper.Input.IsDown(config.Key)))
+                && (!config.EnableMouse || (config.EnableMouse && Helper.Input.IsDown(Conversor.GetMouseButton(config.Mouse)))))
+            {
+                Vector2 tile = Game1.currentCursorTile;
+                Vector2 downTile = new Vector2(tile.X, tile.Y + 1);
+                if (Game1.currentLocation is FarmHouse
+                    && (Game1.currentLocation as FarmHouse).fridgePosition.Equals(tile.ToPoint()))
+                {
+                    int yOffset = (int)(-94 * Game1.options.zoomLevel);
+                    InventoryMenu menu = CreatePreviewMenu(tile, (Game1.currentLocation as FarmHouse).fridge.First().Items.ToList(), 36, yOffset, 3);
+                    menu.draw(e.SpriteBatch);
+                }
+                else if ((Game1.currentLocation.Objects.ContainsKey(tile)
+                    && Game1.currentLocation.Objects[tile] != null
+                    && Game1.currentLocation.Objects[tile] is Chest)
+                    && (config.Range <= 0 || (config.Range > 0
+                    && Utility.tileWithinRadiusOfPlayer((int)tile.X, (int)tile.Y, config.Range, Game1.player))))
+                {
+                    DrawPreview(tile, e.SpriteBatch);
+                }
+                else if
+                    ((Game1.currentLocation.Objects.ContainsKey(downTile)
+                    && Game1.currentLocation.Objects[downTile] != null
+                    && Game1.currentLocation.Objects[downTile] is Chest)
+                    && (config.Range <= 0 || (config.Range > 0 && Utility.tileWithinRadiusOfPlayer((int)downTile.X, (int)downTile.Y, config.Range, Game1.player))))
+                {
+                    DrawPreview(downTile, e.SpriteBatch);
+                }
+            }
+        }
+
         private void OnRendered(object sender, RenderedEventArgs e)
         {
+            
             if (config.Enabled 
                 && Context.IsWorldReady 
                 && Game1.activeClickableMenu == null 
@@ -104,12 +141,12 @@ namespace ChestPreview
                     ((Game1.currentLocation.Objects.ContainsKey(downTile)
                     && Game1.currentLocation.Objects[downTile] != null
                     && Game1.currentLocation.Objects[downTile] is Chest)
-                    && (config.Range <= 0 || (config.Range > 0
-                    && Utility.tileWithinRadiusOfPlayer((int)downTile.X, (int)downTile.Y, config.Range, Game1.player))))
+                    && (config.Range <= 0 || (config.Range > 0 && Utility.tileWithinRadiusOfPlayer((int)downTile.X, (int)downTile.Y, config.Range, Game1.player))))
                 {
                     DrawPreview(downTile, e.SpriteBatch);
                 }
             }
+            
         }
 
         public void DrawPreview(Vector2 tile, SpriteBatch b)
